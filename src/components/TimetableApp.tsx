@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
 import { SideStageSection } from "@/components/SideStageSection";
+import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useStarred } from "@/hooks/useStarred";
@@ -52,9 +53,12 @@ export function TimetableApp() {
 
   return (
     <div className="flex h-dvh flex-col bg-zinc-950 text-zinc-100">
-      <header className="flex items-center justify-between px-3 pt-3">
-        <h1 className="text-sm font-semibold tracking-wide text-zinc-300">Paredes de Coura 2026</h1>
-        <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
+      <header className="flex items-start justify-between px-3 pt-3">
+        <h1 className="text-sm font-semibold tracking-wide text-zinc-300">Vodafone Paredes de Coura 2026</h1>
+        <div className="flex flex-col items-end gap-1">
+          <SocialLinks />
+          <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
+        </div>
       </header>
 
       <DayTabs days={days} selected={selectedDay} today={today} onSelect={setDayOverride} />

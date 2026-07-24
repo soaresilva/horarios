@@ -3,10 +3,10 @@ import { RegisterServiceWorker } from "@/components/RegisterServiceWorker";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PdC 2026",
+  title: "Horários Bolachas",
   description: "Offline-friendly stage timetable for Vodafone Paredes de Coura 2026.",
   appleWebApp: {
-    title: "PdC 2026",
+    title: "Horários Bolachas",
     statusBarStyle: "black-translucent",
     capable: true,
   },

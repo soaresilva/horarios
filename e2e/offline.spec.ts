@@ -15,5 +15,9 @@ test("timetable is usable offline after a first visit", async ({ page, context }
   await expect(page.getByText("Paredes de Coura 2026")).toBeVisible();
   await expect(page.getByText(/Couldn't load the schedule/)).not.toBeVisible();
   // A real stage name from the seeded schedule should render from cache.
-  await expect(page.getByText("Vodafone").or(page.getByText("Sobe à Vila"))).toBeVisible();
+  // Exact match: the page's H1 ("Vodafone Paredes de Coura 2026") also
+  // contains "Vodafone" as a substring, which would otherwise match twice.
+  await expect(
+    page.getByText("Vodafone", { exact: true }).or(page.getByText("Sobe à Vila", { exact: true })),
+  ).toBeVisible();
 });
