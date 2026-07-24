@@ -21,7 +21,7 @@ export function PerformanceBlock({ performance, layout, alternate, starred, onTo
       style={{ top: layout.top, height: layout.height }}
       className={`absolute left-1 right-1 flex flex-col justify-center rounded-md px-2 py-1 text-left transition-colors ${
         starred
-          ? "bg-amber-400/20 ring-1 ring-amber-400"
+          ? "bg-accent/20 ring-1 ring-accent"
           : alternate
             ? "bg-zinc-800/80"
             : "bg-zinc-800/40"
@@ -33,7 +33,7 @@ export function PerformanceBlock({ performance, layout, alternate, starred, onTo
         </span>
         <span
           aria-hidden
-          className={`shrink-0 text-xs leading-none ${starred ? "text-amber-400" : "text-zinc-600"}`}
+          className={`shrink-0 text-xs leading-none ${starred ? "text-accent" : "text-zinc-600"}`}
         >
           ★
         </span>

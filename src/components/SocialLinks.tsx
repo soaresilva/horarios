@@ -34,7 +34,7 @@ export function SocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={link.name}
-          className="text-zinc-500 transition-colors hover:text-zinc-300"
+          className="text-zinc-500 transition-colors hover:text-accent"
         >
           <span className="block h-4 w-4">{link.icon}</span>
         </a>

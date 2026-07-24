@@ -52,7 +52,7 @@ export function TimetableApp() {
   const mainPerformances = dayPerformances.filter((p) => main.some((s) => s.id === p.stageId));
 
   return (
-    <div className="flex h-dvh flex-col bg-zinc-950 text-zinc-100">
+    <div className="flex h-dvh flex-col bg-background text-zinc-100">
       <header className="flex items-start justify-between px-3 pt-3">
         <h1 className="text-sm font-semibold tracking-wide text-zinc-300">Vodafone Paredes de Coura 2026</h1>
         <div className="flex flex-col items-end gap-1">
@@ -82,7 +82,7 @@ export function TimetableApp() {
           {/* Sticky, same as each side stage's header above: whichever
               section is actually in view keeps its label pinned to the top
               as you scroll, main stages included. */}
-          <div className="sticky top-0 z-20 flex bg-zinc-950/95 px-3 pt-2 text-xs font-medium text-zinc-400 backdrop-blur-sm">
+          <div className="sticky top-0 z-20 flex bg-background/95 px-3 pt-2 text-xs font-medium text-zinc-400 backdrop-blur-sm">
             <div className="w-11 shrink-0" />
             <div className="flex flex-1">
               {main.map((stage, i) => (

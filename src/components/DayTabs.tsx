@@ -23,7 +23,7 @@ export function DayTabs({ days, selected, today, onSelect }: DayTabsProps) {
             aria-selected={isSelected}
             onClick={() => onSelect(day)}
             className={`flex shrink-0 flex-col items-center rounded-lg px-3 py-1.5 ${
-              isSelected ? "bg-zinc-100 text-zinc-950" : "bg-zinc-800/60 text-zinc-300"
+              isSelected ? "bg-accent text-background" : "bg-zinc-800/60 text-zinc-300"
             }`}
           >
             <span className="text-[10px] font-medium leading-tight">{weekday}</span>
@@ -31,7 +31,7 @@ export function DayTabs({ days, selected, today, onSelect }: DayTabsProps) {
             {day === today && (
               <span
                 aria-hidden
-                className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? "bg-zinc-950" : "bg-red-500"}`}
+                className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? "bg-background" : "bg-red-500"}`}
               />
             )}
           </button>
