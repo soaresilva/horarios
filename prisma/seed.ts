@@ -1,9 +1,17 @@
 import { prisma } from "../src/lib/prisma";
 
-// No official 2026 set times exist yet (only the artist lineup has been
-// announced). This seed fabricates a plausible schedule so the app has
-// something to render during development and before Diogo replaces it
-// with real times via /admin once the festival publishes them.
+// Real confirmed schedule, sourced from Diogo directly:
+// - Aug 12-15 (Vodafone / COURA / Jazz na Relva / Xapas Lounge): extracted
+//   from his working spreadsheet (BolachasPdC26.xlsx, per-day sheets "12
+//   Ago".."15 Ago"), which gives each act's actual start time and a
+//   merge-derived duration. Two acts had a merge-derived end that slightly
+//   overran the next act's start on the same stage (Getdown Services/
+//   Miramar on the 12th by 5min, Tomode/Milhanas on the 13th by 15min) —
+//   capped at the next act's start rather than guessed away.
+// - Aug 9-11 (Sobe à Vila) and the Jazz na Relva / Xapas Lounge times: given
+//   directly as confirmed lineup images. Duration isn't published for these
+//   smaller stages, so each act is a flat 45min, except the last act of
+//   each Sobe à Vila day (90min, per Diogo).
 
 const YEAR = 2026;
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -12,9 +20,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
 // throughout the festival in August. Times are built with an explicit
 // +01:00 offset so the stored instant matches real Lisbon wall-clock time
 // regardless of the timezone this script (or a viewer's device) runs in.
-function at(day: number, hour: number, minute: number, rollsToNextDay = false) {
-  const d = rollsToNextDay ? day + 1 : day;
-  return new Date(`${YEAR}-08-${pad(d)}T${pad(hour)}:${pad(minute)}:00+01:00`);
+function at(day: number, hhmm: string, rolls: boolean) {
+  const d = rolls ? day + 1 : day;
+  return new Date(`${YEAR}-08-${pad(d)}T${hhmm}:00+01:00`);
 }
 
 // The `date` column is a plain calendar-date label (Prisma @db.Date, no
@@ -25,144 +33,179 @@ function festivalDate(day: number) {
   return new Date(Date.UTC(YEAR, 7, day));
 }
 
-// `startRolls`/`endRolls` mark whether that specific endpoint falls after
-// midnight, i.e. on the calendar day following the festival-day label (a
-// slot can start before midnight and end after it, or - for a stage's
-// closing slot - start and end both after midnight).
-type SlotTemplate = {
-  start: [number, number];
-  end: [number, number];
-  startRolls?: boolean;
-  endRolls?: boolean;
-};
+// Every festival-day's schedule runs from mid-afternoon (earliest: Jazz na
+// Relva at 15:00) through the small hours (latest: ~04:40) — nothing falls
+// in between, so a clock hour before 13:00 unambiguously means "after
+// midnight, next calendar day" relative to the festival-day label.
+function rolls(hhmm: string): boolean {
+  return Number(hhmm.split(":")[0]) < 13;
+}
 
-// Six slots per stage per main day, offset ~20-30min between stages so
-// Vodafone and Palco 2 alternate rather than overlap exactly, mirroring
-// the bolachas.org reference timetable's cadence.
-const VODAFONE_SLOTS: SlotTemplate[] = [
-  { start: [16, 45], end: [17, 30] },
-  { start: [18, 0], end: [18, 45] },
-  { start: [19, 15], end: [20, 15] },
-  { start: [20, 45], end: [21, 45] },
-  { start: [22, 15], end: [23, 15] },
-  { start: [23, 45], end: [1, 0], endRolls: true },
-];
+interface Act {
+  artist: string;
+  start: string;
+  end: string;
+}
 
-const PALCO2_SLOTS: SlotTemplate[] = [
-  { start: [17, 0], end: [17, 45] },
-  { start: [18, 20], end: [19, 5] },
-  { start: [19, 35], end: [20, 35] },
-  { start: [21, 5], end: [22, 5] },
-  { start: [22, 35], end: [23, 35] },
-  { start: [0, 5], end: [1, 20], startRolls: true, endRolls: true },
-];
+const STAGES = [
+  { slug: "vodafone", name: "Vodafone", order: 0 },
+  { slug: "palco-2", name: "COURA", order: 1 },
+  { slug: "sobe-a-vila", name: "Sobe à Vila", order: 2 },
+  { slug: "jazz-na-relva", name: "Jazz na Relva by Pleno", order: 3 },
+  { slug: "xapas-lounge", name: "Xapas Lounge", order: 4 },
+] as const;
 
-const MAIN_LINEUP: Record<number, { vodafone: string[]; palco2: string[] }> = {
+// day -> stageSlug -> acts, sorted by start time.
+const SCHEDULE: Record<number, Record<string, Act[]>> = {
   12: {
-    vodafone: ["Amyl and the Sniffers", "Wet Leg", "Kneecap", "Bloc Party", "Underworld", "M.I.A."],
-    palco2: ["Patrick Watson Solo Piano", "Hermanos Gutiérrez", "CMAT", "Meute", "Benjamin Clementine", "Thundercat"],
+    vodafone: [
+      { artist: "Capitão Fausto", start: "17:15", end: "18:15" },
+      { artist: "CMAT", start: "18:40", end: "19:40" },
+      { artist: "The Horrors", start: "20:40", end: "21:40" },
+      { artist: "Wet Leg", start: "22:25", end: "23:25" },
+      { artist: "Kneecap", start: "00:20", end: "01:50" },
+    ],
+    "palco-2": [
+      { artist: "University", start: "16:30", end: "17:15" },
+      { artist: "Westside Cowboy", start: "18:00", end: "19:00" },
+      { artist: "Greg Freeman", start: "19:40", end: "20:40" },
+      { artist: "Horsegirl", start: "21:40", end: "22:40" },
+      { artist: "First Breath After Coma + Salvador Sobral", start: "23:35", end: "00:35" },
+      { artist: "Getdown Services", start: "01:50", end: "02:45" },
+      { artist: "Miramar", start: "02:45", end: "04:30" },
+    ],
+    "jazz-na-relva": [
+      { artist: "Joana Alegre", start: "15:00", end: "15:45" },
+      { artist: "Janeiro", start: "16:00", end: "16:45" },
+    ],
   },
   13: {
-    vodafone: ["Pale Jay", "Cate Le Bon", "The Horrors", "Aldous Harding", "Joy Orbison", "Kurt Vile & The Violators"],
-    palco2: ["Bassvictim", "Getdown Services", "Show Me The Body", "Wu Lyf", "Carolina Durante", "Maruja"],
+    vodafone: [
+      { artist: "A Garota Não", start: "17:10", end: "18:10" },
+      { artist: "Aldous Harding", start: "18:40", end: "19:40" },
+      { artist: "Hermanos Gutiérrez", start: "20:40", end: "21:55" },
+      { artist: "Kurt Vile & The Violators", start: "22:40", end: "23:40" },
+      { artist: "Underworld", start: "00:35", end: "01:50" },
+    ],
+    "palco-2": [
+      { artist: "Tomode", start: "17:30", end: "18:00" },
+      { artist: "Milhanas", start: "18:00", end: "19:00" },
+      { artist: "Pale Jay", start: "19:40", end: "20:40" },
+      { artist: "Friko", start: "21:40", end: "22:40" },
+      { artist: "Wu Lyf", start: "23:40", end: "00:40" },
+      { artist: "Show Me The Body", start: "01:50", end: "02:50" },
+      { artist: "Bassvictim", start: "03:00", end: "04:30" },
+    ],
+    "jazz-na-relva": [
+      { artist: "Miguel Marôco", start: "15:00", end: "15:45" },
+      { artist: "Salvador Sobral e André Santos", start: "16:00", end: "16:45" },
+    ],
+    "xapas-lounge": [{ artist: "GPSS", start: "15:00", end: "15:45" }],
   },
   14: {
-    vodafone: ["Hudson Freeman", "Sophia Stel", "Terraplana", "Greg Freeman", "Ryan Davis & The Roadhouse Band", "Marie Davidson DJ Set"],
-    palco2: ["Westside Cowboy", "Strawberry Guy", "Friko", "Vendredi Sur Mer", "Prostitute", "Dame Area"],
+    vodafone: [
+      { artist: "Carolina Durante", start: "17:10", end: "18:10" },
+      { artist: "Sérgio & Os Assessores Com Amigos", start: "18:50", end: "19:50" },
+      { artist: "Benjamin Clementine", start: "20:45", end: "21:45" },
+      { artist: "Bloc Party", start: "22:35", end: "23:50" },
+      { artist: "M.I.A.", start: "00:35", end: "01:50" },
+    ],
+    "palco-2": [
+      { artist: "Noko Woi", start: "16:30", end: "17:15" },
+      { artist: "Terraplana", start: "18:00", end: "19:00" },
+      { artist: "Strawberry Guy", start: "19:50", end: "20:50" },
+      { artist: "Ryan Davis & The Roadhouse Band", start: "21:50", end: "22:50" },
+      { artist: "Vendredi Sur Mer", start: "23:50", end: "00:50" },
+      { artist: "Maruja", start: "01:35", end: "02:35" },
+      { artist: "Joy Orbison", start: "02:45", end: "04:30" },
+    ],
+    "jazz-na-relva": [
+      { artist: "Plaka", start: "15:00", end: "15:45" },
+      { artist: "Maria Luiza Jobim", start: "16:00", end: "16:45" },
+    ],
   },
   15: {
-    vodafone: ["Julia Mestre", "Tomode", "A Garota Não", "Sérgio & Os Assessores Com Amigos", "First Breath After Coma + Salvador Sobral", "Capitão Fausto"],
-    palco2: ["Milhanas", "University", "Noko Woi", "Miramar", "Horsegirl", "Noiserv"],
+    vodafone: [
+      { artist: "Patrick Watson Solo Piano", start: "17:10", end: "18:10" },
+      { artist: "Cate Le Bon", start: "18:55", end: "19:55" },
+      { artist: "Meute", start: "20:40", end: "21:55" },
+      { artist: "Thundercat", start: "22:45", end: "00:00" },
+      { artist: "Amyl and the Sniffers", start: "01:00", end: "02:15" },
+    ],
+    "palco-2": [
+      { artist: "Hudson Freeman", start: "16:30", end: "17:15" },
+      { artist: "Sophia Stel", start: "18:10", end: "19:10" },
+      { artist: "Noiserv", start: "19:55", end: "20:55" },
+      { artist: "Julia Mestre", start: "21:45", end: "22:45" },
+      { artist: "Prostitute", start: "00:00", end: "01:00" },
+      { artist: "Dame Area", start: "02:20", end: "03:20" },
+      { artist: "Marie Davidson DJ Set", start: "03:25", end: "04:40" },
+    ],
+    "jazz-na-relva": [
+      { artist: "Rita Cortezão", start: "15:00", end: "15:45" },
+      { artist: "Asa Cobra", start: "16:00", end: "16:45" },
+    ],
+  },
+  9: {
+    "sobe-a-vila": [
+      { artist: "Summer of Hate", start: "22:30", end: "23:15" },
+      { artist: "Colinas", start: "23:30", end: "00:15" },
+      { artist: "Hetta", start: "00:30", end: "01:15" },
+      { artist: "DJ Shake a Leg", start: "01:20", end: "02:50" },
+    ],
+  },
+  10: {
+    "sobe-a-vila": [
+      { artist: "Alex Moon", start: "22:30", end: "23:15" },
+      { artist: "Sofia Araújo", start: "00:00", end: "00:45" },
+      { artist: "Francisco AP", start: "01:30", end: "03:00" },
+    ],
+  },
+  11: {
+    "sobe-a-vila": [
+      { artist: "Nunca Mates o Mandarim", start: "22:30", end: "23:15" },
+      { artist: "La Familia Gitana", start: "23:30", end: "00:15" },
+      { artist: "Halfpipe Records", start: "00:30", end: "02:00" },
+    ],
   },
 };
 
-// Real stage name confirmed from the official site; scoped to its own
-// pre-festival tab per Diogo's instructions, not the main side-by-side grid.
-const PRE_FESTIVAL: Record<number, string[]> = {
-  9: ["Colinas", "DJ Set"],
-  10: ["Hetta", "DJ Set"],
-  11: ["Summer of Hate", "DJ Set"],
-};
-
-const PRE_FESTIVAL_SLOTS: SlotTemplate[] = [
-  { start: [22, 30], end: [23, 30] },
-  { start: [23, 30], end: [1, 30], endRolls: true },
-];
-
 async function main() {
-  console.log("Seeding placeholder 2026 schedule...");
+  console.log("Seeding confirmed 2026 schedule...");
 
-  const vodafone = await prisma.stage.upsert({
-    where: { slug: "vodafone" },
-    update: {},
-    create: { name: "Vodafone", slug: "vodafone", order: 0 },
-  });
-
-  const palco2 = await prisma.stage.upsert({
-    where: { slug: "palco-2" },
-    update: {},
-    create: { name: "Palco 2", slug: "palco-2", order: 1 },
-  });
-
-  const sobeAVila = await prisma.stage.upsert({
-    where: { slug: "sobe-a-vila" },
-    update: {},
-    create: { name: "Sobe à Vila", slug: "sobe-a-vila", order: 2 },
-  });
+  const stageIds: Record<string, string> = {};
+  for (const stage of STAGES) {
+    const row = await prisma.stage.upsert({
+      where: { slug: stage.slug },
+      update: { name: stage.name, order: stage.order },
+      create: stage,
+    });
+    stageIds[stage.slug] = row.id;
+  }
 
   await prisma.performance.deleteMany({});
 
-  for (const [dayStr, { vodafone: vArtists, palco2: pArtists }] of Object.entries(MAIN_LINEUP)) {
+  for (const [dayStr, stages] of Object.entries(SCHEDULE)) {
     const day = Number(dayStr);
     const date = festivalDate(day);
 
-    for (let i = 0; i < vArtists.length; i++) {
-      const slot = VODAFONE_SLOTS[i];
-      await prisma.performance.create({
-        data: {
-          artistName: vArtists[i],
-          date,
-          startTime: at(day, slot.start[0], slot.start[1], slot.startRolls),
-          endTime: at(day, slot.end[0], slot.end[1], slot.endRolls),
-          stageId: vodafone.id,
-        },
-      });
-    }
-
-    for (let i = 0; i < pArtists.length; i++) {
-      const slot = PALCO2_SLOTS[i];
-      await prisma.performance.create({
-        data: {
-          artistName: pArtists[i],
-          date,
-          startTime: at(day, slot.start[0], slot.start[1], slot.startRolls),
-          endTime: at(day, slot.end[0], slot.end[1], slot.endRolls),
-          stageId: palco2.id,
-        },
-      });
-    }
-  }
-
-  for (const [dayStr, artists] of Object.entries(PRE_FESTIVAL)) {
-    const day = Number(dayStr);
-    const date = festivalDate(day);
-
-    for (let i = 0; i < artists.length; i++) {
-      const slot = PRE_FESTIVAL_SLOTS[i];
-      await prisma.performance.create({
-        data: {
-          artistName: artists[i],
-          date,
-          startTime: at(day, slot.start[0], slot.start[1], slot.startRolls),
-          endTime: at(day, slot.end[0], slot.end[1], slot.endRolls),
-          stageId: sobeAVila.id,
-        },
-      });
+    for (const [stageSlug, acts] of Object.entries(stages)) {
+      for (const act of acts) {
+        await prisma.performance.create({
+          data: {
+            artistName: act.artist,
+            date,
+            startTime: at(day, act.start, rolls(act.start)),
+            endTime: at(day, act.end, rolls(act.end)),
+            stageId: stageIds[stageSlug],
+          },
+        });
+      }
     }
   }
 
   const count = await prisma.performance.count();
-  console.log(`Seeded ${count} performances across 3 stages.`);
+  console.log(`Seeded ${count} performances across ${STAGES.length} stages.`);
 }
 
 main()
