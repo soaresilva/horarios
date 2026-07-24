@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+/* Dark-only by design: this is a festival timetable, mostly read outdoors
+   at night, and one palette keeps the CSS and JS payload smaller. */
+:root {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}

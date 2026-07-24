@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// A stage that hosts performances on one or more festival dates.
+// `order` decides display priority within a given date: the two lowest
+// `order` values active on a "main" date render as the side-by-side grid,
+// any others (e.g. a pre-festival or free-programme stage) surface in the
+// "other stages" tab for that date.
+model Stage {
+  id           String        @id @default(cuid())
+  name         String
+  slug         String        @unique
+  order        Int           @default(0)
+  performances Performance[]
+
+  @@index([order])
+}
+
+model Performance {
+  id          String   @id @default(cuid())
+  artistName  String
+  date        DateTime @db.Date
+  // @db.Timestamptz, not the Prisma default (timestamp without time zone):
+  // node-postgres serializes plain `timestamp` columns using the Node
+  // process's local timezone getters, so the naive value stored would
+  // silently depend on the server's TZ env var. Timestamptz always stores
+  // and returns a real UTC instant regardless of the process timezone.
+  startTime   DateTime @db.Timestamptz
+  endTime     DateTime @db.Timestamptz
+  notes       String?
+  stageId     String
+  stage       Stage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([date, stageId])
+}
