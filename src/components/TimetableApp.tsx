@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
-import { SideStagePanel } from "@/components/SideStagePanel";
+import { SideStageSection } from "@/components/SideStageSection";
 import { StageGrid } from "@/components/StageGrid";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useStarred } from "@/hooks/useStarred";
@@ -51,7 +51,7 @@ export function TimetableApp() {
   const mainPerformances = dayPerformances.filter((p) => main.some((s) => s.id === p.stageId));
 
   return (
-    <div className="flex min-h-dvh flex-col bg-zinc-950 text-zinc-100">
+    <div className="flex h-dvh flex-col bg-zinc-950 text-zinc-100">
       <header className="flex items-center justify-between px-3 pt-3">
         <h1 className="text-sm font-semibold tracking-wide text-zinc-300">Paredes de Coura 2026</h1>
         <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
@@ -61,10 +61,8 @@ export function TimetableApp() {
 
       <div className="flex-1 overflow-y-auto pb-6">
         {other.map((stage) => (
-          // Keyed by day too: each side stage's manual expand/collapse
-          // choice shouldn't carry over when switching days.
-          <SideStagePanel
-            key={`${selectedDay}-${stage.id}`}
+          <SideStageSection
+            key={stage.id}
             stage={stage}
             performances={dayPerformances.filter((p) => p.stageId === stage.id)}
             isStarred={isStarred}
@@ -72,18 +70,23 @@ export function TimetableApp() {
           />
         ))}
 
-        <div className="flex px-3 pt-2 text-xs font-medium text-zinc-400">
-          <div className="w-11 shrink-0" />
-          <div className="flex flex-1">
-            {main.map((stage, i) => (
-              <div key={stage.id} className={`flex-1 pb-1 ${i === 0 ? "pr-2" : "pl-2"}`}>
-                {stage.name}
-              </div>
-            ))}
+        <div>
+          {/* Sticky, same as each side stage's header above: whichever
+              section is actually in view keeps its label pinned to the top
+              as you scroll, main stages included. */}
+          <div className="sticky top-0 z-20 flex bg-zinc-950/95 px-3 pt-2 text-xs font-medium text-zinc-400 backdrop-blur-sm">
+            <div className="w-11 shrink-0" />
+            <div className="flex flex-1">
+              {main.map((stage, i) => (
+                <div key={stage.id} className={`flex-1 pb-1 ${i === 0 ? "pr-2" : "pl-2"}`}>
+                  {stage.name}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="px-3">
-          <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} onToggleStar={toggle} />
+          <div className="px-3">
+            <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} onToggleStar={toggle} />
+          </div>
         </div>
       </div>
     </div>
