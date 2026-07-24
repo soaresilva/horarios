@@ -61,6 +61,10 @@ export function TimetableApp() {
         </div>
       </header>
 
+      <p className="px-3 pb-1 pt-1 text-[10px] leading-snug text-zinc-600">
+        Stage times are not known yet, and end times are estimated since they are not officially revealed.
+      </p>
+
       <DayTabs days={days} selected={selectedDay} today={today} onSelect={setDayOverride} />
 
       <div className="flex-1 overflow-y-auto pb-6">
