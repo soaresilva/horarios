@@ -9,6 +9,7 @@ import {
   formatDayTabLabel,
   fromLisbonDatetimeLocalValue,
   generateTimeTicks,
+  isStageOver,
   toLisbonDatetimeLocalValue,
   todayInFestivalTimezone,
 } from "./time";
@@ -111,6 +112,29 @@ describe("Lisbon datetime-local round-trip", () => {
     const original = lisbon("2026-08-14T00:05:00");
     const value = toLisbonDatetimeLocalValue(original);
     expect(fromLisbonDatetimeLocalValue(value).getTime()).toBe(original.getTime());
+  });
+});
+
+describe("isStageOver", () => {
+  const performances = [
+    { startTime: lisbon("2026-08-12T15:00:00"), endTime: lisbon("2026-08-12T15:45:00") },
+    { startTime: lisbon("2026-08-12T16:00:00"), endTime: lisbon("2026-08-12T16:45:00") },
+  ];
+
+  it("is false before the last act ends", () => {
+    expect(isStageOver(performances, lisbon("2026-08-12T16:30:00"))).toBe(false);
+  });
+
+  it("is true after the last act ends", () => {
+    expect(isStageOver(performances, lisbon("2026-08-12T16:46:00"))).toBe(true);
+  });
+
+  it("is false when now isn't known yet (null)", () => {
+    expect(isStageOver(performances, null)).toBe(false);
+  });
+
+  it("is false for an empty performance list", () => {
+    expect(isStageOver([], lisbon("2026-08-12T20:00:00"))).toBe(false);
   });
 });
 

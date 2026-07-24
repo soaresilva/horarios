@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
-import { OtherStagesList } from "@/components/OtherStagesList";
+import { SideStagePanel } from "@/components/SideStagePanel";
 import { StageGrid } from "@/components/StageGrid";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useStarred } from "@/hooks/useStarred";
@@ -17,7 +17,6 @@ export function TimetableApp() {
   // into state via an effect, since `days` isn't known until the schedule
   // has loaded.
   const [dayOverride, setDayOverride] = useState<string | null>(null);
-  const [view, setView] = useState<"main" | "other">("main");
 
   const days = useMemo(() => (schedule ? uniqueSortedDates(schedule.performances) : []), [schedule]);
   const today = useMemo(() => todayInFestivalTimezone(), []);
@@ -50,7 +49,6 @@ export function TimetableApp() {
   const main = mainStages(schedule.stages, dayPerformances);
   const other = otherStages(schedule.stages, dayPerformances);
   const mainPerformances = dayPerformances.filter((p) => main.some((s) => s.id === p.stageId));
-  const otherPerformances = dayPerformances.filter((p) => other.some((s) => s.id === p.stageId));
 
   return (
     <div className="flex min-h-dvh flex-col bg-zinc-950 text-zinc-100">
@@ -59,69 +57,35 @@ export function TimetableApp() {
         <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
       </header>
 
-      <DayTabs
-        days={days}
-        selected={selectedDay}
-        today={today}
-        onSelect={(day) => {
-          setDayOverride(day);
-          setView("main");
-        }}
-      />
+      <DayTabs days={days} selected={selectedDay} today={today} onSelect={setDayOverride} />
 
-      {other.length > 0 && (
-        <div className="flex gap-1.5 px-3 pb-1" role="tablist" aria-label="Stage group">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === "main"}
-            onClick={() => setView("main")}
-            className={`rounded-full px-3 py-1 text-xs ${
-              view === "main" ? "bg-zinc-100 text-zinc-950" : "bg-zinc-800/60 text-zinc-400"
-            }`}
-          >
-            Main stages
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={view === "other"}
-            onClick={() => setView("other")}
-            className={`rounded-full px-3 py-1 text-xs ${
-              view === "other" ? "bg-zinc-100 text-zinc-950" : "bg-zinc-800/60 text-zinc-400"
-            }`}
-          >
-            Other stages
-          </button>
-        </div>
-      )}
-
-      {view === "main" ? (
-        <>
-          <div className="flex px-3 text-xs font-medium text-zinc-400">
-            <div className="w-11 shrink-0" />
-            <div className="flex flex-1">
-              {main.map((stage, i) => (
-                <div key={stage.id} className={`flex-1 pb-1 ${i === 0 ? "pr-2" : "pl-2"}`}>
-                  {stage.name}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="flex-1 overflow-y-auto px-3 pb-6">
-            <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} onToggleStar={toggle} />
-          </div>
-        </>
-      ) : (
-        <div className="flex-1 overflow-y-auto pb-6">
-          <OtherStagesList
-            stages={other}
-            performances={otherPerformances}
+      <div className="flex-1 overflow-y-auto pb-6">
+        {other.map((stage) => (
+          // Keyed by day too: each side stage's manual expand/collapse
+          // choice shouldn't carry over when switching days.
+          <SideStagePanel
+            key={`${selectedDay}-${stage.id}`}
+            stage={stage}
+            performances={dayPerformances.filter((p) => p.stageId === stage.id)}
             isStarred={isStarred}
             onToggleStar={toggle}
           />
+        ))}
+
+        <div className="flex px-3 pt-2 text-xs font-medium text-zinc-400">
+          <div className="w-11 shrink-0" />
+          <div className="flex flex-1">
+            {main.map((stage, i) => (
+              <div key={stage.id} className={`flex-1 pb-1 ${i === 0 ? "pr-2" : "pl-2"}`}>
+                {stage.name}
+              </div>
+            ))}
+          </div>
         </div>
-      )}
+        <div className="px-3">
+          <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} onToggleStar={toggle} />
+        </div>
+      </div>
     </div>
   );
 }

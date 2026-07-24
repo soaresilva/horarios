@@ -141,6 +141,19 @@ export function currentTimeOffset(window: GridWindow, now: Date): number | null 
   return minutesFromWindowStart(window, now) * PX_PER_MINUTE;
 }
 
+/**
+ * True once `now` is past every given performance's end time — used to
+ * auto-collapse a side stage's panel (e.g. Jazz na Relva) once its last act
+ * for the day is over, so it stops taking up space once irrelevant.
+ * `now: null` (not yet known client-side) and an empty list both read as
+ * "not over" — nothing to collapse for/toward.
+ */
+export function isStageOver(performances: TimeRange[], now: Date | null): boolean {
+  if (!now || performances.length === 0) return false;
+  const lastEnd = Math.max(...performances.map((p) => p.endTime.getTime()));
+  return now.getTime() > lastEnd;
+}
+
 export interface TimeTick {
   offset: number;
   label: string;

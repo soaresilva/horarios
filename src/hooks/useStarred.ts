@@ -5,6 +5,7 @@ import { useCallback, useSyncExternalStore } from "react";
 const STORAGE_KEY = "pdc26:starred";
 const listeners = new Set<() => void>();
 let cachedIds: string[] | null = null;
+const EMPTY_IDS: string[] = [];
 
 function readIds(): string[] {
   try {
@@ -39,8 +40,10 @@ function getSnapshot(): string[] {
   return cachedIds;
 }
 
-function getServerSnapshot(): string[] {
-  return [];
+// Exported for a regression test — must return a referentially stable
+// value, or React warns "getServerSnapshot should be cached" and can loop.
+export function getServerSnapshot(): string[] {
+  return EMPTY_IDS;
 }
 
 function subscribe(onStoreChange: () => void): () => void {

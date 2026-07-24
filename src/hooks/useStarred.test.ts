@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { useStarred } from "./useStarred";
+import { getServerSnapshot, useStarred } from "./useStarred";
 
 afterEach(() => {
   window.localStorage.clear();
@@ -39,5 +39,11 @@ describe("useStarred", () => {
     });
     expect(result.current.isStarred("p2")).toBe(true);
     expect(result.current.isStarred("p3")).toBe(false);
+  });
+
+  it("getServerSnapshot returns a referentially stable value", () => {
+    // useSyncExternalStore requires this — a fresh `[]` on every call
+    // triggers React's "getServerSnapshot should be cached" warning/loop.
+    expect(getServerSnapshot()).toBe(getServerSnapshot());
   });
 });
