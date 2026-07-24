@@ -28,7 +28,7 @@ export function PerformanceBlock({ performance, layout, alternate, starred, onTo
       }`}
     >
       <span className="flex items-start justify-between gap-1">
-        <span className="text-xs leading-tight font-medium text-zinc-100 sm:text-sm">
+        <span className="text-sm leading-tight font-medium text-zinc-100 sm:text-base">
           {performance.artistName}
         </span>
         <span
