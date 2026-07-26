@@ -55,6 +55,37 @@ export function fromLisbonDatetimeLocalValue(value: string): Date {
   return new Date(`${value}:00+01:00`);
 }
 
+/**
+ * Whether an "HH:MM" clock time belongs to the calendar day *after* its
+ * festival-day label. Paredes de Coura's programme runs mid-afternoon into
+ * the small hours (earliest ~15:00, latest ~04:40, nothing in between), so a
+ * time before 13:00 unambiguously means "after midnight, next day". Same rule
+ * `prisma/seed.ts` uses to place its seeded acts — kept identical here so the
+ * admin panel's festival-day + time inputs resolve to the same instants.
+ */
+export function festivalTimeRolls(hhmm: string): boolean {
+  return Number(hhmm.split(":")[0]) < 13;
+}
+
+/**
+ * Resolve a festival-day label ("YYYY-MM-DD") plus an "HH:MM" Lisbon
+ * wall-clock time into a real UTC instant, rolling past-midnight times onto
+ * the next calendar day. Portugal is fixed at WEST (UTC+1) for the whole
+ * August festival window, so the offset is a constant (matches seed.ts).
+ */
+export function fromFestivalDayTime(dayISO: string, hhmm: string): Date {
+  const base = new Date(`${dayISO}T${hhmm}:00+01:00`);
+  if (festivalTimeRolls(hhmm)) {
+    base.setUTCDate(base.getUTCDate() + 1);
+  }
+  return base;
+}
+
+/** "HH:MM" Lisbon wall-clock time of an instant, for pre-filling the admin time pickers. */
+export function toLisbonClockValue(date: Date): string {
+  return toLisbonDatetimeLocalValue(date).slice(11);
+}
+
 export function formatClock(date: Date): string {
   return new Intl.DateTimeFormat("pt-PT", {
     timeZone: FESTIVAL_TIMEZONE,

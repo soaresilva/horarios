@@ -7,8 +7,11 @@ import {
   currentTimeOffset,
   formatClock,
   formatDayTabLabel,
+  fromFestivalDayTime,
   fromLisbonDatetimeLocalValue,
+  festivalTimeRolls,
   generateTimeTicks,
+  toLisbonClockValue,
   toLisbonDatetimeLocalValue,
   todayInFestivalTimezone,
 } from "./time";
@@ -111,6 +114,50 @@ describe("Lisbon datetime-local round-trip", () => {
     const original = lisbon("2026-08-14T00:05:00");
     const value = toLisbonDatetimeLocalValue(original);
     expect(fromLisbonDatetimeLocalValue(value).getTime()).toBe(original.getTime());
+  });
+});
+
+describe("festivalTimeRolls", () => {
+  it("treats pre-13:00 clock times as belonging to the next calendar day", () => {
+    expect(festivalTimeRolls("00:05")).toBe(true);
+    expect(festivalTimeRolls("02:00")).toBe(true);
+    expect(festivalTimeRolls("12:59")).toBe(true);
+  });
+
+  it("treats 13:00 and later as the same festival day", () => {
+    expect(festivalTimeRolls("13:00")).toBe(false);
+    expect(festivalTimeRolls("15:00")).toBe(false);
+    expect(festivalTimeRolls("23:30")).toBe(false);
+  });
+});
+
+describe("fromFestivalDayTime", () => {
+  it("resolves an evening slot on the same calendar day", () => {
+    expect(fromFestivalDayTime("2026-08-12", "20:00").getTime()).toBe(lisbon("2026-08-12T20:00:00").getTime());
+  });
+
+  it("rolls an after-midnight slot onto the next calendar day", () => {
+    expect(fromFestivalDayTime("2026-08-12", "02:00").getTime()).toBe(lisbon("2026-08-13T02:00:00").getTime());
+  });
+
+  it("keeps a set that straddles midnight ordered (end after start)", () => {
+    const start = fromFestivalDayTime("2026-08-12", "23:30");
+    const end = fromFestivalDayTime("2026-08-12", "00:30");
+    expect(end.getTime()).toBeGreaterThan(start.getTime());
+    expect(end.getTime() - start.getTime()).toBe(60 * 60 * 1000);
+  });
+});
+
+describe("toLisbonClockValue", () => {
+  it("returns the Lisbon wall-clock HH:MM of an instant", () => {
+    expect(toLisbonClockValue(lisbon("2026-08-13T19:40:00"))).toBe("19:40");
+    expect(toLisbonClockValue(lisbon("2026-08-14T00:05:00"))).toBe("00:05");
+  });
+
+  it("round-trips with fromFestivalDayTime for an after-midnight slot", () => {
+    // Festival-day label is the 13th, the set plays 02:00 (really the 14th).
+    const instant = fromFestivalDayTime("2026-08-13", "02:00");
+    expect(toLisbonClockValue(instant)).toBe("02:00");
   });
 });
 
