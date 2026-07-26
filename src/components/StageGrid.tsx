@@ -4,6 +4,7 @@ import { CurrentTimeLine } from "@/components/CurrentTimeLine";
 import { PerformanceBlock } from "@/components/PerformanceBlock";
 import { TimeAxis } from "@/components/TimeAxis";
 import type { Performance, Stage } from "@/lib/schedule-client";
+import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { blockLayout, computeDayWindow, windowHeight } from "@/lib/time";
 
 interface StageGridProps {
@@ -14,6 +15,7 @@ interface StageGridProps {
 }
 
 export function StageGrid({ stages, performances, isStarred, onToggleStar }: StageGridProps) {
+  const { show: showRecommendations } = useShowRecommendations();
   const window = computeDayWindow(performances);
 
   if (!window) {
@@ -44,6 +46,7 @@ export function StageGrid({ stages, performances, isStarred, onToggleStar }: Sta
                   layout={blockLayout(window, performance)}
                   alternate={i % 2 === 0}
                   starred={isStarred(performance.id)}
+                  showRecommendation={showRecommendations}
                   onToggleStar={onToggleStar}
                 />
               ))}

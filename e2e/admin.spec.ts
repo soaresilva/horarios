@@ -102,6 +102,48 @@ test("dismissing the delete confirm keeps the performance", async ({ page }) => 
   await expect(page.locator(`input[value="${uniqueName}"]`)).toHaveCount(0);
 });
 
+test("the public recommendations toggle hides the marker and persists across a reload", async ({
+  page,
+  context,
+}) => {
+  await login(page);
+
+  const uniqueName = `E2E Toggle Act ${Date.now()}`;
+  await page.fill('input[name="perf.new-blank.artistName"]', uniqueName);
+  await page.fill('input[name="perf.new-blank.date"]', "2026-08-12");
+  await page.selectOption('select[name="perf.new-blank.start"]', "18:00");
+  await page.selectOption('select[name="perf.new-blank.end"]', "18:30");
+  await page.check('input[name="perf.new-blank.recommended"]');
+  await Promise.all([
+    page.waitForLoadState("networkidle"),
+    page.getByRole("button", { name: "Save all changes" }).click(),
+  ]);
+  await expect(page.locator(`input[value="${uniqueName}"]`)).toBeVisible();
+
+  const pub = await context.newPage();
+  await pub.goto("/");
+  await pub.getByRole("tab", { name: /12/ }).click();
+  await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(1);
+
+  // Switch recommendations off: the marker disappears.
+  await pub.getByRole("switch", { name: /recommend/i }).click();
+  await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(0);
+
+  // The preference survives a reload (localStorage-backed).
+  await pub.reload();
+  await pub.getByRole("tab", { name: /12/ }).click();
+  await expect(pub.getByRole("switch", { name: /recommend/i })).toHaveAttribute("aria-checked", "false");
+  await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(0);
+  await pub.close();
+
+  // Clean up the act.
+  page.once("dialog", (dialog) => dialog.accept());
+  await Promise.all([
+    page.waitForLoadState("networkidle"),
+    page.getByRole("button", { name: `Delete ${uniqueName}` }).click(),
+  ]);
+});
+
 test("logging out re-protects /admin", async ({ page }) => {
   await login(page);
   await Promise.all([page.waitForURL("**/admin/login"), page.click('button:has-text("Log out")')]);

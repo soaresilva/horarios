@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
-import { ThumbsUp } from "@/components/icons";
+import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
@@ -67,10 +67,7 @@ export function TimetableApp() {
       </p>
 
       <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
-        <span className="flex items-center gap-1">
-          <ThumbsUp className="h-3 w-3 text-accent" />
-          bolachas recommends
-        </span>
+        <RecommendationsToggle />
         <span className="flex items-center gap-1">
           <span aria-hidden className="text-accent">★</span>
           your favorites

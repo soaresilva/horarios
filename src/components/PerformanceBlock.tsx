@@ -10,10 +10,18 @@ interface PerformanceBlockProps {
   layout: BlockLayout;
   alternate: boolean;
   starred: boolean;
+  showRecommendation: boolean;
   onToggleStar: (id: string) => void;
 }
 
-export function PerformanceBlock({ performance, layout, alternate, starred, onToggleStar }: PerformanceBlockProps) {
+export function PerformanceBlock({
+  performance,
+  layout,
+  alternate,
+  starred,
+  showRecommendation,
+  onToggleStar,
+}: PerformanceBlockProps) {
   return (
     <button
       type="button"
@@ -31,7 +39,7 @@ export function PerformanceBlock({ performance, layout, alternate, starred, onTo
       <span className="flex items-start justify-between gap-1">
         <span className="text-sm leading-tight font-medium text-zinc-100 sm:text-base">
           {performance.artistName}
-          {performance.recommended && (
+          {performance.recommended && showRecommendation && (
             <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
           )}
         </span>

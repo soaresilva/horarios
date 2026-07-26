@@ -3,6 +3,7 @@
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
 import { ThumbsUp } from "@/components/icons";
+import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 
 interface SideStageSectionProps {
   stage: Stage;
@@ -18,6 +19,7 @@ interface SideStageSectionProps {
 // header naturally takes over the sticky slot, so whichever stage is
 // actually on screen is always the one labeled at the top.
 export function SideStageSection({ stage, performances, isStarred, onToggleStar }: SideStageSectionProps) {
+  const { show: showRecommendations } = useShowRecommendations();
   const sorted = [...performances].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   if (sorted.length === 0) return null;
 
@@ -41,7 +43,7 @@ export function SideStageSection({ stage, performances, isStarred, onToggleStar 
               >
                 <span className="text-sm font-medium text-zinc-100">
                   {performance.artistName}
-                  {performance.recommended && (
+                  {performance.recommended && showRecommendations && (
                     <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
                   )}
                 </span>
