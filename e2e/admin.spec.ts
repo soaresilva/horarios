@@ -49,7 +49,19 @@ test("adding a performance in admin shows it on the public timetable, and deleti
   await publicPage.goto("/");
   await publicPage.getByRole("tab", { name: /12/ }).click();
   await expect(publicPage.getByText(uniqueName)).toBeVisible();
+  // Not recommended yet: no thumbs-up marker on the act.
+  await expect(publicPage.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(0);
   await publicPage.close();
+
+  // Mark it as "bolachas recommends" and confirm the marker appears publicly.
+  await editForm.locator('input[name="recommended"]').check();
+  await Promise.all([page.waitForLoadState("networkidle"), editForm.getByRole("button", { name: "Save" }).click()]);
+
+  const recommendedPage = await context.newPage();
+  await recommendedPage.goto("/");
+  await recommendedPage.getByRole("tab", { name: /12/ }).click();
+  await expect(recommendedPage.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(1);
+  await recommendedPage.close();
 
   await Promise.all([page.waitForLoadState("networkidle"), editForm.getByRole("button", { name: "Delete" }).click()]);
   await expect(page.locator(`input[value="${uniqueName}"]`)).toHaveCount(0);

@@ -3,6 +3,7 @@
 import type { Performance } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
 import type { BlockLayout } from "@/lib/time";
+import { ThumbsUp } from "@/components/icons";
 
 interface PerformanceBlockProps {
   performance: Performance;
@@ -30,6 +31,9 @@ export function PerformanceBlock({ performance, layout, alternate, starred, onTo
       <span className="flex items-start justify-between gap-1">
         <span className="text-sm leading-tight font-medium text-zinc-100 sm:text-base">
           {performance.artistName}
+          {performance.recommended && (
+            <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
+          )}
         </span>
         <span
           aria-hidden

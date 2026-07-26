@@ -81,6 +81,16 @@ export function PerformanceForm({ stages, performance, defaultDate }: Performanc
         className={inputClass}
       />
 
+      <label className="flex items-center justify-center" title="bolachas recommends">
+        <input
+          type="checkbox"
+          name="recommended"
+          value="true"
+          defaultChecked={performance?.recommended ?? false}
+          className="h-4 w-4 accent-accent"
+        />
+      </label>
+
       <div className="flex gap-1">
         <button
           type="submit"

@@ -21,6 +21,7 @@ const performances: Performance[] = [
     startTime: lisbon("2026-08-13T19:40:00"),
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
+    recommended: false,
     stageId: "vodafone",
   },
   {
@@ -30,6 +31,7 @@ const performances: Performance[] = [
     startTime: lisbon("2026-08-13T20:40:00"),
     endTime: lisbon("2026-08-13T21:40:00"),
     notes: null,
+    recommended: true,
     stageId: "palco2",
   },
 ];
@@ -60,6 +62,19 @@ describe("StageGrid", () => {
 
     await user.click(screen.getByRole("button", { name: /Cass McCombs/ }));
     expect(onToggleStar).toHaveBeenCalledWith("p1");
+  });
+
+  it("shows the bolachas-recommends marker only on recommended performances", () => {
+    render(
+      <StageGrid stages={stages} performances={performances} isStarred={() => false} onToggleStar={() => {}} />,
+    );
+
+    // Perfume Genius is recommended (fixture), Cass McCombs is not. The marker
+    // is an aria-hidden SVG, so assert on the DOM within each act's button.
+    const recommended = screen.getByRole("button", { name: /Perfume Genius/ });
+    const notRecommended = screen.getByRole("button", { name: /Cass McCombs/ });
+    expect(recommended.querySelector("svg")).toBeInTheDocument();
+    expect(notRecommended.querySelector("svg")).not.toBeInTheDocument();
   });
 
   it("reflects starred state via aria-pressed", () => {

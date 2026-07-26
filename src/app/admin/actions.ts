@@ -45,6 +45,7 @@ const PerformanceInput = z.object({
   startTime: z.string().min(1, "Start time is required"),
   endTime: z.string().min(1, "End time is required"),
   notes: z.string().optional(),
+  recommended: z.boolean(),
 });
 
 export interface PerformanceFormState {
@@ -65,13 +66,15 @@ export async function upsertPerformanceAction(
     startTime: formData.get("startTime"),
     endTime: formData.get("endTime"),
     notes: formData.get("notes") || undefined,
+    // An unchecked checkbox submits nothing, so absence means false.
+    recommended: formData.get("recommended") === "true",
   });
 
   if (!parsed.success) {
     return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
   }
 
-  const { id, artistName, stageId, date, notes } = parsed.data;
+  const { id, artistName, stageId, date, notes, recommended } = parsed.data;
   const startTime = fromLisbonDatetimeLocalValue(parsed.data.startTime);
   const endTime = fromLisbonDatetimeLocalValue(parsed.data.endTime);
 
@@ -86,6 +89,7 @@ export async function upsertPerformanceAction(
     startTime,
     endTime,
     notes: notes || null,
+    recommended,
   };
 
   if (id) {

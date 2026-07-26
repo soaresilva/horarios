@@ -28,11 +28,12 @@ export default async function AdminDashboardPage() {
     startTime: p.startTime,
     endTime: p.endTime,
     notes: p.notes,
+    recommended: p.recommended,
     stageId: p.stageId,
   }));
 
   const days = uniqueSortedDates(performances);
-  const gridCols = "grid-cols-[1.3fr_110px_125px_150px_150px_1fr_auto]";
+  const gridCols = "grid-cols-[1.3fr_110px_125px_150px_150px_1fr_44px_auto]";
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 p-4 text-zinc-100">
@@ -63,18 +64,19 @@ export default async function AdminDashboardPage() {
             .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
           return (
-            <div key={day} className="min-w-[900px]">
+            <div key={day} className="min-w-[950px]">
               <h3 className="mb-1 text-sm font-medium text-zinc-300">
                 {weekday} {dayNum} <span className="text-zinc-600">({day})</span>
               </h3>
               <div className={`grid ${gridCols} items-center gap-x-2 gap-y-1`}>
-                <div className="grid grid-cols-subgrid col-span-7 pb-1 text-[10px] font-medium tracking-wide text-zinc-500 uppercase">
+                <div className="grid grid-cols-subgrid col-span-8 pb-1 text-[10px] font-medium tracking-wide text-zinc-500 uppercase">
                   <span>Artist</span>
                   <span>Stage</span>
                   <span>Day</span>
                   <span>Start</span>
                   <span>End</span>
                   <span>Notes</span>
+                  <span>Rec</span>
                   <span></span>
                 </div>
                 {dayPerformances.map((performance) => (
@@ -86,7 +88,7 @@ export default async function AdminDashboardPage() {
           );
         })}
 
-        <div className="min-w-[900px]">
+        <div className="min-w-[950px]">
           <h3 className="mb-1 text-sm font-medium text-zinc-300">Add a new day</h3>
           <div className={`grid ${gridCols} items-center gap-x-2 gap-y-1`}>
             <PerformanceForm stages={stages} />

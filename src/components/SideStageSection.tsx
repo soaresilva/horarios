@@ -2,6 +2,7 @@
 
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
+import { ThumbsUp } from "@/components/icons";
 
 interface SideStageSectionProps {
   stage: Stage;
@@ -38,7 +39,12 @@ export function SideStageSection({ stage, performances, isStarred, onToggleStar 
                   starred ? "bg-accent/20 ring-1 ring-accent" : "bg-zinc-800/60"
                 }`}
               >
-                <span className="text-sm font-medium text-zinc-100">{performance.artistName}</span>
+                <span className="text-sm font-medium text-zinc-100">
+                  {performance.artistName}
+                  {performance.recommended && (
+                    <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
+                  )}
+                </span>
                 <span className="flex items-center gap-2 text-xs text-zinc-400">
                   {formatClock(performance.startTime)}–{formatClock(performance.endTime)}
                   <span aria-hidden className={starred ? "text-accent" : "text-zinc-600"}>

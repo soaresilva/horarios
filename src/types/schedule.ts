@@ -17,6 +17,8 @@ export interface PerformanceDTO {
   startTime: string;
   endTime: string;
   notes: string | null;
+  /** Admin-curated "bolachas recommends" flag. Independent of a viewer's own starred favourites. */
+  recommended: boolean;
   stageId: string;
 }
 

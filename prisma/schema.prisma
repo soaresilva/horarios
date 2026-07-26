@@ -37,6 +37,11 @@ model Performance {
   startTime   DateTime @db.Timestamptz
   endTime     DateTime @db.Timestamptz
   notes       String?
+  // Admin-curated "bolachas recommends" flag, surfaced on the public page as
+  // a small blue thumbs-up after the artist name (see PerformanceBlock /
+  // SideStageSection). Distinct from a viewer's client-side "starred"
+  // favourites, which live in localStorage, never the DB.
+  recommended Boolean  @default(false)
   stageId     String
   stage       Stage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())

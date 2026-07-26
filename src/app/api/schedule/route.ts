@@ -27,6 +27,7 @@ export async function GET() {
     startTime: p.startTime.toISOString(),
     endTime: p.endTime.toISOString(),
     notes: p.notes,
+    recommended: p.recommended,
     stageId: p.stageId,
   }));
 
