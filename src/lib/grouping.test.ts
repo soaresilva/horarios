@@ -2,11 +2,12 @@ import { describe, expect, it } from "vitest";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "./grouping";
 
 const stages = [
-  { id: "vodafone", order: 0 },
-  { id: "palco2", order: 1 },
-  { id: "sobe-a-vila", order: 2 },
-  { id: "quarto-mundo", order: 3 },
-  { id: "jazz-na-relva", order: 4 },
+  { id: "vodafone", slug: "vodafone", order: 0 },
+  { id: "palco2", slug: "palco-2", order: 1 },
+  { id: "sobe-a-vila", slug: "sobe-a-vila", order: 2 },
+  { id: "quarto-mundo", slug: "quarto-mundo", order: 3 },
+  { id: "jazz-na-relva", slug: "jazz-na-relva", order: 4 },
+  { id: "xapas-lounge", slug: "xapas-lounge", order: 5 },
 ];
 
 describe("uniqueSortedDates", () => {
@@ -61,9 +62,20 @@ describe("mainStages / otherStages", () => {
     expect(mainStages(stages, performancesForDay).map((s) => s.id)).toEqual(["vodafone"]);
   });
 
-  it("never promotes a side-programme stage (order > 2) into the main grid", () => {
-    // Aug 10-11 shape: only Sobe à Vila + Quarto Mundo active. Sobe headlines
-    // the single main column; Quarto Mundo stays stacked, not paired with it.
+  it("pairs Sobe à Vila + Xapas Lounge on a pre-festival evening, with Quarto Mundo stacked on top", () => {
+    // Aug 10-11 shape: Quarto Mundo (daytime), Sobe à Vila + Xapas Lounge
+    // (simultaneous evening). Quarto never joins the grid; the two evening
+    // stages pair up even though Quarto's order sits between them.
+    const performancesForDay = [
+      { id: "1", date: "2026-08-10", stageId: "sobe-a-vila" },
+      { id: "2", date: "2026-08-10", stageId: "quarto-mundo" },
+      { id: "3", date: "2026-08-10", stageId: "xapas-lounge" },
+    ];
+    expect(mainStages(stages, performancesForDay).map((s) => s.id)).toEqual(["sobe-a-vila", "xapas-lounge"]);
+    expect(otherStages(stages, performancesForDay).map((s) => s.id)).toEqual(["quarto-mundo"]);
+  });
+
+  it("keeps Quarto Mundo on its own on a two-stage day, never paired into the grid", () => {
     const performancesForDay = [
       { id: "1", date: "2026-08-10", stageId: "sobe-a-vila" },
       { id: "2", date: "2026-08-10", stageId: "quarto-mundo" },
@@ -72,14 +84,19 @@ describe("mainStages / otherStages", () => {
     expect(otherStages(stages, performancesForDay).map((s) => s.id)).toEqual(["quarto-mundo"]);
   });
 
-  it("keeps Quarto Mundo and Jazz na Relva stacked on a main day, not in the Vodafone/COURA grid", () => {
+  it("keeps Quarto Mundo, Jazz na Relva and Xapas Lounge stacked (Quarto on top) on a main day", () => {
     const performancesForDay = [
       { id: "1", date: "2026-08-13", stageId: "vodafone" },
       { id: "2", date: "2026-08-13", stageId: "palco2" },
       { id: "3", date: "2026-08-13", stageId: "quarto-mundo" },
       { id: "4", date: "2026-08-13", stageId: "jazz-na-relva" },
+      { id: "5", date: "2026-08-13", stageId: "xapas-lounge" },
     ];
     expect(mainStages(stages, performancesForDay).map((s) => s.id)).toEqual(["vodafone", "palco2"]);
-    expect(otherStages(stages, performancesForDay).map((s) => s.id)).toEqual(["quarto-mundo", "jazz-na-relva"]);
+    expect(otherStages(stages, performancesForDay).map((s) => s.id)).toEqual([
+      "quarto-mundo",
+      "jazz-na-relva",
+      "xapas-lounge",
+    ]);
   });
 });

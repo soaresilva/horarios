@@ -50,10 +50,12 @@ interface Act {
   end: string;
 }
 
-// order 0-2 are the "big" stages that can headline the two-column main grid
-// (Vodafone/COURA on the main days, Sobe à Vila on the pre-festival days);
-// order >= 3 are side-programme stages that always render as their own
-// stacked single-column section (see MAIN_STAGE_MAX_ORDER in grouping.ts).
+// `order` sets both the main-grid pairing (the two lowest-order active,
+// grid-eligible stages pair side-by-side) and the top-to-bottom order of the
+// stacked side sections. Quarto Mundo (daytime) is always stacked regardless
+// of order — see ALWAYS_STACKED_SLUGS in grouping.ts. Its order 3 just puts it
+// at the top of the stack; the evening stages below it still pair up
+// (Vodafone+COURA on the main days, Sobe à Vila+Xapas Lounge on 10-11 Aug).
 const STAGES = [
   { slug: "vodafone", name: "Vodafone", order: 0 },
   { slug: "palco-2", name: "COURA", order: 1 },
