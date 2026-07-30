@@ -144,6 +144,32 @@ test("the public recommendations toggle hides the marker and persists across a r
   ]);
 });
 
+test("an early-afternoon 12:30-13:30 slot saves without a start/end error", async ({ page }) => {
+  await login(page);
+
+  const uniqueName = `E2E Afternoon Act ${Date.now()}`;
+  await page.fill('input[name="perf.new-blank.artistName"]', uniqueName);
+  await page.fill('input[name="perf.new-blank.date"]', "2026-08-13");
+  await page.selectOption('select[name="perf.new-blank.start"]', "12:30");
+  await page.selectOption('select[name="perf.new-blank.end"]', "13:30");
+  await Promise.all([
+    page.waitForLoadState("networkidle"),
+    page.getByRole("button", { name: "Save all changes" }).click(),
+  ]);
+
+  // The old <13:00 roll rule pushed 12:30 to the next day, tripping this
+  // error. It must save cleanly and appear as an existing row.
+  await expect(page.getByText("end time must be after start time.")).toHaveCount(0);
+  await expect(page.locator(`input[value="${uniqueName}"]`)).toBeVisible();
+
+  // Clean up.
+  page.once("dialog", (dialog) => dialog.accept());
+  await Promise.all([
+    page.waitForLoadState("networkidle"),
+    page.getByRole("button", { name: `Delete ${uniqueName}` }).click(),
+  ]);
+});
+
 test("logging out re-protects /admin", async ({ page }) => {
   await login(page);
   await Promise.all([page.waitForURL("**/admin/login"), page.click('button:has-text("Log out")')]);

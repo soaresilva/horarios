@@ -55,16 +55,24 @@ export function fromLisbonDatetimeLocalValue(value: string): Date {
   return new Date(`${value}:00+01:00`);
 }
 
+// Boundary hour between "the small hours of the next calendar day" (rolls)
+// and "the same calendar day" (doesn't). It sits inside the daily gap in the
+// programme — nothing is scheduled 05:00–15:00 — and is safely clear of the
+// ~04:40 latest set end. Set at 06:00 rather than up at 13:00 so the admin
+// can enter an early-afternoon slot (e.g. 12:30) without it silently rolling
+// onto the next day. Must stay in [05:00, 15:00) for real sets to resolve
+// correctly; `prisma/seed.ts` uses the same boundary.
+const FESTIVAL_DAY_ROLL_HOUR = 6;
+
 /**
  * Whether an "HH:MM" clock time belongs to the calendar day *after* its
- * festival-day label. Paredes de Coura's programme runs mid-afternoon into
- * the small hours (earliest ~15:00, latest ~04:40, nothing in between), so a
- * time before 13:00 unambiguously means "after midnight, next day". Same rule
- * `prisma/seed.ts` uses to place its seeded acts — kept identical here so the
- * admin panel's festival-day + time inputs resolve to the same instants.
+ * festival-day label — i.e. it falls in the small hours following that
+ * evening. Paredes de Coura's programme runs mid-afternoon into the small
+ * hours (earliest ~15:00, latest ~04:40), so a time before 06:00 means
+ * "after midnight, next day"; 06:00 onward is the same calendar day.
  */
 export function festivalTimeRolls(hhmm: string): boolean {
-  return Number(hhmm.split(":")[0]) < 13;
+  return Number(hhmm.split(":")[0]) < FESTIVAL_DAY_ROLL_HOUR;
 }
 
 /**

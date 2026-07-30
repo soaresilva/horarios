@@ -118,14 +118,17 @@ describe("Lisbon datetime-local round-trip", () => {
 });
 
 describe("festivalTimeRolls", () => {
-  it("treats pre-13:00 clock times as belonging to the next calendar day", () => {
+  it("treats small-hours clock times (before 06:00) as the next calendar day", () => {
     expect(festivalTimeRolls("00:05")).toBe(true);
     expect(festivalTimeRolls("02:00")).toBe(true);
-    expect(festivalTimeRolls("12:59")).toBe(true);
+    expect(festivalTimeRolls("05:59")).toBe(true);
   });
 
-  it("treats 13:00 and later as the same festival day", () => {
-    expect(festivalTimeRolls("13:00")).toBe(false);
+  it("treats 06:00 onward — including early afternoon — as the same festival day", () => {
+    expect(festivalTimeRolls("06:00")).toBe(false);
+    // Regression: an early-afternoon slot must not roll onto the next day.
+    expect(festivalTimeRolls("12:30")).toBe(false);
+    expect(festivalTimeRolls("13:30")).toBe(false);
     expect(festivalTimeRolls("15:00")).toBe(false);
     expect(festivalTimeRolls("23:30")).toBe(false);
   });
@@ -138,6 +141,16 @@ describe("fromFestivalDayTime", () => {
 
   it("rolls an after-midnight slot onto the next calendar day", () => {
     expect(fromFestivalDayTime("2026-08-12", "02:00").getTime()).toBe(lisbon("2026-08-13T02:00:00").getTime());
+  });
+
+  it("keeps an early-afternoon 12:30-13:30 set on its festival day, ordered", () => {
+    // Regression for the admin bug: 12:30 must not roll to the next day while
+    // 13:30 stays put, which had made end land before start.
+    const start = fromFestivalDayTime("2026-08-13", "12:30");
+    const end = fromFestivalDayTime("2026-08-13", "13:30");
+    expect(start.getTime()).toBe(lisbon("2026-08-13T12:30:00").getTime());
+    expect(end.getTime()).toBe(lisbon("2026-08-13T13:30:00").getTime());
+    expect(end.getTime()).toBeGreaterThan(start.getTime());
   });
 
   it("keeps a set that straddles midnight ordered (end after start)", () => {

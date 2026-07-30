@@ -35,10 +35,13 @@ function festivalDate(day: number) {
 
 // Every festival-day's schedule runs from mid-afternoon (earliest: Jazz na
 // Relva at 15:00) through the small hours (latest: ~04:40) — nothing falls
-// in between, so a clock hour before 13:00 unambiguously means "after
-// midnight, next calendar day" relative to the festival-day label.
+// in between, so a clock hour before 06:00 means "after midnight, next
+// calendar day" relative to the festival-day label. Same boundary as
+// `festivalTimeRolls` in src/lib/time.ts (kept at 06:00 rather than 13:00 so
+// the admin can enter early-afternoon slots); identical output for every
+// seeded time, which all fall outside 06:00–15:00.
 function rolls(hhmm: string): boolean {
-  return Number(hhmm.split(":")[0]) < 13;
+  return Number(hhmm.split(":")[0]) < 6;
 }
 
 interface Act {
