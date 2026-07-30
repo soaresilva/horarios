@@ -50,12 +50,17 @@ interface Act {
   end: string;
 }
 
+// order 0-2 are the "big" stages that can headline the two-column main grid
+// (Vodafone/COURA on the main days, Sobe à Vila on the pre-festival days);
+// order >= 3 are side-programme stages that always render as their own
+// stacked single-column section (see MAIN_STAGE_MAX_ORDER in grouping.ts).
 const STAGES = [
   { slug: "vodafone", name: "Vodafone", order: 0 },
   { slug: "palco-2", name: "COURA", order: 1 },
   { slug: "sobe-a-vila", name: "Sobe à Vila", order: 2 },
-  { slug: "jazz-na-relva", name: "Jazz na Relva by Pleno", order: 3 },
-  { slug: "xapas-lounge", name: "Xapas Lounge", order: 4 },
+  { slug: "quarto-mundo", name: "Quarto Mundo Sessions by Cabriz", order: 3 },
+  { slug: "jazz-na-relva", name: "Jazz na Relva by Pleno", order: 4 },
+  { slug: "xapas-lounge", name: "Xapas Lounge", order: 5 },
 ] as const;
 
 // day -> stageSlug -> acts, sorted by start time.
@@ -81,6 +86,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Joana Alegre", start: "15:00", end: "15:45" },
       { artist: "Janeiro", start: "16:00", end: "16:45" },
     ],
+    "quarto-mundo": [{ artist: "Quarto Mundo", start: "11:00", end: "15:00" }],
   },
   13: {
     vodafone: [
@@ -104,6 +110,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Salvador Sobral e André Santos", start: "16:00", end: "16:45" },
     ],
     "xapas-lounge": [{ artist: "GPSS", start: "15:00", end: "15:45" }],
+    "quarto-mundo": [{ artist: "Sounzstore", start: "11:00", end: "15:00" }],
   },
   14: {
     vodafone: [
@@ -126,6 +133,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Plaka", start: "15:00", end: "15:45" },
       { artist: "Maria Luiza Jobim", start: "16:00", end: "16:45" },
     ],
+    "quarto-mundo": [{ artist: "Quarto Mundo", start: "11:00", end: "15:00" }],
   },
   15: {
     vodafone: [
@@ -148,6 +156,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Rita Cortezão", start: "15:00", end: "15:45" },
       { artist: "Asa Cobra", start: "16:00", end: "16:45" },
     ],
+    "quarto-mundo": [{ artist: "Trol2000", start: "11:00", end: "15:00" }],
   },
   9: {
     "sobe-a-vila": [
@@ -163,6 +172,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Sofia Araújo", start: "00:00", end: "00:45" },
       { artist: "Francisco AP", start: "01:30", end: "03:00" },
     ],
+    "quarto-mundo": [{ artist: "Quarto Mundo", start: "11:00", end: "15:00" }],
   },
   11: {
     "sobe-a-vila": [
@@ -170,6 +180,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "La Familia Gitana", start: "23:30", end: "00:15" },
       { artist: "Halfpipe Records", start: "00:30", end: "02:00" },
     ],
+    "quarto-mundo": [{ artist: "James Keating", start: "11:00", end: "15:00" }],
   },
 };
 
