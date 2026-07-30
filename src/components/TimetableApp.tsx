@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
+import { InstallBanner } from "@/components/InstallBanner";
 import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
@@ -61,6 +62,8 @@ export function TimetableApp() {
           <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
         </div>
       </header>
+
+      <InstallBanner />
 
       <p className="px-3 pb-1 pt-1 text-[10px] leading-snug text-zinc-600">
         Stage times are not known yet, and end times are estimated since they are not officially revealed.
