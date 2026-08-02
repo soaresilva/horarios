@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { logoutAction } from "@/app/admin/actions";
-import { ScheduleEditor } from "@/components/admin/ScheduleEditor";
+import { AdminScheduleShell } from "@/components/admin/AdminScheduleShell";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 import type { Performance, Stage } from "@/lib/schedule-client";
@@ -47,7 +47,7 @@ export default async function AdminDashboardPage() {
         </form>
       </header>
 
-      <ScheduleEditor key={editorKey} stages={stages} performances={performances} />
+      <AdminScheduleShell editorKey={editorKey} stages={stages} performances={performances} />
     </div>
   );
 }

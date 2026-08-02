@@ -170,6 +170,52 @@ test("an early-afternoon 12:30-13:30 slot saves without a start/end error", asyn
   ]);
 });
 
+test("ticking recommended on two different rows in one save shows Saved and persists both", async ({ page }) => {
+  await login(page);
+
+  const nameA = `E2E Multi A ${Date.now()}`;
+  const nameB = `E2E Multi B ${Date.now()}`;
+
+  // Two different days' add-rows, both recommended, saved together: the
+  // "tick more than one box at a time" scenario. A save bumps every row's
+  // updatedAt, which remounts the whole editor once the save resolves — that
+  // remount used to also wipe the "Saved." confirmation before it could ever
+  // render, even though the save itself succeeded.
+  await page.fill('input[name="perf.new-2026-08-12.artistName"]', nameA);
+  await page.selectOption('select[name="perf.new-2026-08-12.start"]', "14:00");
+  await page.selectOption('select[name="perf.new-2026-08-12.end"]', "14:30");
+  await page.check('input[name="perf.new-2026-08-12.recommended"]');
+
+  await page.fill('input[name="perf.new-2026-08-13.artistName"]', nameB);
+  await page.selectOption('select[name="perf.new-2026-08-13.start"]', "15:00");
+  await page.selectOption('select[name="perf.new-2026-08-13.end"]', "15:30");
+  await page.check('input[name="perf.new-2026-08-13.recommended"]');
+
+  await page.getByRole("button", { name: "Save all changes" }).click();
+  await expect(page.getByText("Saved.")).toBeVisible({ timeout: 10_000 });
+
+  await page.reload();
+  await page.waitForLoadState("networkidle");
+
+  const artistInputA = page.locator(`input[value="${nameA}"]`);
+  const artistInputB = page.locator(`input[value="${nameB}"]`);
+  await expect(artistInputA).toBeVisible();
+  await expect(artistInputB).toBeVisible();
+
+  const checkboxA = artistInputA.locator("xpath=following-sibling::label[1]/input[@type='checkbox']");
+  const checkboxB = artistInputB.locator("xpath=following-sibling::label[1]/input[@type='checkbox']");
+  await expect(checkboxA).toBeChecked();
+  await expect(checkboxB).toBeChecked();
+
+  for (const name of [nameA, nameB]) {
+    page.once("dialog", (dialog) => dialog.accept());
+    await Promise.all([
+      page.waitForLoadState("networkidle"),
+      page.getByRole("button", { name: `Delete ${name}` }).click(),
+    ]);
+  }
+});
+
 test("logging out re-protects /admin", async ({ page }) => {
   await login(page);
   await Promise.all([page.waitForURL("**/admin/login"), page.click('button:has-text("Log out")')]);

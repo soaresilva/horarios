@@ -126,10 +126,22 @@ function HeaderRow() {
 interface ScheduleEditorProps {
   stages: Stage[];
   performances: Performance[];
+  // Called with the save result right after it resolves. A save bumps every
+  // row's updatedAt, which changes the parent's editorKey and remounts this
+  // component — so any confirmation kept in this component's own state can
+  // be destroyed before it ever paints. Bubbling the result up to a stable
+  // parent (AdminScheduleShell) is what makes the confirmation reliable.
+  onSaved?: (state: SaveScheduleState) => void;
 }
 
-export function ScheduleEditor({ stages, performances }: ScheduleEditorProps) {
-  const [state, action, pending] = useActionState(saveScheduleAction, initialState);
+export function ScheduleEditor({ stages, performances, onSaved }: ScheduleEditorProps) {
+  async function saveAndReport(prevState: SaveScheduleState, formData: FormData) {
+    const result = await saveScheduleAction(prevState, formData);
+    onSaved?.(result);
+    return result;
+  }
+
+  const [, action, pending] = useActionState(saveAndReport, initialState);
   const [isDeleting, startDelete] = useTransition();
 
   const days = uniqueSortedDates(performances);
@@ -220,8 +232,6 @@ export function ScheduleEditor({ stages, performances }: ScheduleEditorProps) {
         >
           {pending ? "Saving…" : "Save all changes"}
         </button>
-        {state.error && <span className="text-xs text-red-400">{state.error}</span>}
-        {state.saved && !state.error && <span className="text-xs text-emerald-400">Saved.</span>}
       </div>
     </form>
   );
