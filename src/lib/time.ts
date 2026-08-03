@@ -62,6 +62,14 @@ export function fromLisbonDatetimeLocalValue(value: string): Date {
 // can enter an early-afternoon slot (e.g. 12:30) without it silently rolling
 // onto the next day. Must stay in [05:00, 15:00) for real sets to resolve
 // correctly; `prisma/seed.ts` uses the same boundary.
+//
+// One known exception: 16 Aug's Dupplo set (04:20-06:15) straddles this
+// boundary mid-act, so re-entering its start time through this heuristic
+// (e.g. editing it in /admin) rolls 04:20 onto the 17th while leaving 06:15
+// on the 16th, and the save fails the "end time must be after start time"
+// check in actions.ts — loud, not silent corruption. That row's DB values
+// were set directly via a data migration instead. Not fixing the boundary
+// itself for this one bonus-day edge case.
 const FESTIVAL_DAY_ROLL_HOUR = 6;
 
 /**

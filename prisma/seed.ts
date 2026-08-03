@@ -48,6 +48,13 @@ interface Act {
   artist: string;
   start: string;
   end: string;
+  // Override the computed rolls() result for this endpoint. Needed only for
+  // 16 Aug's Dupplo set (04:20-06:15), which straddles the 06:00 boundary
+  // that every other day's programme stays clear of (see the comment above
+  // `rolls()`) — without this, the heuristic would push its 04:20 start onto
+  // the 17th while leaving 06:15 on the 16th, making end < start.
+  startRolls?: boolean;
+  endRolls?: boolean;
 }
 
 // `order` sets both the main-grid pairing (the two lowest-order active,
@@ -184,6 +191,16 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
     ],
     "quarto-mundo": [{ artist: "James Keating", start: "11:00", end: "15:00" }],
   },
+  // Bonus afterparty day, confirmed by Diogo. All three acts on Jazz na
+  // Relva; "Quarto Mundo" here is just the 15:00-17:00 act's name, not the
+  // separate Quarto Mundo Sessions stage.
+  16: {
+    "jazz-na-relva": [
+      { artist: "Dupplo", start: "04:20", end: "06:15", startRolls: false },
+      { artist: "Armanda", start: "06:15", end: "08:00" },
+      { artist: "Quarto Mundo", start: "15:00", end: "17:00" },
+    ],
+  },
 };
 
 async function main() {
@@ -211,8 +228,8 @@ async function main() {
           data: {
             artistName: act.artist,
             date,
-            startTime: at(day, act.start, rolls(act.start)),
-            endTime: at(day, act.end, rolls(act.end)),
+            startTime: at(day, act.start, act.startRolls ?? rolls(act.start)),
+            endTime: at(day, act.end, act.endRolls ?? rolls(act.end)),
             stageId: stageIds[stageSlug],
           },
         });
