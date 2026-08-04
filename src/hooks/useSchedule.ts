@@ -10,6 +10,11 @@ export interface UseScheduleResult {
   reload: () => void;
 }
 
+// How often to silently re-fetch while the tab is visible. Bounds how stale
+// an already-open tab's data can get between an admin edit and it showing
+// up, without hammering the API from every device open during the festival.
+const POLL_INTERVAL_MS = 60_000;
+
 export function useSchedule(): UseScheduleResult {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,6 +46,27 @@ export function useSchedule(): UseScheduleResult {
     // doesn't justify the dependency (see CLAUDE.md: vanilla by default).
     // eslint-disable-next-line react-hooks/set-state-in-effect
     load();
+  }, [load]);
+
+  // A PWA opened from the home screen is typically suspended, not fully
+  // reloaded, when backgrounded — so the mount-only fetch above can go
+  // hours without re-firing even while the schedule changes underneath it
+  // (an edit saved via /admin). Re-fetch whenever the tab regains focus or
+  // visibility, and poll on an interval while it stays visible, so an edit
+  // shows up within a bounded time instead of only on a hard reload.
+  useEffect(() => {
+    const refetchIfVisible = () => {
+      if (document.visibilityState === "visible") load();
+    };
+    document.addEventListener("visibilitychange", refetchIfVisible);
+    window.addEventListener("focus", refetchIfVisible);
+    const interval = setInterval(refetchIfVisible, POLL_INTERVAL_MS);
+
+    return () => {
+      document.removeEventListener("visibilitychange", refetchIfVisible);
+      window.removeEventListener("focus", refetchIfVisible);
+      clearInterval(interval);
+    };
   }, [load]);
 
   return { schedule, loading, error, reload: load };
