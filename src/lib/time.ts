@@ -64,12 +64,16 @@ export function fromLisbonDatetimeLocalValue(value: string): Date {
 // correctly; `prisma/seed.ts` uses the same boundary.
 //
 // One known exception: 16 Aug's Dupplo set (04:20-06:15) straddles this
-// boundary mid-act, so re-entering its start time through this heuristic
-// (e.g. editing it in /admin) rolls 04:20 onto the 17th while leaving 06:15
-// on the 16th, and the save fails the "end time must be after start time"
-// check in actions.ts — loud, not silent corruption. That row's DB values
-// were set directly via a data migration instead. Not fixing the boundary
-// itself for this one bonus-day edge case.
+// boundary mid-act, so re-deriving its start time through this heuristic
+// rolls 04:20 onto the 17th while leaving 06:15 on the 16th, which would
+// fail the "end time must be after start time" check in actions.ts. That
+// row's DB values were set directly via a data migration instead of through
+// this heuristic. actions.ts's buildPerformanceData() reuses a row's
+// existing startTime/endTime whenever the submitted date/start/end
+// round-trip to what's already stored, so this only bites if the admin
+// actually edits Dupplo's own start or end time in /admin — it no longer
+// blocks saving unrelated rows. Not fixing the boundary itself for this one
+// bonus-day edge case.
 const FESTIVAL_DAY_ROLL_HOUR = 6;
 
 /**

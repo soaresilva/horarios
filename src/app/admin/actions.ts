@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createSession, deleteSession, requireSession } from "@/lib/session";
-import { fromFestivalDayTime } from "@/lib/time";
+import { buildPerformanceData, rowUnchanged } from "@/lib/admin-performance";
 
 export interface LoginState {
   error?: string;
@@ -38,19 +38,6 @@ export async function logoutAction(): Promise<void> {
   redirect("/admin/login");
 }
 
-// One "HH:MM" time picker per start/end plus a festival-day label, resolved
-// into instants server-side (see fromFestivalDayTime). Notes and the
-// recommended checkbox are optional; an unchecked box submits nothing.
-const RowInput = z.object({
-  artistName: z.string().trim().min(1, "artist name is required"),
-  stageId: z.string().min(1, "a stage is required"),
-  date: z.string().min(1, "a festival day is required"),
-  start: z.string().min(1, "a start time is required"),
-  end: z.string().min(1, "an end time is required"),
-  notes: z.string().optional(),
-  recommended: z.boolean(),
-});
-
 const StageRowInput = z.object({
   name: z.string().trim().min(1, "Stage name is required"),
   order: z.coerce.number().int("Stage order must be a whole number"),
@@ -77,37 +64,6 @@ function readRow(formData: FormData, key: string) {
   };
 }
 
-// Validate one row into a Prisma create/update `data` object, or return an
-// error string tagged with the artist name so the admin knows which row.
-function buildPerformanceData(
-  raw: ReturnType<typeof readRow>,
-): { data: Parameters<typeof prisma.performance.create>[0]["data"] } | { error: string } {
-  const parsed = RowInput.safeParse(raw);
-  const label = raw.artistName.trim() || "New performance";
-  if (!parsed.success) {
-    return { error: `${label}: ${parsed.error.issues[0]?.message ?? "invalid input"}` };
-  }
-
-  const { artistName, stageId, date, start, end, notes, recommended } = parsed.data;
-  const startTime = fromFestivalDayTime(date, start);
-  const endTime = fromFestivalDayTime(date, end);
-  if (endTime.getTime() <= startTime.getTime()) {
-    return { error: `${label}: end time must be after start time.` };
-  }
-
-  return {
-    data: {
-      artistName,
-      stageId,
-      date: new Date(`${date}T00:00:00Z`),
-      startTime,
-      endTime,
-      notes: notes || null,
-      recommended,
-    },
-  };
-}
-
 // Saves the whole admin panel in one shot: every existing performance and
 // stage row is updated, every add row with an artist name is created, all in
 // a single transaction so a validation error anywhere saves nothing.
@@ -120,6 +76,9 @@ export async function saveScheduleAction(
   const existingIds = String(formData.get("existingIds") ?? "").split(",").filter(Boolean);
   const newKeys = String(formData.get("newKeys") ?? "").split(",").filter(Boolean);
   const stageIds = String(formData.get("stageIds") ?? "").split(",").filter(Boolean);
+
+  const existingRows = await prisma.performance.findMany({ where: { id: { in: existingIds } } });
+  const existingById = new Map(existingRows.map((p) => [p.id, p]));
 
   const ops: Prisma.PrismaPromise<unknown>[] = [];
 
@@ -135,7 +94,14 @@ export async function saveScheduleAction(
   }
 
   for (const id of existingIds) {
-    const built = buildPerformanceData(readRow(formData, id));
+    const raw = readRow(formData, id);
+    const current = existingById.get(id);
+    // Fully untouched row (common — the form resubmits every loaded row on
+    // every save): skip it entirely rather than round-tripping it through
+    // validation, so an unrelated edit elsewhere can never be blocked by a
+    // row the admin didn't touch.
+    if (current && rowUnchanged(raw, current)) continue;
+    const built = buildPerformanceData(raw, current);
     if ("error" in built) return { error: built.error };
     ops.push(prisma.performance.update({ where: { id }, data: built.data }));
   }
