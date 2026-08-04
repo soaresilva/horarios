@@ -135,7 +135,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
     "palco-2": [
       { artist: "Noko Woi", start: "16:15", end: "16:55" },
       { artist: "Strawberry Guy", start: "17:55", end: "18:40" },
-      { artist: "Ryan Davis & The Roadhouse Band", start: "19:55", end: "20:40" },
+      { artist: "Ryan Davis and the Roadhouse Band", start: "19:55", end: "20:40" },
       { artist: "Terraplana", start: "21:55", end: "22:45" },
       { artist: "Vendredi Sur Mer", start: "00:00", end: "01:00" },
       { artist: "Maruja", start: "02:00", end: "03:25" },
@@ -149,7 +149,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
   },
   15: {
     vodafone: [
-      { artist: "Patrick Watson Solo Piano", start: "17:10", end: "18:10" },
+      { artist: "Patrick Watson", start: "17:10", end: "18:10" },
       { artist: "Cate Le Bon", start: "18:55", end: "19:55" },
       { artist: "Meute", start: "20:45", end: "21:45" },
       { artist: "Thundercat", start: "22:45", end: "23:45" },
