@@ -24,7 +24,7 @@ export function performancesForDate<T extends PerformanceLike>(performances: T[]
 // running. Quarto Mundo Sessions is an 11:00-15:00 daytime programme that
 // doesn't overlap the evening stages, so pairing it into a shared-timeline
 // grid just leaves big empty gaps. Every other stage is grid-eligible, so the
-// two lowest-order active ones still pair up (Vodafone+COURA on the main days,
+// two lowest-order active ones still pair up (Vodafone+Coura Sem Paredes on the main days,
 // Sobe à Vila+Xapas Lounge on the pre-festival evenings).
 const ALWAYS_STACKED_SLUGS = new Set<string>(["quarto-mundo"]);
 

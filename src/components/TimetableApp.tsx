@@ -66,7 +66,7 @@ export function TimetableApp() {
       <InstallBanner />
 
       <p className="px-3 pb-1 pt-1 text-[10px] leading-snug text-zinc-600">
-        Stage times are not known yet, and end times are estimated since they are not officially revealed.
+        End times are estimated since they are not officially revealed.
       </p>
 
       <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">

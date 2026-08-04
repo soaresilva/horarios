@@ -1,13 +1,16 @@
 import { prisma } from "../src/lib/prisma";
 
 // Real confirmed schedule, sourced from Diogo directly:
-// - Aug 12-15 (Vodafone / COURA / Jazz na Relva / Xapas Lounge): extracted
-//   from his working spreadsheet (BolachasPdC26.xlsx, per-day sheets "12
-//   Ago".."15 Ago"), which gives each act's actual start time and a
-//   merge-derived duration. Two acts had a merge-derived end that slightly
-//   overran the next act's start on the same stage (Getdown Services/
-//   Miramar on the 12th by 5min, Tomode/Milhanas on the 13th by 15min) —
-//   capped at the next act's start rather than guessed away.
+// - Aug 12-15 Vodafone / Coura Sem Paredes: officially revealed per-stage
+//   lineup (start times only, no durations published). Vodafone and Coura
+//   Sem Paredes strictly alternate all four nights — merging both stages'
+//   starts chronologically shows zero overlap — so each act's end time is
+//   guessed as the next act's start time, on either stage, whichever comes
+//   first. Each night's final act (no following act) gets a flat +75min
+//   guess, matching the closing-set lengths already used elsewhere in this
+//   lineup (Bassvictim/Marie Davidson DJ Set/Amyl and the Sniffers were all
+//   guessed at 75-90min previously). Superseded a pre-reveal guessed lineup
+//   that had different stage assignments for several acts.
 // - Aug 9-11 (Sobe à Vila) and the Jazz na Relva / Xapas Lounge times: given
 //   directly as confirmed lineup images. Duration isn't published for these
 //   smaller stages, so each act is a flat 45min, except the last act of
@@ -62,10 +65,10 @@ interface Act {
 // stacked side sections. Quarto Mundo (daytime) is always stacked regardless
 // of order — see ALWAYS_STACKED_SLUGS in grouping.ts. Its order 3 just puts it
 // at the top of the stack; the evening stages below it still pair up
-// (Vodafone+COURA on the main days, Sobe à Vila+Xapas Lounge on 10-11 Aug).
+// (Vodafone+Coura Sem Paredes on the main days, Sobe à Vila+Xapas Lounge on 10-11 Aug).
 const STAGES = [
   { slug: "vodafone", name: "Vodafone", order: 0 },
-  { slug: "palco-2", name: "COURA", order: 1 },
+  { slug: "palco-2", name: "Coura Sem Paredes", order: 1 },
   { slug: "sobe-a-vila", name: "Sobe à Vila", order: 2 },
   { slug: "quarto-mundo", name: "Quarto Mundo Sessions by Cabriz", order: 3 },
   { slug: "jazz-na-relva", name: "Jazz na Relva by Pleno", order: 4 },
@@ -76,20 +79,20 @@ const STAGES = [
 const SCHEDULE: Record<number, Record<string, Act[]>> = {
   12: {
     vodafone: [
-      { artist: "Capitão Fausto", start: "17:15", end: "18:15" },
-      { artist: "CMAT", start: "18:40", end: "19:40" },
-      { artist: "The Horrors", start: "20:40", end: "21:40" },
-      { artist: "Wet Leg", start: "22:25", end: "23:25" },
-      { artist: "Kneecap", start: "00:20", end: "01:50" },
+      { artist: "Westside Cowboy", start: "17:25", end: "18:25" },
+      { artist: "First Breath After Coma + Salvador Sobral", start: "19:15", end: "20:15" },
+      { artist: "CMAT", start: "21:00", end: "22:05" },
+      { artist: "Wet Leg", start: "23:05", end: "00:20" },
+      { artist: "Kneecap", start: "01:25", end: "02:40" },
     ],
     "palco-2": [
-      { artist: "University", start: "16:30", end: "17:15" },
-      { artist: "Westside Cowboy", start: "18:00", end: "19:00" },
-      { artist: "Greg Freeman", start: "19:40", end: "20:40" },
-      { artist: "Horsegirl", start: "21:40", end: "22:40" },
-      { artist: "First Breath After Coma + Salvador Sobral", start: "23:35", end: "00:35" },
-      { artist: "Getdown Services", start: "01:50", end: "02:45" },
-      { artist: "Miramar", start: "02:45", end: "04:30" },
+      { artist: "Miramar", start: "16:45", end: "17:25" },
+      { artist: "Greg Freeman", start: "18:25", end: "19:15" },
+      { artist: "Horsegirl", start: "20:15", end: "21:00" },
+      { artist: "Capitão Fausto", start: "22:05", end: "23:05" },
+      { artist: "The Horrors", start: "00:20", end: "01:25" },
+      { artist: "Getdown Services", start: "02:40", end: "04:00" },
+      { artist: "University", start: "04:00", end: "05:15" },
     ],
     "jazz-na-relva": [
       { artist: "Joana Alegre", start: "15:00", end: "15:45" },
@@ -99,20 +102,20 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
   },
   13: {
     vodafone: [
-      { artist: "A Garota Não", start: "17:10", end: "18:10" },
-      { artist: "Aldous Harding", start: "18:40", end: "19:40" },
-      { artist: "Hermanos Gutiérrez", start: "20:40", end: "21:55" },
-      { artist: "Kurt Vile & The Violators", start: "22:40", end: "23:40" },
-      { artist: "Underworld", start: "00:35", end: "01:50" },
+      { artist: "A Garota Não", start: "17:10", end: "18:00" },
+      { artist: "Aldous Harding", start: "19:00", end: "20:00" },
+      { artist: "Kurt Vile & The Violators", start: "21:00", end: "22:15" },
+      { artist: "Hermanos Gutiérrez", start: "23:15", end: "00:30" },
+      { artist: "Underworld", start: "01:30", end: "02:45" },
     ],
     "palco-2": [
-      { artist: "Tomode", start: "17:30", end: "18:00" },
-      { artist: "Milhanas", start: "18:00", end: "19:00" },
-      { artist: "Pale Jay", start: "19:40", end: "20:40" },
-      { artist: "Friko", start: "21:40", end: "22:40" },
-      { artist: "Wu Lyf", start: "23:40", end: "00:40" },
-      { artist: "Show Me The Body", start: "01:50", end: "02:50" },
-      { artist: "Bassvictim", start: "03:00", end: "04:30" },
+      { artist: "Milhanas", start: "16:30", end: "17:10" },
+      { artist: "Tomode", start: "18:00", end: "19:00" },
+      { artist: "Friko", start: "20:00", end: "21:00" },
+      { artist: "Pale Jay", start: "22:15", end: "23:15" },
+      { artist: "Wu Lyf", start: "00:30", end: "01:30" },
+      { artist: "Show Me The Body", start: "02:45", end: "03:45" },
+      { artist: "Bassvictim", start: "03:45", end: "05:00" },
     ],
     "jazz-na-relva": [
       { artist: "Miguel Marôco", start: "15:00", end: "15:45" },
@@ -123,20 +126,20 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
   },
   14: {
     vodafone: [
-      { artist: "Carolina Durante", start: "17:10", end: "18:10" },
-      { artist: "Sérgio & Os Assessores Com Amigos", start: "18:50", end: "19:50" },
-      { artist: "Benjamin Clementine", start: "20:45", end: "21:45" },
-      { artist: "Bloc Party", start: "22:35", end: "23:50" },
-      { artist: "M.I.A.", start: "00:35", end: "01:50" },
+      { artist: "Carolina Durante", start: "16:55", end: "17:55" },
+      { artist: "Sérgio & Os Assessores Com Amigos", start: "18:40", end: "19:55" },
+      { artist: "Benjamin Clementine", start: "20:40", end: "21:55" },
+      { artist: "Bloc Party", start: "22:45", end: "00:00" },
+      { artist: "M.I.A.", start: "01:00", end: "02:00" },
     ],
     "palco-2": [
-      { artist: "Noko Woi", start: "16:30", end: "17:15" },
-      { artist: "Terraplana", start: "18:00", end: "19:00" },
-      { artist: "Strawberry Guy", start: "19:50", end: "20:50" },
-      { artist: "Ryan Davis & The Roadhouse Band", start: "21:50", end: "22:50" },
-      { artist: "Vendredi Sur Mer", start: "23:50", end: "00:50" },
-      { artist: "Maruja", start: "01:35", end: "02:35" },
-      { artist: "Joy Orbison", start: "02:45", end: "04:30" },
+      { artist: "Noko Woi", start: "16:15", end: "16:55" },
+      { artist: "Strawberry Guy", start: "17:55", end: "18:40" },
+      { artist: "Ryan Davis & The Roadhouse Band", start: "19:55", end: "20:40" },
+      { artist: "Terraplana", start: "21:55", end: "22:45" },
+      { artist: "Vendredi Sur Mer", start: "00:00", end: "01:00" },
+      { artist: "Maruja", start: "02:00", end: "03:25" },
+      { artist: "Joy Orbison", start: "03:25", end: "04:40" },
     ],
     "jazz-na-relva": [
       { artist: "Plaka", start: "15:00", end: "15:45" },
@@ -148,18 +151,18 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
     vodafone: [
       { artist: "Patrick Watson Solo Piano", start: "17:10", end: "18:10" },
       { artist: "Cate Le Bon", start: "18:55", end: "19:55" },
-      { artist: "Meute", start: "20:40", end: "21:55" },
-      { artist: "Thundercat", start: "22:45", end: "00:00" },
-      { artist: "Amyl and the Sniffers", start: "01:00", end: "02:15" },
+      { artist: "Meute", start: "20:45", end: "21:45" },
+      { artist: "Thundercat", start: "22:45", end: "23:45" },
+      { artist: "Amyl and the Sniffers", start: "00:35", end: "01:35" },
     ],
     "palco-2": [
-      { artist: "Hudson Freeman", start: "16:30", end: "17:15" },
-      { artist: "Sophia Stel", start: "18:10", end: "19:10" },
-      { artist: "Noiserv", start: "19:55", end: "20:55" },
+      { artist: "Noiserv", start: "16:30", end: "17:10" },
+      { artist: "Hudson Freeman", start: "18:10", end: "18:55" },
+      { artist: "Sophia Stel", start: "19:55", end: "20:45" },
       { artist: "Julia Mestre", start: "21:45", end: "22:45" },
-      { artist: "Prostitute", start: "00:00", end: "01:00" },
-      { artist: "Dame Area", start: "02:20", end: "03:20" },
-      { artist: "Marie Davidson DJ Set", start: "03:25", end: "04:40" },
+      { artist: "Prostitute", start: "23:45", end: "00:35" },
+      { artist: "Dame Area", start: "01:35", end: "02:50" },
+      { artist: "Marie Davidson DJ Set", start: "02:50", end: "04:05" },
     ],
     "jazz-na-relva": [
       { artist: "Rita Cortezão", start: "15:00", end: "15:45" },
