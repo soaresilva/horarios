@@ -67,6 +67,25 @@ export function TimetableApp() {
 
       <p className="px-3 pb-1 pt-1 text-[10px] leading-snug text-zinc-600">
         End times are estimated since they are not officially revealed.
+        <br />
+        Download printable timetables:{" "}
+        <a
+          href="/files/pdc26.xlsx"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-zinc-400"
+        >
+          xls
+        </a>
+        /
+        <a
+          href="/files/pdc26.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-zinc-400"
+        >
+          pdf
+        </a>
       </p>
 
       <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
