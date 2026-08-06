@@ -26,7 +26,9 @@ export function SideStageSection({ stage, performances, isStarred, onToggleStar 
 
   return (
     <div className="mb-1">
-      <div className="sticky top-0 z-20 bg-background/95 px-3 py-2 backdrop-blur-sm">
+      {/* will-change-transform: see the matching comment on the main-grid
+          sticky header in TimetableApp.tsx — same WebKit paint bug applies here. */}
+      <div className="sticky top-0 z-20 bg-background/95 px-3 py-2 backdrop-blur-sm will-change-transform">
         <span className="text-sm font-semibold text-zinc-200">{stage.name}</span>
       </div>
       <ul className="flex flex-col gap-1.5 px-3 pb-3">
