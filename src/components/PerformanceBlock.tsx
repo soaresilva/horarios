@@ -56,7 +56,7 @@ export function PerformanceBlock({
       </button>
 
       {/* Icon rail, layered above the button so link taps hit the link, not the toggle. */}
-      <div className="pointer-events-none absolute top-1 right-1 bottom-1 z-10 flex flex-col items-center gap-1">
+      <div className="pointer-events-none absolute top-1 right-1 bottom-1 z-10 flex flex-col items-center gap-2.5">
         <span
           aria-hidden
           className={`text-xs leading-none ${starred ? "text-accent" : "text-zinc-600"}`}
@@ -69,7 +69,7 @@ export function PerformanceBlock({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${performance.artistName} on Spotify`}
-            className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
+            className="pointer-events-auto p-1.5 text-zinc-500 transition-colors hover:text-accent"
           >
             <Spotify className="h-3.5 w-3.5" />
           </a>
@@ -80,7 +80,7 @@ export function PerformanceBlock({
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`${performance.artistName} on Instagram`}
-            className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
+            className="pointer-events-auto p-1.5 text-zinc-500 transition-colors hover:text-accent"
           >
             <Instagram className="h-3.5 w-3.5" />
           </a>

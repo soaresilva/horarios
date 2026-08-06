@@ -15,7 +15,7 @@ const LINKS = [
 
 export function SocialLinks() {
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex items-center gap-4">
       {LINKS.map((link) => (
         <a
           key={link.name}
@@ -23,7 +23,7 @@ export function SocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={link.name}
-          className="text-zinc-500 transition-colors hover:text-accent"
+          className="p-1.5 text-zinc-500 transition-colors hover:text-accent"
         >
           {link.icon}
         </a>
