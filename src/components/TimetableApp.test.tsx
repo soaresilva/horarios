@@ -70,3 +70,64 @@ describe("TimetableApp loading/error states", () => {
     expect(screen.queryByRole("button", { name: /refresh failed/i })).not.toBeInTheDocument();
   });
 });
+
+// The 10-11 Aug shape: two stages pair up in the main grid, so both of their
+// names have to appear in the sticky header above it.
+const pairedSchedule: Schedule = {
+  updatedAt: new Date("2026-08-10T18:00:00Z"),
+  stages: [
+    { id: "sobe-a-vila", name: "Sobe à Vila", slug: "sobe-a-vila", order: 2 },
+    { id: "xapas-lounge", name: "Xapas Lounge", slug: "xapas-lounge", order: 5 },
+  ],
+  performances: [
+    {
+      id: "p1",
+      artistName: "Alex Moon",
+      date: "2026-08-10",
+      startTime: new Date("2026-08-10T21:30:00Z"),
+      endTime: new Date("2026-08-10T23:00:00Z"),
+      notes: null,
+      recommended: false,
+      stageId: "sobe-a-vila",
+    },
+    {
+      id: "p2",
+      artistName: "Rufia Terno",
+      date: "2026-08-10",
+      startTime: new Date("2026-08-10T21:30:00Z"),
+      endTime: new Date("2026-08-11T03:00:00Z"),
+      notes: null,
+      recommended: false,
+      stageId: "xapas-lounge",
+    },
+  ],
+};
+
+describe("TimetableApp main-stage header", () => {
+  // Regression for a reported bug where "Xapas Lounge" was missing from the
+  // header until the visitor switched to another day and back.
+  it("labels every paired main stage, not just the first", () => {
+    mockUseSchedule.mockReturnValue({ schedule: pairedSchedule, loading: false, error: null, reload: vi.fn() });
+    render(<TimetableApp />);
+
+    expect(screen.getByText("Sobe à Vila")).toBeInTheDocument();
+    expect(screen.getByText("Xapas Lounge")).toBeInTheDocument();
+  });
+
+  // The blurred backdrop was what made Safari stutter while scrolling (it
+  // recomputes the backdrop every frame for a sticky element inside a
+  // scroll container) and what left the header text unpainted on first
+  // render. The background is opaque instead, so the blur buys nothing —
+  // if it comes back, both bugs come back with it.
+  it("keeps the sticky header opaque rather than backdrop-blurred", () => {
+    mockUseSchedule.mockReturnValue({ schedule: pairedSchedule, loading: false, error: null, reload: vi.fn() });
+    const { container } = render(<TimetableApp />);
+
+    const stickies = container.querySelectorAll(".sticky");
+    expect(stickies.length).toBeGreaterThan(0);
+    for (const el of stickies) {
+      expect(el.className).not.toMatch(/backdrop-blur/);
+      expect(el.className).not.toMatch(/will-change/);
+    }
+  });
+});

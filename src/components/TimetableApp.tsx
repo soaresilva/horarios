@@ -142,18 +142,25 @@ export function TimetableApp() {
         <div>
           {/* Sticky, same as each side stage's header above: whichever
               section is actually in view keeps its label pinned to the top
-              as you scroll, main stages included. Keyed by the paired
-              stage ids so switching to a day with a different pairing
-              remounts this as a fresh DOM subtree instead of patching the
-              existing one in place — Safari has been observed leaving a
-              newly-inserted sibling's text unpainted inside an
-              already-composited sticky+backdrop-blur element (present in
-              the DOM, correct computed style, just not painted) when the
-              set of stages changes from under it. A full remount sidesteps
-              that instead of relying on Safari to invalidate the layer. */}
+              as you scroll, main stages included.
+
+              Deliberately opaque (`bg-background`) with no `backdrop-blur`.
+              A backdrop-filter on a sticky element inside a scroll
+              container makes Safari recompute a blurred backdrop every
+              scroll frame, which is what made scrolling stutter on iOS,
+              and it also left this header's text unpainted on first
+              render (present in the DOM with correct computed style, just
+              never composited) until a later relayout forced it. Since
+              the background was already 95% opaque, the blur was doing
+              almost nothing visually — dropping it costs nothing and
+              removes both failure modes.
+
+              Keyed by the paired stage ids so a day whose pairing differs
+              remounts this subtree wholesale rather than having React
+              append one new label into the existing header. */}
           <div
             key={main.map((s) => s.id).join(",")}
-            className="sticky top-0 z-20 flex bg-background/95 px-3 pt-2 text-xs font-medium text-zinc-400 backdrop-blur-sm"
+            className="sticky top-0 z-20 flex bg-background px-3 pt-2 text-xs font-medium text-zinc-400"
           >
             <div className="w-11 shrink-0" />
             <div className="flex flex-1">

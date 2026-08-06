@@ -5,7 +5,7 @@
 // network-first for one API route — that a small vanilla worker is simpler
 // than fighting that incompatibility. Bump CACHE_VERSION on breaking
 // changes to force old caches to be dropped.
-const CACHE_VERSION = "pdc26-v1";
+const CACHE_VERSION = "pdc26-v2";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
@@ -82,8 +82,20 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // App shell, hashed JS/CSS bundles, icons, navigations: serve from cache
-  // instantly if present (populated the first time each was fetched) while
-  // refreshing in the background.
+  // HTML documents must be network-first, not stale-while-revalidate. The
+  // document is what names the hashed bundle URLs for the current build, so
+  // serving a stale copy pins the visitor to the *previous* deploy's entire
+  // JS/CSS set — the revalidate only lands in the cache for the load after
+  // this one. That left every deploy invisible until the app was opened
+  // twice, which made shipped fixes look like they had never deployed.
+  // Offline still works: this falls back to the cached document.
+  if (request.mode === "navigate") {
+    event.respondWith(networkFirst(request, ASSET_CACHE));
+    return;
+  }
+
+  // Hashed JS/CSS bundles and icons are content-addressed — a given URL's
+  // bytes never change — so serving them from cache instantly is safe and
+  // is what makes repeat loads feel instant.
   event.respondWith(staleWhileRevalidate(request, ASSET_CACHE));
 });
