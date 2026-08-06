@@ -142,13 +142,19 @@ export function TimetableApp() {
         <div>
           {/* Sticky, same as each side stage's header above: whichever
               section is actually in view keeps its label pinned to the top
-              as you scroll, main stages included. `will-change-transform`
-              forces this onto its own compositing layer immediately —
-              without it, WebKit sometimes leaves a sticky+backdrop-blur
-              element's text unpainted on first load (present in the DOM,
-              correct computed style, just not composited) until something
-              else forces a relayout, e.g. switching day tabs away and back. */}
-          <div className="sticky top-0 z-20 flex bg-background/95 px-3 pt-2 text-xs font-medium text-zinc-400 backdrop-blur-sm will-change-transform">
+              as you scroll, main stages included. Keyed by the paired
+              stage ids so switching to a day with a different pairing
+              remounts this as a fresh DOM subtree instead of patching the
+              existing one in place — Safari has been observed leaving a
+              newly-inserted sibling's text unpainted inside an
+              already-composited sticky+backdrop-blur element (present in
+              the DOM, correct computed style, just not painted) when the
+              set of stages changes from under it. A full remount sidesteps
+              that instead of relying on Safari to invalidate the layer. */}
+          <div
+            key={main.map((s) => s.id).join(",")}
+            className="sticky top-0 z-20 flex bg-background/95 px-3 pt-2 text-xs font-medium text-zinc-400 backdrop-blur-sm"
+          >
             <div className="w-11 shrink-0" />
             <div className="flex flex-1">
               {main.map((stage, i) => (
