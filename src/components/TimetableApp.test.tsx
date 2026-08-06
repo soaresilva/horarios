@@ -57,7 +57,7 @@ describe("TimetableApp loading/error states", () => {
     render(<TimetableApp />);
 
     // The real timetable UI is still up...
-    expect(screen.getByText("Vodafone Paredes de Coura 2026")).toBeInTheDocument();
+    expect(screen.getByText("Horários Bolachas")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
 
     // ...with a small, non-blocking notice instead of a full-page takeover.

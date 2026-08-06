@@ -64,7 +64,11 @@ export function TimetableApp() {
   return (
     <div className="flex h-dvh flex-col bg-background text-zinc-100">
       <header className="flex items-start justify-between px-3 pt-3">
-        <h1 className="text-sm font-semibold tracking-wide text-zinc-300">Vodafone Paredes de Coura 2026</h1>
+        <h1 className="text-sm font-semibold tracking-wide text-zinc-300">
+          <a href="https://bolachas.org" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400">
+            Horários Bolachas
+          </a>
+        </h1>
         <div className="flex flex-col items-end gap-1">
           <SocialLinks />
           <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
@@ -86,7 +90,15 @@ export function TimetableApp() {
       <p className="px-3 pb-1 pt-1 text-[10px] leading-snug text-zinc-600">
         End times are estimated since they are not officially revealed.
         <br />
-        Download printable timetables:{" "}
+        <a
+          href="https://open.spotify.com/playlist/2zBxbOfM0JV1TzJvvhkYBs"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline hover:text-zinc-400"
+        >
+          Playlist
+        </a>
+        . Download printable timetables:{" "}
         <a
           href="/files/pdc26.xlsx"
           target="_blank"
