@@ -138,7 +138,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Ryan Davis and the Roadhouse Band", start: "19:55", end: "20:40" },
       { artist: "Terraplana", start: "21:55", end: "22:45" },
       { artist: "Vendredi Sur Mer", start: "00:00", end: "01:00" },
-      { artist: "Maruja", start: "02:00", end: "03:25" },
+      { artist: "Maruja", start: "02:00", end: "03:00" },
       { artist: "Joy Orbison", start: "03:25", end: "04:40" },
     ],
     "jazz-na-relva": [
@@ -161,7 +161,7 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
       { artist: "Sophia Stel", start: "19:55", end: "20:45" },
       { artist: "Julia Mestre", start: "21:45", end: "22:45" },
       { artist: "Prostitute", start: "23:45", end: "00:35" },
-      { artist: "Dame Area", start: "01:35", end: "02:50" },
+      { artist: "Dame Area", start: "01:35", end: "02:35" },
       { artist: "Marie Davidson DJ Set", start: "02:50", end: "04:05" },
     ],
     "jazz-na-relva": [
