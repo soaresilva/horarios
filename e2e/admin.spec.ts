@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { prisma } from "../src/lib/prisma";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 if (!ADMIN_PASSWORD) {
@@ -214,6 +215,58 @@ test("ticking recommended on two different rows in one save shows Saved and pers
       page.getByRole("button", { name: `Delete ${name}` }).click(),
     ]);
   }
+});
+
+test("a save is rejected, not silently overwritten, when the row changed elsewhere since the page loaded", async ({
+  page,
+}) => {
+  // Regression for: a 2026-08-04 data migration fixed two performances'
+  // times, then a bulk /admin save from a browser tab that had loaded the
+  // page *before* the migration ran silently reverted both back to their
+  // pre-fix values — the tab's uncontrolled inputs still held the old
+  // values, and the save action had no way to tell that apart from a
+  // genuine edit. This reproduces that scenario end to end: load the page
+  // (snapshotting updatedAt), mutate the row directly in the DB (standing
+  // in for "a migration ran" / "another tab saved"), then try to save from
+  // the now-stale page and confirm it's rejected instead of clobbering the
+  // external change.
+  await login(page);
+
+  const uniqueName = `E2E Stale Snapshot Act ${Date.now()}`;
+  await page.fill('input[name="perf.new-blank.artistName"]', uniqueName);
+  await page.fill('input[name="perf.new-blank.date"]', "2026-08-12");
+  await page.selectOption('select[name="perf.new-blank.start"]', "19:00");
+  await page.selectOption('select[name="perf.new-blank.end"]', "19:30");
+  await Promise.all([
+    page.waitForLoadState("networkidle"),
+    page.getByRole("button", { name: "Save all changes" }).click(),
+  ]);
+  await expect(page.locator(`input[value="${uniqueName}"]`)).toBeVisible();
+
+  const created = await prisma.performance.findFirstOrThrow({ where: { artistName: uniqueName } });
+
+  // The page currently in front of us has the freshly-created row's real
+  // updatedAt snapshotted in its hidden field (the save above remounted the
+  // editor with fresh data). Mutate the row directly in the DB now, as a
+  // stand-in for a migration or a second admin tab saving in the meantime —
+  // this is exactly what makes the open page's snapshot stale.
+  await prisma.performance.update({
+    where: { id: created.id },
+    data: { notes: "changed out from under the open tab" },
+  });
+
+  // Save again from the now-stale page, with no further edits of our own.
+  await page.getByRole("button", { name: "Save all changes" }).click();
+
+  await expect(page.getByText(/changed elsewhere since you loaded this page/i)).toBeVisible();
+
+  // The external change must survive — the whole point of the check.
+  const afterFailedSave = await prisma.performance.findUniqueOrThrow({ where: { id: created.id } });
+  expect(afterFailedSave.notes).toBe("changed out from under the open tab");
+
+  // Clean up directly (the page's row list is now stale, so its own Delete
+  // button targets a row we've already asserted on).
+  await prisma.performance.delete({ where: { id: created.id } });
 });
 
 test("logging out re-protects /admin", async ({ page }) => {

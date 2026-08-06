@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { buildPerformanceData, rowUnchanged, type RawPerformanceRow, type StoredPerformance } from "./admin-performance";
+import {
+  buildPerformanceData,
+  isStaleSnapshot,
+  rowUnchanged,
+  type RawPerformanceRow,
+  type StoredPerformance,
+} from "./admin-performance";
 
 function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
@@ -18,6 +24,7 @@ const dupplo: StoredPerformance = {
   endTime: lisbon("2026-08-16T06:15:00"),
   notes: null,
   recommended: false,
+  updatedAt: new Date("2026-08-03T18:38:00Z"),
 };
 
 const dupploRowUnchanged: RawPerformanceRow = {
@@ -105,5 +112,27 @@ describe("rowUnchanged", () => {
 
   it("is false when the start time differs", () => {
     expect(rowUnchanged({ ...dupploRowUnchanged, start: "04:25" }, dupplo)).toBe(false);
+  });
+});
+
+describe("isStaleSnapshot", () => {
+  // Regression for: a 2026-08-04 data migration fixed Ryan Davis and
+  // Patrick Watson's times, then a bulk /admin save from a browser tab
+  // opened before that migration ran silently reverted both back to their
+  // old values on 2026-08-05 — the save action had no signal that the
+  // database had moved since the page loaded, so it trusted the stale
+  // form fields. This is the check that closes that gap.
+  it("is false (no conflict) when the snapshot matches the row's current updatedAt", () => {
+    expect(isStaleSnapshot(dupplo.updatedAt.toISOString(), dupplo)).toBe(false);
+  });
+
+  it("is true when the row's updatedAt has moved since the snapshot was taken", () => {
+    const migrated = { updatedAt: new Date("2026-08-04T18:01:00.463Z") };
+    const staleSnapshotFromBeforeTheMigration = new Date("2026-08-02T20:58:00Z").toISOString();
+    expect(isStaleSnapshot(staleSnapshotFromBeforeTheMigration, migrated)).toBe(true);
+  });
+
+  it("is true for an empty/missing snapshot (e.g. a hidden field that failed to render)", () => {
+    expect(isStaleSnapshot("", dupplo)).toBe(true);
   });
 });

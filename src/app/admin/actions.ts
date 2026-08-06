@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createSession, deleteSession, requireSession } from "@/lib/session";
-import { buildPerformanceData, rowUnchanged } from "@/lib/admin-performance";
+import { buildPerformanceData, isStaleSnapshot, rowUnchanged } from "@/lib/admin-performance";
 
 export interface LoginState {
   error?: string;
@@ -77,8 +77,12 @@ export async function saveScheduleAction(
   const newKeys = String(formData.get("newKeys") ?? "").split(",").filter(Boolean);
   const stageIds = String(formData.get("stageIds") ?? "").split(",").filter(Boolean);
 
-  const existingRows = await prisma.performance.findMany({ where: { id: { in: existingIds } } });
+  const [existingRows, stageRows] = await Promise.all([
+    prisma.performance.findMany({ where: { id: { in: existingIds } } }),
+    prisma.stage.findMany({ where: { id: { in: stageIds } } }),
+  ]);
   const existingById = new Map(existingRows.map((p) => [p.id, p]));
+  const stageById = new Map(stageRows.map((s) => [s.id, s]));
 
   const ops: Prisma.PrismaPromise<unknown>[] = [];
 
@@ -89,6 +93,18 @@ export async function saveScheduleAction(
     });
     if (!parsed.success) {
       return { error: parsed.error.issues[0]?.message ?? "Invalid stage" };
+    }
+    const current = stageById.get(id);
+    // Fully untouched row: skip it (also sidesteps the staleness check
+    // below — nothing to overwrite if nothing would change).
+    if (current && parsed.data.name === current.name && parsed.data.order === current.order) continue;
+    if (current) {
+      const snapshotUpdatedAt = String(formData.get(`stage.${id}.updatedAt`) ?? "");
+      if (isStaleSnapshot(snapshotUpdatedAt, current)) {
+        return {
+          error: `${current.name}: this stage was changed elsewhere since you loaded this page — refresh and try again.`,
+        };
+      }
     }
     ops.push(prisma.stage.update({ where: { id }, data: parsed.data }));
   }
@@ -101,6 +117,14 @@ export async function saveScheduleAction(
     // validation, so an unrelated edit elsewhere can never be blocked by a
     // row the admin didn't touch.
     if (current && rowUnchanged(raw, current)) continue;
+    if (current) {
+      const snapshotUpdatedAt = String(formData.get(`perf.${id}.updatedAt`) ?? "");
+      if (isStaleSnapshot(snapshotUpdatedAt, current)) {
+        return {
+          error: `${current.artistName}: this row was changed elsewhere since you loaded this page — refresh and try again.`,
+        };
+      }
+    }
     const built = buildPerformanceData(raw, current);
     if ("error" in built) return { error: built.error };
     ops.push(prisma.performance.update({ where: { id }, data: built.data }));

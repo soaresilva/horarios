@@ -8,8 +8,8 @@ import type { Performance, Stage } from "@/lib/schedule-client";
 const BANNER_TIMEOUT_MS = 4000;
 
 interface AdminScheduleShellProps {
-  stages: Stage[];
-  performances: Performance[];
+  stages: (Stage & { updatedAt: Date })[];
+  performances: (Performance & { updatedAt: Date })[];
   editorKey: string;
 }
 

@@ -29,7 +29,15 @@ export function TimetableApp() {
     return <p className="p-4 text-sm text-zinc-500">Loading timetable…</p>;
   }
 
-  if (error || !schedule) {
+  // Only replace the whole app with an error screen when there's nothing to
+  // show yet (the very first load failed). Once a schedule has loaded
+  // successfully once, keep showing it — a later background refetch (the
+  // 60s poll, or a focus/visibility refetch) failing, e.g. from a patchy
+  // festival-grounds signal, must not blank out an already-working page the
+  // visitor is mid-way through reading. That failure is instead surfaced as
+  // a small inline notice below, next to the existing "Updated HH:MM"
+  // timestamp, alongside the last successfully loaded data.
+  if (!schedule) {
     return (
       <div className="flex flex-col items-start gap-2 p-4">
         <p className="text-sm text-zinc-400">{error ?? "No schedule available."}</p>
@@ -60,6 +68,16 @@ export function TimetableApp() {
         <div className="flex flex-col items-end gap-1">
           <SocialLinks />
           <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
+          {error && (
+            <button
+              type="button"
+              onClick={reload}
+              className="text-[10px] text-amber-500 underline decoration-dotted"
+              title={error}
+            >
+              Refresh failed, tap to retry
+            </button>
+          )}
         </div>
       </header>
 

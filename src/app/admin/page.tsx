@@ -17,8 +17,14 @@ export default async function AdminDashboardPage() {
     prisma.performance.findMany({ orderBy: { startTime: "asc" } }),
   ]);
 
-  const stages: Stage[] = stageRows.map((s) => ({ id: s.id, name: s.name, slug: s.slug, order: s.order }));
-  const performances: Performance[] = performanceRows.map((p) => ({
+  const stages: (Stage & { updatedAt: Date })[] = stageRows.map((s) => ({
+    id: s.id,
+    name: s.name,
+    slug: s.slug,
+    order: s.order,
+    updatedAt: s.updatedAt,
+  }));
+  const performances: (Performance & { updatedAt: Date })[] = performanceRows.map((p) => ({
     id: p.id,
     artistName: p.artistName,
     date: p.date.toISOString().slice(0, 10),
@@ -27,6 +33,7 @@ export default async function AdminDashboardPage() {
     notes: p.notes,
     recommended: p.recommended,
     stageId: p.stageId,
+    updatedAt: p.updatedAt,
   }));
 
   // The editor's inputs are uncontrolled (defaultValue), so a bump to any

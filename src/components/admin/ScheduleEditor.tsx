@@ -7,6 +7,13 @@ import {
   type SaveScheduleState,
 } from "@/app/admin/actions";
 import type { Performance, Stage } from "@/lib/schedule-client";
+
+// Every row carries its stored `updatedAt` as a hidden snapshot field, so
+// the save action can detect whether the database moved under a stale
+// browser tab before trusting this row's other fields — see
+// isStaleSnapshot in src/lib/admin-performance.ts.
+type EditableStage = Stage & { updatedAt: Date };
+type EditablePerformance = Performance & { updatedAt: Date };
 import { performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { formatDayTabLabel, toLisbonClockValue } from "@/lib/time";
 
@@ -51,7 +58,7 @@ function TimeSelect({ name, defaultValue }: { name: string; defaultValue?: strin
 interface RowProps {
   stages: Stage[];
   keyName: string;
-  performance?: Performance;
+  performance?: EditablePerformance;
   defaultDate?: string;
   onDelete?: (id: string, name: string) => void;
 }
@@ -63,6 +70,7 @@ function PerformanceRow({ stages, keyName, performance, defaultDate, onDelete }:
   const field = (name: string) => `perf.${keyName}.${name}`;
   return (
     <Fragment>
+      {performance && <input type="hidden" name={field("updatedAt")} value={performance.updatedAt.toISOString()} />}
       <input
         type="text"
         name={field("artistName")}
@@ -124,8 +132,8 @@ function HeaderRow() {
 }
 
 interface ScheduleEditorProps {
-  stages: Stage[];
-  performances: Performance[];
+  stages: EditableStage[];
+  performances: EditablePerformance[];
   // Called with the save result right after it resolves. A save bumps every
   // row's updatedAt, which changes the parent's editorKey and remounts this
   // component — so any confirmation kept in this component's own state can
@@ -179,6 +187,7 @@ export function ScheduleEditor({ stages, performances, onSaved }: ScheduleEditor
                 title="Display order (lower = shown first / paired as a main stage)"
                 className="w-16 rounded-md border border-zinc-800 bg-zinc-900 px-2 py-1 text-sm text-zinc-100"
               />
+              <input type="hidden" name={`stage.${stage.id}.updatedAt`} value={stage.updatedAt.toISOString()} />
               <span className="text-xs text-zinc-600">{stage.slug}</span>
             </div>
           ))}

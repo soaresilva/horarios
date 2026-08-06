@@ -21,6 +21,7 @@ model Stage {
   slug         String        @unique
   order        Int           @default(0)
   performances Performance[]
+  updatedAt    DateTime      @default(now()) @updatedAt
 
   @@index([order])
 }

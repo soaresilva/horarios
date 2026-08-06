@@ -26,6 +26,7 @@ export interface StoredPerformance {
   endTime: Date;
   notes: string | null;
   recommended: boolean;
+  updatedAt: Date;
 }
 
 export interface PerformanceData {
@@ -63,6 +64,29 @@ export function rowUnchanged(raw: RawPerformanceRow, current: StoredPerformance)
     raw.recommended === current.recommended &&
     timeFieldsUnchanged(raw, current)
   );
+}
+
+// Optimistic-concurrency guard. `snapshotUpdatedAt` is the row's `updatedAt`
+// at the moment the admin page was rendered (carried through the form as a
+// hidden field); `current` is a fresh fetch taken right before this save
+// commits. A mismatch means something else (a data migration, another
+// admin tab, a direct DB edit) wrote to this row after the page loaded.
+//
+// This matters because the admin's inputs are uncontrolled (defaultValue) —
+// a browser tab left open across such a write still holds the pre-write
+// values, and `rowUnchanged` alone can't tell "the admin genuinely edited
+// this" apart from "the page is stale and this field never changed on
+// screen, but the database moved under it." Comparing against a fresh
+// `current` (as rowUnchanged does) only catches the former; it silently
+// writes the stale value in the latter case. Concretely: this is exactly
+// what reverted the 2026-08-04 Ryan Davis/Patrick Watson fix on
+// 2026-08-05 — a stale tab's untouched fields overwrote a migration that
+// had already landed. Callers should treat a stale snapshot as a hard
+// error (abort the whole save) rather than trying to merge, since there's
+// no way to know whether the admin's edit was made with knowledge of the
+// row's real current state.
+export function isStaleSnapshot(snapshotUpdatedAt: string, current: { updatedAt: Date }): boolean {
+  return snapshotUpdatedAt !== current.updatedAt.toISOString();
 }
 
 // Validate one row into a create/update `data` object, or return an error

@@ -12,13 +12,17 @@ vi.mock("@/app/admin/actions", () => ({
   deletePerformanceById: vi.fn(async () => {}),
 }));
 
-const stages: Stage[] = [{ id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0 }];
+const stageUpdatedAt = new Date("2026-08-01T12:00:00Z");
+const stages: (Stage & { updatedAt: Date })[] = [
+  { id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, updatedAt: stageUpdatedAt },
+];
 
 function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
 }
 
-const performances: Performance[] = [
+const performanceUpdatedAt = new Date("2026-08-05T09:21:24.007Z");
+const performances: (Performance & { updatedAt: Date })[] = [
   {
     id: "p1",
     artistName: "Cass McCombs",
@@ -28,6 +32,7 @@ const performances: Performance[] = [
     notes: null,
     recommended: true,
     stageId: "vodafone",
+    updatedAt: performanceUpdatedAt,
   },
 ];
 
@@ -63,5 +68,28 @@ describe("ScheduleEditor", () => {
     confirmSpy.mockReturnValue(true);
     await user.click(screen.getByRole("button", { name: /Delete Cass McCombs/ }));
     expect(deletePerformanceById).toHaveBeenCalledWith("p1");
+  });
+
+  // Regression for: a bulk save from a browser tab left open across a data
+  // migration silently reverted the migration's fix, because the save
+  // action had no way to tell "the admin left this field alone" apart from
+  // "the database changed since this page was loaded." These hidden fields
+  // are what saveScheduleAction compares against a fresh DB read (see
+  // isStaleSnapshot in src/lib/admin-performance.ts) to catch that case.
+  it("submits each row's loaded updatedAt as a hidden snapshot field, for staleness detection on save", () => {
+    const { container } = render(<ScheduleEditor stages={stages} performances={performances} />);
+
+    const perfSnapshot = container.querySelector('input[name="perf.p1.updatedAt"]') as HTMLInputElement | null;
+    expect(perfSnapshot).not.toBeNull();
+    expect(perfSnapshot?.value).toBe(performanceUpdatedAt.toISOString());
+
+    const stageSnapshot = container.querySelector('input[name="stage.vodafone.updatedAt"]') as HTMLInputElement | null;
+    expect(stageSnapshot).not.toBeNull();
+    expect(stageSnapshot?.value).toBe(stageUpdatedAt.toISOString());
+  });
+
+  it("does not render an updatedAt snapshot field for a blank add-row (nothing stored to conflict with)", () => {
+    const { container } = render(<ScheduleEditor stages={stages} performances={performances} />);
+    expect(container.querySelector('input[name="perf.new-blank.updatedAt"]')).toBeNull();
   });
 });
