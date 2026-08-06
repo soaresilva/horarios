@@ -38,14 +38,15 @@ const performances: Performance[] = [
 
 describe("StageGrid", () => {
   it("renders one block per performance, positioned by its own stage column", () => {
-    render(
+    const { container } = render(
       <StageGrid stages={stages} performances={performances} isStarred={() => false} onToggleStar={() => {}} />,
     );
 
     expect(screen.getByText("Cass McCombs")).toBeInTheDocument();
     expect(screen.getByText("Perfume Genius")).toBeInTheDocument();
     // Window start floors the earliest start (19:40) to 19:00; 19:40 is 40 minutes later, at 2px/min.
-    expect(screen.getByRole("button", { name: /Cass McCombs/ })).toHaveStyle({ top: "80px" });
+    // top/height live on the block's root div, not the star-toggle button nested inside it.
+    expect(container.querySelector('[data-performance-id="p1"]')).toHaveStyle({ top: "80px" });
   });
 
   it("shows an empty-state message instead of a grid when there are no performances", () => {

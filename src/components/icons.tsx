@@ -62,3 +62,43 @@ export function Share({ className }: IconProps) {
     </svg>
   );
 }
+
+// Per-artist link markers (SideStageSection, PerformanceBlock), also used by
+// SocialLinks for the bolachas accounts.
+export function Instagram({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
+export function Spotify({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      className={className}
+      aria-hidden
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="M7 15c3-1.5 7-1.5 10 0" />
+      <path d="M6.5 11.5c4-2 8.5-2 12 0" />
+      <path d="M6 8c4.5-2.2 9.5-2.2 14 0" />
+    </svg>
+  );
+}

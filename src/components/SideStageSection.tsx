@@ -2,8 +2,9 @@
 
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
-import { ThumbsUp } from "@/components/icons";
+import { Instagram, Spotify, ThumbsUp } from "@/components/icons";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
+import { getArtistLinks } from "@/lib/artist-links";
 
 interface SideStageSectionProps {
   stage: Stage;
@@ -31,13 +32,15 @@ export function SideStageSection({ stage, performances, isStarred, onToggleStar 
       <ul className="flex flex-col gap-1.5 px-3 pb-3">
         {sorted.map((performance) => {
           const starred = isStarred(performance.id);
+          const links = getArtistLinks(performance.artistName);
           return (
-            <li key={performance.id}>
+            <li key={performance.id} className="relative">
+              {/* Fills the row: clicking anywhere that isn't a link toggles the star. */}
               <button
                 type="button"
                 onClick={() => onToggleStar(performance.id)}
                 aria-pressed={starred}
-                className={`flex w-full items-center justify-between gap-2 rounded-md px-3 py-2 text-left ${
+                className={`flex w-full items-center justify-between gap-2 rounded-md py-2 pl-3 pr-16 text-left ${
                   starred ? "bg-accent/20 ring-1 ring-accent" : "bg-zinc-800/60"
                 }`}
               >
@@ -47,13 +50,42 @@ export function SideStageSection({ stage, performances, isStarred, onToggleStar 
                     <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
                   )}
                 </span>
-                <span className="flex items-center gap-2 text-xs text-zinc-400">
+                <span className="text-xs text-zinc-400">
                   {formatClock(performance.startTime)}–{formatClock(performance.endTime)}
-                  <span aria-hidden className={starred ? "text-accent" : "text-zinc-600"}>
-                    ★
-                  </span>
                 </span>
               </button>
+
+              {/* Icon row, layered above the button so link taps hit the link, not the toggle. */}
+              <div className="pointer-events-none absolute inset-y-0 right-2 z-10 flex items-center gap-1.5">
+                <span
+                  aria-hidden
+                  className={`text-xs leading-none ${starred ? "text-accent" : "text-zinc-600"}`}
+                >
+                  ★
+                </span>
+                {links.spotify && (
+                  <a
+                    href={links.spotify}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${performance.artistName} on Spotify`}
+                    className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
+                  >
+                    <Spotify className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {links.instagram && (
+                  <a
+                    href={links.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${performance.artistName} on Instagram`}
+                    className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
+                  >
+                    <Instagram className="h-3.5 w-3.5" />
+                  </a>
+                )}
+              </div>
             </li>
           );
         })}
