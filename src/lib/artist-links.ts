@@ -65,6 +65,7 @@ export const ARTIST_LINKS: Record<string, ArtistLinks> = {
   },
   "First Breath After Coma + Salvador Sobral": {
     spotify: "https://open.spotify.com/artist/0h6a6g2SHlGGabD0gEHIht",
+    instagram: "https://www.instagram.com/_firstbreathaftercoma_/",
   },
   "Friko": {
     spotify: "https://open.spotify.com/artist/5HViQsHNdOovxKa420CPGR",
@@ -159,10 +160,13 @@ export const ARTIST_LINKS: Record<string, ArtistLinks> = {
   },
   "Ryan Davis and the Roadhouse Band": {
     spotify: "https://open.spotify.com/artist/7Ah0xZVyWfAL3Vd7OVvKuo",
+    instagram: "https://www.instagram.com/technique_street/",
   },
   "Salvador Sobral e André Santos": {
     spotify: "https://open.spotify.com/artist/0GfYO21pue5u0sVEYk9HZO",
+    instagram: "https://www.instagram.com/salvadorsobral.music/",
   },
+
   "Show Me The Body": {
     spotify: "https://open.spotify.com/artist/5jh7sgXW2njALiIh0aPXjB",
     instagram: "https://www.instagram.com/showmethebody/",
@@ -227,33 +231,52 @@ export const ARTIST_LINKS: Record<string, ArtistLinks> = {
   //     wrong icon is not.
   // ---------------------------------------------------------------------------
   // "Alex Moon": { spotify: "", instagram: "" },
-  // "Armanda": { spotify: "", instagram: "" },
-  // "Asa Cobra": { spotify: "", instagram: "" },
-  // "Colinas": { spotify: "", instagram: "" },
+  "Armanda": { instagram: "https://www.instagram.com/armanda_lx/" },
+  "Asa Cobra": { spotify: "https://open.spotify.com/artist/7t1PK0gwL5AIFw52ilNGBL", instagram: "https://www.instagram.com/asacobramusic/" },
+  "Colinas": { spotify: "https://open.spotify.com/artist/0ahNf03N7IXcOmeafsdcgj", instagram: "https://www.instagram.com/xcolinasx/" },
   // "Consulta Aberta": { spotify: "", instagram: "" },
   // "DJ Shake a Leg": { spotify: "", instagram: "" },
-  // "Dupplo": { spotify: "", instagram: "" },
-  // "Francisco AP": { spotify: "", instagram: "" },
-  // "Gin Party Soundsystem": { spotify: "", instagram: "" },
-  // "Halfpipe Records": { spotify: "", instagram: "" },
-  // "Hetta": { spotify: "", instagram: "" },
+  "Dupplo": { instagram: "https://www.instagram.com/dupplomusic/" },
+  "Francisco AP": { instagram: "https://www.instagram.com/francisco_ap/" },
+  "Gin Party Soundsystem": { instagram: "https://www.instagram.com/ginpartysoundsystem/" },
+  "Halfpipe Records": { spotify: "https://open.spotify.com/artist/3EagGxqQ99hKSaFYwSMxxu" },
+  "Hetta": { spotify: "https://open.spotify.com/artist/0RyfKQoHpko3ddSQyW2zFL", instagram: "https://www.instagram.com/hetta____/" },
   // "Humor à Primeira Vista": { spotify: "", instagram: "" },
+  // James Keating: co-founder of Quarto Mundo, Porto's "deep listening" bar/
+  // session (confirmed via press coverage) — a selector/curator, not an
+  // artist with a discography, so no Spotify artist page exists. No festival
+  // page either. Found an Instagram handle (@jkeat6) that plausibly matches
+  // but couldn't verify it's actually him with confidence — left commented
+  // rather than risk linking the wrong James Keating.
   // "James Keating": { spotify: "", instagram: "" },
-  // "Janeiro": { spotify: "", instagram: "" },
-  // "La Familia Gitana": { spotify: "", instagram: "" },
-  // "Maria Luiza Jobim": { spotify: "", instagram: "" },
-  // "Miguel Marôco": { spotify: "", instagram: "" },
-  // "Nunca Mates o Mandarim": { spotify: "", instagram: "" },
-  // "Plaka": { spotify: "", instagram: "" },
+  "Janeiro": {
+    spotify: "https://open.spotify.com/artist/6XkMchHBuVhvBzCOyKIlJ0",
+    instagram: "https://www.instagram.com/janeiromusic/",
+  },
+  "La Familia Gitana": { spotify: "https://open.spotify.com/artist/1lEY6QtxvnNuSEOkJfCBE2", instagram: "https://www.instagram.com/la_familia_gitana/" },
+  "Maria Luiza Jobim": { spotify: "https://open.spotify.com/artist/0UBAjVKUJGkde9EeaoEyTM", instagram: "https://www.instagram.com/marialuizajobim/" },
+  "Miguel Marôco": {
+    spotify: "https://open.spotify.com/artist/0g5A7iVLIbfx6nXLecA1aE",
+    instagram: "https://www.instagram.com/themaroco/",
+  },
+  "Nunca Mates o Mandarim": {
+    spotify: "https://open.spotify.com/artist/1mXzaPO6UaW47RaHKVJ1UZ",
+    instagram: "https://www.instagram.com/nuncamatesomandarim/",
+  },
+  // Two same-named Spotify artists exist ("PLAKA", 80 monthly listeners, no
+  // socials linked; "Plaka", 4 monthly listeners, linked to instagram.com/
+  // plaka_rua) and NEITHER matches Diogo's confirmed instagram.com/plaka_sound
+  // — so which one is actually this act can't be verified. Instagram only.
+  "Plaka": { instagram: "https://www.instagram.com/plaka_sound/" },
   // "Posto Emissor": { spotify: "", instagram: "" },
-  // "Quarto Mundo": { spotify: "", instagram: "" },
-  // "Rufia Terno": { spotify: "", instagram: "" },
-  // "Sofia Araújo": { spotify: "", instagram: "" },
-  // "Sounzstore": { spotify: "", instagram: "" },
-  // "Summer of Hate": { spotify: "", instagram: "" },
-  // "Sérgio & Os Assessores Com Amigos": { spotify: "", instagram: "" },
-  // "Trol2000": { spotify: "", instagram: "" },
-  // "Wu Lyf": { spotify: "", instagram: "" },
+  "Quarto Mundo": { instagram: "https://www.instagram.com/_quartomundo/" },
+  "Rufia Terno": { instagram: "https://www.instagram.com/rufiaterno/" },
+  "Sofia Araújo": { instagram: "https://www.instagram.com/sofiaaraujowi/" },
+  "Sounzstore": { instagram: "https://www.instagram.com/sounzstore/" },
+  "Summer of Hate": { spotify: "https://open.spotify.com/artist/5yGpqacLZRqrWc93E6CxiB", instagram: "https://www.instagram.com/summer.of.hate/" },
+  "Sérgio & Os Assessores Com Amigos": { spotify: "https://open.spotify.com/artist/2q9ET2kJQY4J3bGaIWt6Uz", instagram: "https://www.instagram.com/sergio.godinho.oficial/" },
+  "Trol2000": { instagram: "https://www.instagram.com/trol2000/" },
+  "Wu Lyf": { instagram: "https://www.instagram.com/wulyf_archive/" },
 };
 
 /**

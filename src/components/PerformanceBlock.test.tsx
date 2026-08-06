@@ -51,7 +51,7 @@ describe("PerformanceBlock", () => {
   it("renders only the Spotify link for an artist with no known Instagram", () => {
     render(
       <PerformanceBlock
-        performance={performance({ artistName: "Ryan Davis and the Roadhouse Band" })}
+        performance={performance({ artistName: "Halfpipe Records" })}
         layout={layout}
         alternate={false}
         starred={false}
@@ -67,7 +67,7 @@ describe("PerformanceBlock", () => {
   it("renders no links for an artist with no entry (just the star)", () => {
     render(
       <PerformanceBlock
-        performance={performance({ artistName: "Wu Lyf" })}
+        performance={performance({ artistName: "Some Totally Unknown Act" })}
         layout={layout}
         alternate={false}
         starred={false}

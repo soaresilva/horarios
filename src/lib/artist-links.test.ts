@@ -9,15 +9,16 @@ describe("getArtistLinks", () => {
   });
 
   // Regression guard: a naive Spotify search for "Wu Lyf" surfaces "Wu-Lu", a
-  // completely different act. Wu Lyf genuinely has no Spotify presence and no
-  // Instagram on the festival site, so it must have no entry at all — never a
-  // link to the wrong artist.
-  it("returns no links for Wu Lyf rather than a wrong-artist match", () => {
-    expect(getArtistLinks("Wu Lyf")).toEqual({});
+  // completely different act. Wu Lyf genuinely has no Spotify presence, so it
+  // must never carry a spotify link — an Instagram entry (a fan/archive
+  // account) is fine, since that was sourced independently and isn't at risk
+  // of the same wrong-artist mixup.
+  it("has no Spotify link for Wu Lyf, never a wrong-artist match", () => {
+    expect(getArtistLinks("Wu Lyf").spotify).toBeUndefined();
   });
 
   it("returns spotify only when instagram is unknown (partial entries work)", () => {
-    const links = getArtistLinks("Ryan Davis and the Roadhouse Band");
+    const links = getArtistLinks("Halfpipe Records");
     expect(links.spotify).toMatch(/^https:\/\/open\.spotify\.com\/artist\//);
     expect(links.instagram).toBeUndefined();
   });
