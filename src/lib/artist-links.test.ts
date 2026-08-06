@@ -18,7 +18,7 @@ describe("getArtistLinks", () => {
   });
 
   it("returns spotify only when instagram is unknown (partial entries work)", () => {
-    const links = getArtistLinks("Halfpipe Records");
+    const links = getArtistLinks("Rita Cortezão");
     expect(links.spotify).toMatch(/^https:\/\/open\.spotify\.com\/artist\//);
     expect(links.instagram).toBeUndefined();
   });

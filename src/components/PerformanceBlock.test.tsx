@@ -51,7 +51,7 @@ describe("PerformanceBlock", () => {
   it("renders only the Spotify link for an artist with no known Instagram", () => {
     render(
       <PerformanceBlock
-        performance={performance({ artistName: "Halfpipe Records" })}
+        performance={performance({ artistName: "Rita Cortezão" })}
         layout={layout}
         alternate={false}
         starred={false}

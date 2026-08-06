@@ -239,7 +239,7 @@ export const ARTIST_LINKS: Record<string, ArtistLinks> = {
   "Dupplo": { instagram: "https://www.instagram.com/dupplomusic/" },
   "Francisco AP": { instagram: "https://www.instagram.com/francisco_ap/" },
   "Gin Party Soundsystem": { instagram: "https://www.instagram.com/ginpartysoundsystem/" },
-  "Halfpipe Records": { spotify: "https://open.spotify.com/artist/3EagGxqQ99hKSaFYwSMxxu" },
+  "Halfpipe Records": { spotify: "https://open.spotify.com/artist/3EagGxqQ99hKSaFYwSMxxu", instagram: "https://www.instagram.com/halfpipe.records/" },
   "Hetta": { spotify: "https://open.spotify.com/artist/0RyfKQoHpko3ddSQyW2zFL", instagram: "https://www.instagram.com/hetta____/" },
   // "Humor à Primeira Vista": { spotify: "", instagram: "" },
   // James Keating: co-founder of Quarto Mundo, Porto's "deep listening" bar/
@@ -267,7 +267,7 @@ export const ARTIST_LINKS: Record<string, ArtistLinks> = {
   // socials linked; "Plaka", 4 monthly listeners, linked to instagram.com/
   // plaka_rua) and NEITHER matches Diogo's confirmed instagram.com/plaka_sound
   // — so which one is actually this act can't be verified. Instagram only.
-  "Plaka": { instagram: "https://www.instagram.com/plaka_sound/" },
+  "Plaka": { spotify: "https://open.spotify.com/artist/0CF1dLx7vMftQSoNeCmQj4",instagram: "https://www.instagram.com/plaka_sound/" },
   // "Posto Emissor": { spotify: "", instagram: "" },
   "Quarto Mundo": { instagram: "https://www.instagram.com/_quartomundo/" },
   "Rufia Terno": { instagram: "https://www.instagram.com/rufiaterno/" },
