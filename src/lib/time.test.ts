@@ -94,9 +94,36 @@ describe("currentTimeOffset", () => {
 
 describe("todayInFestivalTimezone", () => {
   it("returns YYYY-MM-DD anchored to Lisbon time, not the host's local date", () => {
-    // 23:30 UTC on Aug 9 is already 00:30 on Aug 10 in Lisbon (WEST, UTC+1).
+    // 19:00 UTC on Aug 9 is 20:00 on Aug 9 in Lisbon (WEST, UTC+1) - well
+    // past the 8am rollover, so it's an unambiguous same-day case.
+    const eveningUtc = new Date("2026-08-09T19:00:00Z");
+    expect(todayInFestivalTimezone(eveningUtc)).toBe("2026-08-09");
+  });
+
+  it("does not roll to the next day at Lisbon midnight, since sets run past it", () => {
+    // 23:30 UTC on Aug 9 is 00:30 on Aug 10 in Lisbon. The festival day is
+    // still "Aug 9" from the visitor's perspective until 8am.
     const lateUtc = new Date("2026-08-09T23:30:00Z");
-    expect(todayInFestivalTimezone(lateUtc)).toBe("2026-08-10");
+    expect(todayInFestivalTimezone(lateUtc)).toBe("2026-08-09");
+  });
+
+  it("stays on the previous festival day right up to 07:59 Lisbon", () => {
+    // 06:59 UTC = 07:59 Lisbon in August.
+    const beforeRollover = new Date("2026-08-10T06:59:00Z");
+    expect(todayInFestivalTimezone(beforeRollover)).toBe("2026-08-09");
+  });
+
+  it("rolls to the next festival day exactly at 08:00 Lisbon", () => {
+    // 07:00 UTC = 08:00 Lisbon in August.
+    const atRollover = new Date("2026-08-10T07:00:00Z");
+    expect(todayInFestivalTimezone(atRollover)).toBe("2026-08-10");
+  });
+
+  it("treats Lisbon midnight itself as the previous festival day", () => {
+    // 23:00 UTC = 00:00 Lisbon. Guards against ICU reporting midnight as
+    // hour "24" instead of "00" and skipping the rollover check entirely.
+    const midnight = new Date("2026-08-09T23:00:00Z");
+    expect(todayInFestivalTimezone(midnight)).toBe("2026-08-09");
   });
 });
 

@@ -20,14 +20,39 @@ export interface GridWindow {
   end: Date;
 }
 
-/** Today's date as YYYY-MM-DD in the festival timezone, for matching against performance `date` labels. */
+// The active festival day doesn't roll forward at Lisbon midnight — sets
+// commonly run past it (latest end ~04:40, one outlier at 06:15). 8am gives
+// a solid margin past that so the previous evening's tab stays active
+// through the small hours instead of jumping to an empty "tomorrow" while
+// the show (or the visitor reviewing it) is still going. Deliberately a
+// separate constant from FESTIVAL_DAY_ROLL_HOUR below, which answers a
+// different question (which calendar day a performance's own clock time
+// belongs to), not "which day is active right now".
+const ACTIVE_DAY_ROLLOVER_HOUR = 8;
+
+/**
+ * The active festival day as YYYY-MM-DD, for matching against performance
+ * `date` labels. Doesn't roll to the next calendar day at Lisbon midnight —
+ * only once it's past ACTIVE_DAY_ROLLOVER_HOUR (8am) Lisbon time, since the
+ * programme regularly runs into the small hours.
+ */
 export function todayInFestivalTimezone(now: Date = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", {
+  const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: FESTIVAL_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).format(now);
+    hour: "2-digit",
+    hourCycle: "h23", // force 00-23; hourCycle "h24" (a possible ICU default) reports midnight as "24"
+  }).formatToParts(now);
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  const dateLabel = `${get("year")}-${get("month")}-${get("day")}`;
+  if (Number(get("hour")) < ACTIVE_DAY_ROLLOVER_HOUR) {
+    const rolledBack = new Date(`${dateLabel}T00:00:00Z`);
+    rolledBack.setUTCDate(rolledBack.getUTCDate() - 1);
+    return rolledBack.toISOString().slice(0, 10);
+  }
+  return dateLabel;
 }
 
 /**
