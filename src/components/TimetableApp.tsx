@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
 import { InstallBanner } from "@/components/InstallBanner";
@@ -12,8 +13,12 @@ import { useStarred } from "@/hooks/useStarred";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { formatClock, todayInFestivalTimezone } from "@/lib/time";
 
-export function TimetableApp() {
-  const { schedule, loading, error, reload } = useSchedule();
+interface TimetableAppProps {
+  festivalSlug: string;
+}
+
+export function TimetableApp({ festivalSlug }: TimetableAppProps) {
+  const { schedule, loading, error, reload } = useSchedule(festivalSlug);
   const { isStarred, toggle } = useStarred();
   // Holds only the user's explicit tab choice; the default (today, falling
   // back to the first festival day) is derived below rather than pushed
@@ -64,11 +69,16 @@ export function TimetableApp() {
   return (
     <div className="flex h-dvh flex-col bg-background text-zinc-100">
       <header className="flex items-start justify-between px-3 pt-3">
-        <h1 className="text-sm font-semibold tracking-wide text-zinc-300">
-          <a href="https://bolachas.org" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400">
-            Horários Bolachas
-          </a>
-        </h1>
+        <div className="flex flex-col gap-0.5">
+          <Link href="/" className="text-[10px] text-zinc-600 hover:text-zinc-400">
+            ← Horários archive
+          </Link>
+          <h1 className="text-sm font-semibold tracking-wide text-zinc-300">
+            <a href="https://bolachas.org" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400">
+              Horários Bolachas
+            </a>
+          </h1>
+        </div>
         <div className="flex flex-col items-end gap-1">
           <SocialLinks />
           <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>

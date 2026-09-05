@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Horários Bolachas",
-  description: "Offline-friendly stage timetable for Vodafone Paredes de Coura 2026.",
+  description: "Archive of offline-friendly festival stage timetables by Bolachas.",
   appleWebApp: {
     title: "Horários Bolachas",
     statusBarStyle: "black-translucent",

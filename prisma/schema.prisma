@@ -10,20 +10,46 @@ datasource db {
   provider = "postgresql"
 }
 
-// A stage that hosts performances on one or more festival dates.
-// `order` decides display priority within a given date: the two lowest
-// `order` values active on a "main" date render as the side-by-side grid,
-// any others (e.g. a pre-festival or free-programme stage) surface in the
-// "other stages" tab for that date.
+// One festival edition (Paredes de Coura 2026, Left of the Dial 2026, ...).
+// Each gets its own public route at /<slug> and admin route at
+// /admin/<slug>; there is no `archived` column — a festival reads as past
+// once `endDate` has gone by (see isFestivalOver in src/lib/festival.ts),
+// so nothing needs remembering to flip a flag when an edition wraps up.
+model Festival {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  location  String
+  startDate DateTime @db.Date
+  endDate   DateTime @db.Date
+  // IANA zone (e.g. "Europe/Lisbon", "Europe/Amsterdam") every performance
+  // time for this festival is anchored to, regardless of a viewer's or
+  // admin's own device timezone.
+  timezone  String
+  stages    Stage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+// A stage/venue that hosts performances on one or more festival dates,
+// scoped to a single festival — a slug like "main-stage" may legitimately
+// exist in more than one festival, so uniqueness is per-festival, not
+// global. `order` decides display priority within a given date: the two
+// lowest `order` values active on a "main" date render as the side-by-side
+// grid, any others (e.g. a pre-festival or free-programme stage) surface in
+// the "other stages" tab for that date.
 model Stage {
   id           String        @id @default(cuid())
+  festivalId   String
+  festival     Festival      @relation(fields: [festivalId], references: [id], onDelete: Cascade)
   name         String
-  slug         String        @unique
+  slug         String
   order        Int           @default(0)
   performances Performance[]
   updatedAt    DateTime      @default(now()) @updatedAt
 
-  @@index([order])
+  @@unique([festivalId, slug])
+  @@index([festivalId, order])
 }
 
 model Performance {

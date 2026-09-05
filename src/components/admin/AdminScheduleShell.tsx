@@ -8,6 +8,7 @@ import type { Performance, Stage } from "@/lib/schedule-client";
 const BANNER_TIMEOUT_MS = 4000;
 
 interface AdminScheduleShellProps {
+  festivalSlug: string;
   stages: (Stage & { updatedAt: Date })[];
   performances: (Performance & { updatedAt: Date })[];
   editorKey: string;
@@ -22,7 +23,7 @@ interface AdminScheduleShellProps {
 // one submit) showed no confirmation at all. This shell holds the banner
 // state instead: it never remounts, so the message set by `onSaved` always
 // renders, independent of the editor's lifecycle.
-export function AdminScheduleShell({ stages, performances, editorKey }: AdminScheduleShellProps) {
+export function AdminScheduleShell({ festivalSlug, stages, performances, editorKey }: AdminScheduleShellProps) {
   const [banner, setBanner] = useState<SaveScheduleState | null>(null);
 
   useEffect(() => {
@@ -35,7 +36,13 @@ export function AdminScheduleShell({ stages, performances, editorKey }: AdminSch
     <div className="flex flex-col gap-3">
       {banner?.error && <p className="text-xs text-red-400">{banner.error}</p>}
       {banner?.saved && !banner.error && <p className="text-xs text-emerald-400">Saved.</p>}
-      <ScheduleEditor key={editorKey} stages={stages} performances={performances} onSaved={setBanner} />
+      <ScheduleEditor
+        key={editorKey}
+        festivalSlug={festivalSlug}
+        stages={stages}
+        performances={performances}
+        onSaved={setBanner}
+      />
     </div>
   );
 }

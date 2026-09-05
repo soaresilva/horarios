@@ -22,10 +22,11 @@ afterEach(() => {
 });
 
 describe("useSchedule", () => {
-  it("fetches once on mount", async () => {
-    const { result } = renderHook(() => useSchedule());
+  it("fetches once on mount, scoped to the given festival slug", async () => {
+    const { result } = renderHook(() => useSchedule("pdc26"));
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch).toHaveBeenCalledWith("/api/festivals/pdc26/schedule");
     expect(result.current.schedule).not.toBeNull();
   });
 
@@ -35,7 +36,7 @@ describe("useSchedule", () => {
     // could go hours without seeing an edit saved via /admin. Simulates the
     // resume-from-background case via the visibilitychange event the app
     // now listens for.
-    const { result } = renderHook(() => useSchedule());
+    const { result } = renderHook(() => useSchedule("pdc26"));
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(fetch).toHaveBeenCalledTimes(1);
 
@@ -46,7 +47,7 @@ describe("useSchedule", () => {
   });
 
   it("does not re-fetch on a visibilitychange event while the tab is hidden", async () => {
-    const { result } = renderHook(() => useSchedule());
+    const { result } = renderHook(() => useSchedule("pdc26"));
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(fetch).toHaveBeenCalledTimes(1);
 
@@ -59,7 +60,7 @@ describe("useSchedule", () => {
   });
 
   it("re-fetches on window focus", async () => {
-    const { result } = renderHook(() => useSchedule());
+    const { result } = renderHook(() => useSchedule("pdc26"));
     await waitFor(() => expect(result.current.loading).toBe(false));
     expect(fetch).toHaveBeenCalledTimes(1);
 
@@ -73,7 +74,7 @@ describe("useSchedule", () => {
     vi.useFakeTimers();
     Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
 
-    const { result } = renderHook(() => useSchedule());
+    const { result } = renderHook(() => useSchedule("pdc26"));
     await vi.waitFor(() => expect(result.current.loading).toBe(false));
     expect(fetch).toHaveBeenCalledTimes(1);
 
@@ -88,7 +89,7 @@ describe("useSchedule", () => {
     vi.useFakeTimers();
     Object.defineProperty(document, "visibilityState", { value: "visible", configurable: true });
 
-    const { result, unmount } = renderHook(() => useSchedule());
+    const { result, unmount } = renderHook(() => useSchedule("pdc26"));
     await vi.waitFor(() => expect(result.current.loading).toBe(false));
     expect(fetch).toHaveBeenCalledTimes(1);
 

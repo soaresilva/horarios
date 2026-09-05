@@ -73,13 +73,20 @@ export async function saveScheduleAction(
 ): Promise<SaveScheduleState> {
   await requireSession();
 
+  const festivalSlug = String(formData.get("festivalSlug") ?? "");
+  const festival = await prisma.festival.findUnique({ where: { slug: festivalSlug } });
+  if (!festival) return { error: "Unknown festival." };
+
   const existingIds = String(formData.get("existingIds") ?? "").split(",").filter(Boolean);
   const newKeys = String(formData.get("newKeys") ?? "").split(",").filter(Boolean);
   const stageIds = String(formData.get("stageIds") ?? "").split(",").filter(Boolean);
 
+  // Scoped to this festival: an id belonging to a different festival (a
+  // stale form, or a tampered hidden field) simply won't be found below and
+  // is skipped, rather than silently editing another festival's data.
   const [existingRows, stageRows] = await Promise.all([
-    prisma.performance.findMany({ where: { id: { in: existingIds } } }),
-    prisma.stage.findMany({ where: { id: { in: stageIds } } }),
+    prisma.performance.findMany({ where: { id: { in: existingIds }, stage: { festivalId: festival.id } } }),
+    prisma.stage.findMany({ where: { id: { in: stageIds }, festivalId: festival.id } }),
   ]);
   const existingById = new Map(existingRows.map((p) => [p.id, p]));
   const stageById = new Map(stageRows.map((s) => [s.id, s]));
@@ -87,6 +94,11 @@ export async function saveScheduleAction(
   const ops: Prisma.PrismaPromise<unknown>[] = [];
 
   for (const id of stageIds) {
+    const current = stageById.get(id);
+    // Not found within this festival's scope (deleted concurrently, or a
+    // stale/tampered id from another festival): nothing to update.
+    if (!current) continue;
+
     const parsed = StageRowInput.safeParse({
       name: formData.get(`stage.${id}.name`),
       order: formData.get(`stage.${id}.order`),
@@ -94,36 +106,38 @@ export async function saveScheduleAction(
     if (!parsed.success) {
       return { error: parsed.error.issues[0]?.message ?? "Invalid stage" };
     }
-    const current = stageById.get(id);
     // Fully untouched row: skip it (also sidesteps the staleness check
     // below — nothing to overwrite if nothing would change).
-    if (current && parsed.data.name === current.name && parsed.data.order === current.order) continue;
-    if (current) {
-      const snapshotUpdatedAt = String(formData.get(`stage.${id}.updatedAt`) ?? "");
-      if (isStaleSnapshot(snapshotUpdatedAt, current)) {
-        return {
-          error: `${current.name}: this stage was changed elsewhere since you loaded this page — refresh and try again.`,
-        };
-      }
+    if (parsed.data.name === current.name && parsed.data.order === current.order) continue;
+    const snapshotUpdatedAt = String(formData.get(`stage.${id}.updatedAt`) ?? "");
+    if (isStaleSnapshot(snapshotUpdatedAt, current)) {
+      return {
+        error: `${current.name}: this stage was changed elsewhere since you loaded this page — refresh and try again.`,
+      };
     }
     ops.push(prisma.stage.update({ where: { id }, data: parsed.data }));
   }
 
   for (const id of existingIds) {
-    const raw = readRow(formData, id);
     const current = existingById.get(id);
+    // Not found within this festival's scope (deleted concurrently, or a
+    // stale/tampered id from another festival): nothing to update.
+    if (!current) continue;
+
+    const raw = readRow(formData, id);
     // Fully untouched row (common — the form resubmits every loaded row on
     // every save): skip it entirely rather than round-tripping it through
     // validation, so an unrelated edit elsewhere can never be blocked by a
     // row the admin didn't touch.
-    if (current && rowUnchanged(raw, current)) continue;
-    if (current) {
-      const snapshotUpdatedAt = String(formData.get(`perf.${id}.updatedAt`) ?? "");
-      if (isStaleSnapshot(snapshotUpdatedAt, current)) {
-        return {
-          error: `${current.artistName}: this row was changed elsewhere since you loaded this page — refresh and try again.`,
-        };
-      }
+    if (rowUnchanged(raw, current)) continue;
+    const snapshotUpdatedAt = String(formData.get(`perf.${id}.updatedAt`) ?? "");
+    if (isStaleSnapshot(snapshotUpdatedAt, current)) {
+      return {
+        error: `${current.artistName}: this row was changed elsewhere since you loaded this page — refresh and try again.`,
+      };
+    }
+    if (raw.stageId !== current.stageId && !stageById.has(raw.stageId)) {
+      return { error: `${current.artistName}: unknown stage.` };
     }
     const built = buildPerformanceData(raw, current);
     if ("error" in built) return { error: built.error };
@@ -134,6 +148,9 @@ export async function saveScheduleAction(
     const raw = readRow(formData, key);
     // An untouched add row (no artist typed) is ignored, not an error.
     if (!raw.artistName.trim()) continue;
+    if (!stageById.has(raw.stageId)) {
+      return { error: `${raw.artistName}: unknown stage.` };
+    }
     const built = buildPerformanceData(raw);
     if ("error" in built) return { error: built.error };
     ops.push(prisma.performance.create({ data: built.data }));
@@ -141,18 +158,21 @@ export async function saveScheduleAction(
 
   await prisma.$transaction(ops);
 
-  revalidatePath("/admin");
-  revalidatePath("/");
+  revalidatePath(`/admin/${festival.slug}`);
+  revalidatePath(`/${festival.slug}`);
   return { saved: true };
 }
 
 // Immediate single-row delete, called from a client onClick after a
 // window.confirm() — kept off the bulk form so it can't submit half-edited
 // rows. Re-checks the session since it's a directly-invoked server action.
-export async function deletePerformanceById(id: string): Promise<void> {
+// Scoped to the given festival via deleteMany (Prisma's unique `delete`
+// can't take an extra filter) so an id belonging to a different festival
+// can't be deleted through this call.
+export async function deletePerformanceById(festivalSlug: string, id: string): Promise<void> {
   await requireSession();
   if (!id) return;
-  await prisma.performance.delete({ where: { id } });
-  revalidatePath("/admin");
-  revalidatePath("/");
+  await prisma.performance.deleteMany({ where: { id, stage: { festival: { slug: festivalSlug } } } });
+  revalidatePath(`/admin/${festivalSlug}`);
+  revalidatePath(`/${festivalSlug}`);
 }

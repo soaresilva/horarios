@@ -19,6 +19,19 @@ import { prisma } from "../src/lib/prisma";
 const YEAR = 2026;
 const pad = (n: number) => String(n).padStart(2, "0");
 
+// This script only ever seeds the one archived PdC 2026 edition — a second
+// festival (Left of the Dial) gets its own data source, not a branch in this
+// file. Matches the Festival row the 20260905120000_add_festival_model data
+// migration created in dev/prod, kept here so a fresh local DB reproduces it.
+const FESTIVAL = {
+  slug: "pdc26",
+  name: "Paredes de Coura 2026",
+  location: "Paredes de Coura, Portugal",
+  startDate: new Date(Date.UTC(YEAR, 7, 9)),
+  endDate: new Date(Date.UTC(YEAR, 7, 16)),
+  timezone: "Europe/Lisbon",
+} as const;
+
 // Paredes de Coura runs in mainland Portugal, which is on WEST (UTC+1)
 // throughout the festival in August. Times are built with an explicit
 // +01:00 offset so the stored instant matches real Lisbon wall-clock time
@@ -209,17 +222,23 @@ const SCHEDULE: Record<number, Record<string, Act[]>> = {
 async function main() {
   console.log("Seeding confirmed 2026 schedule...");
 
+  const festival = await prisma.festival.upsert({
+    where: { slug: FESTIVAL.slug },
+    update: FESTIVAL,
+    create: FESTIVAL,
+  });
+
   const stageIds: Record<string, string> = {};
   for (const stage of STAGES) {
     const row = await prisma.stage.upsert({
-      where: { slug: stage.slug },
+      where: { festivalId_slug: { festivalId: festival.id, slug: stage.slug } },
       update: { name: stage.name, order: stage.order },
-      create: stage,
+      create: { ...stage, festivalId: festival.id },
     });
     stageIds[stage.slug] = row.id;
   }
 
-  await prisma.performance.deleteMany({});
+  await prisma.performance.deleteMany({ where: { stage: { festivalId: festival.id } } });
 
   for (const [dayStr, stages] of Object.entries(SCHEDULE)) {
     const day = Number(dayStr);

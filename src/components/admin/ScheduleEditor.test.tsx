@@ -43,13 +43,13 @@ afterEach(() => {
 
 describe("ScheduleEditor", () => {
   it("renders the whole panel as one form with a single save button", () => {
-    render(<ScheduleEditor stages={stages} performances={performances} />);
+    render(<ScheduleEditor festivalSlug="pdc26" stages={stages} performances={performances} />);
     expect(screen.getAllByRole("button", { name: "Save all changes" })).toHaveLength(1);
     expect(document.querySelectorAll("form")).toHaveLength(1);
   });
 
   it("prefills an existing performance's fields, including the recommended checkbox", () => {
-    render(<ScheduleEditor stages={stages} performances={performances} />);
+    render(<ScheduleEditor festivalSlug="pdc26" stages={stages} performances={performances} />);
     expect(screen.getByDisplayValue("Cass McCombs")).toBeInTheDocument();
     // The recommended checkbox for this row is pre-checked.
     const checkboxes = screen.getAllByRole("checkbox");
@@ -59,7 +59,7 @@ describe("ScheduleEditor", () => {
   it("deletes a performance only after the user confirms", async () => {
     const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
     const user = userEvent.setup();
-    render(<ScheduleEditor stages={stages} performances={performances} />);
+    render(<ScheduleEditor festivalSlug="pdc26" stages={stages} performances={performances} />);
 
     await user.click(screen.getByRole("button", { name: /Delete Cass McCombs/ }));
     expect(confirmSpy).toHaveBeenCalledOnce();
@@ -67,7 +67,15 @@ describe("ScheduleEditor", () => {
 
     confirmSpy.mockReturnValue(true);
     await user.click(screen.getByRole("button", { name: /Delete Cass McCombs/ }));
-    expect(deletePerformanceById).toHaveBeenCalledWith("p1");
+    expect(deletePerformanceById).toHaveBeenCalledWith("pdc26", "p1");
+  });
+
+  it("submits the festival slug as a hidden field, scoping the save to this festival", () => {
+    const { container } = render(
+      <ScheduleEditor festivalSlug="pdc26" stages={stages} performances={performances} />,
+    );
+    const field = container.querySelector('input[name="festivalSlug"]') as HTMLInputElement | null;
+    expect(field?.value).toBe("pdc26");
   });
 
   // Regression for: a bulk save from a browser tab left open across a data
@@ -77,7 +85,7 @@ describe("ScheduleEditor", () => {
   // are what saveScheduleAction compares against a fresh DB read (see
   // isStaleSnapshot in src/lib/admin-performance.ts) to catch that case.
   it("submits each row's loaded updatedAt as a hidden snapshot field, for staleness detection on save", () => {
-    const { container } = render(<ScheduleEditor stages={stages} performances={performances} />);
+    const { container } = render(<ScheduleEditor festivalSlug="pdc26" stages={stages} performances={performances} />);
 
     const perfSnapshot = container.querySelector('input[name="perf.p1.updatedAt"]') as HTMLInputElement | null;
     expect(perfSnapshot).not.toBeNull();
@@ -89,7 +97,7 @@ describe("ScheduleEditor", () => {
   });
 
   it("does not render an updatedAt snapshot field for a blank add-row (nothing stored to conflict with)", () => {
-    const { container } = render(<ScheduleEditor stages={stages} performances={performances} />);
+    const { container } = render(<ScheduleEditor festivalSlug="pdc26" stages={stages} performances={performances} />);
     expect(container.querySelector('input[name="perf.new-blank.updatedAt"]')).toBeNull();
   });
 });

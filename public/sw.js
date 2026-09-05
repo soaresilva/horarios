@@ -5,16 +5,24 @@
 // network-first for one API route — that a small vanilla worker is simpler
 // than fighting that incompatibility. Bump CACHE_VERSION on breaking
 // changes to force old caches to be dropped.
-const CACHE_VERSION = "pdc26-v2";
+// Renamed from "pdc26-*" now that this app hosts more than one festival —
+// bumped to v4 (was pdc26-v3) so the rename itself also drops old caches.
+const CACHE_VERSION = "horarios-v4";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
 
 // The page that triggers SW registration is fetched before the worker can
 // intercept anything, so without an explicit precache here, a user who
-// loads the app once and goes straight offline would have no cached "/" to
-// fall back to on their next visit.
-const SHELL_URLS = ["/", "/manifest.webmanifest"];
+// loads the app once and goes straight offline would have no cached page to
+// fall back to on their next visit. "/pdc26" is the currently-installable
+// festival (and the manifest's start_url); "/" is the archive index a
+// visitor may also have open. A future festival's route isn't known to this
+// static file at build time, so precaching it here needs a matching edit —
+// the rest of the app still works offline without it, just without this
+// as-you-install head start.
+const SHELL_URLS = ["/", "/pdc26", "/manifest.webmanifest"];
+const SCHEDULE_URLS = ["/api/festivals/pdc26/schedule"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -23,7 +31,7 @@ self.addEventListener("install", (event) => {
       // Also fetched by the page itself on mount, but that fetch races SW
       // activation on a first-ever visit and can miss the cache. Fetching
       // it here too closes that gap deterministically.
-      caches.open(SCHEDULE_CACHE).then((cache) => cache.add("/api/schedule")),
+      caches.open(SCHEDULE_CACHE).then((cache) => cache.addAll(SCHEDULE_URLS)),
     ]),
   );
   self.skipWaiting();
@@ -35,7 +43,12 @@ self.addEventListener("activate", (event) => {
       .keys()
       .then((keys) =>
         Promise.all(
-          keys.filter((key) => key.startsWith("pdc26-") && !CURRENT_CACHES.includes(key)).map((key) => caches.delete(key)),
+          keys
+            // Matches both this app's current prefix and its old "pdc26-*"
+            // one, so the v3->v4 rename above actually cleans up the caches
+            // it's replacing instead of leaving them orphaned.
+            .filter((key) => /^(horarios|pdc26)-/.test(key) && !CURRENT_CACHES.includes(key))
+            .map((key) => caches.delete(key)),
         ),
       )
       .then(() => self.clients.claim()),
@@ -76,8 +89,10 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   // Live data: try the network first so admin edits show up immediately;
-  // fall back to the last-cached response when offline.
-  if (url.pathname === "/api/schedule") {
+  // fall back to the last-cached response when offline. Matches
+  // /api/festivals/<slug>/schedule for any festival, not just the one
+  // precached above.
+  if (/^\/api\/festivals\/[^/]+\/schedule$/.test(url.pathname)) {
     event.respondWith(networkFirst(request, SCHEDULE_CACHE));
     return;
   }

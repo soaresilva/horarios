@@ -11,7 +11,7 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-zinc-950 px-4">
       <form action={action} className="flex w-full max-w-xs flex-col gap-3">
-        <h1 className="text-center text-sm font-semibold text-zinc-300">PdC 2026 admin</h1>
+        <h1 className="text-center text-sm font-semibold text-zinc-300">Horários Bolachas admin</h1>
         <input
           type="password"
           name="password"

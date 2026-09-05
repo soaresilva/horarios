@@ -40,7 +40,7 @@ const schedule: Schedule = {
 describe("TimetableApp loading/error states", () => {
   it("shows the full-page error screen when nothing has ever loaded", () => {
     mockUseSchedule.mockReturnValue({ schedule: null, loading: false, error: "boom", reload: vi.fn() });
-    render(<TimetableApp />);
+    render(<TimetableApp festivalSlug="pdc26" />);
     expect(screen.getByText("boom")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
   });
@@ -54,11 +54,14 @@ describe("TimetableApp loading/error states", () => {
   // good previously-loaded schedule still sitting in state.
   it("keeps showing the already-loaded schedule when a background refetch fails, instead of blanking the page", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: "Couldn't load the schedule.", reload: vi.fn() });
-    render(<TimetableApp />);
+    render(<TimetableApp festivalSlug="pdc26" />);
 
     // The real timetable UI is still up...
     expect(screen.getByText("Horários Bolachas")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
+    // ...with a way back to the archive index at "/", now that this
+    // component only renders under /pdc26 rather than at the site root.
+    expect(screen.getByRole("link", { name: /Horários archive/ })).toHaveAttribute("href", "/");
 
     // ...with a small, non-blocking notice instead of a full-page takeover.
     expect(screen.getByRole("button", { name: /refresh failed/i })).toBeInTheDocument();
@@ -66,7 +69,7 @@ describe("TimetableApp loading/error states", () => {
 
   it("shows no stale-refresh notice once a refetch succeeds again", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
-    render(<TimetableApp />);
+    render(<TimetableApp festivalSlug="pdc26" />);
     expect(screen.queryByRole("button", { name: /refresh failed/i })).not.toBeInTheDocument();
   });
 });
@@ -108,7 +111,7 @@ describe("TimetableApp main-stage header", () => {
   // header until the visitor switched to another day and back.
   it("labels every paired main stage, not just the first", () => {
     mockUseSchedule.mockReturnValue({ schedule: pairedSchedule, loading: false, error: null, reload: vi.fn() });
-    render(<TimetableApp />);
+    render(<TimetableApp festivalSlug="pdc26" />);
 
     expect(screen.getByText("Sobe à Vila")).toBeInTheDocument();
     expect(screen.getByText("Xapas Lounge")).toBeInTheDocument();
@@ -121,7 +124,7 @@ describe("TimetableApp main-stage header", () => {
   // if it comes back, both bugs come back with it.
   it("keeps the sticky header opaque rather than backdrop-blurred", () => {
     mockUseSchedule.mockReturnValue({ schedule: pairedSchedule, loading: false, error: null, reload: vi.fn() });
-    const { container } = render(<TimetableApp />);
+    const { container } = render(<TimetableApp festivalSlug="pdc26" />);
 
     const stickies = container.querySelectorAll(".sticky");
     expect(stickies.length).toBeGreaterThan(0);

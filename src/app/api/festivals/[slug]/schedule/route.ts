@@ -2,15 +2,29 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import type { PerformanceDTO, ScheduleResponse, StageDTO } from "@/types/schedule";
 
+interface Params {
+  params: Promise<{ slug: string }>;
+}
+
 // Dynamic by default (no `dynamic` export, no `use cache`): every request
 // re-queries Postgres directly. The dataset is tiny and edits from /admin
 // must be visible immediately, so there's no server-side cache layer to
 // invalidate. Offline access is handled client-side by the service worker's
 // NetworkFirst cache for this route, not by HTTP caching here.
-export async function GET() {
+export async function GET(_request: Request, { params }: Params) {
+  const { slug } = await params;
+
+  const festival = await prisma.festival.findUnique({ where: { slug } });
+  if (!festival) {
+    return NextResponse.json({ error: "Festival not found" }, { status: 404 });
+  }
+
   const [stages, performances] = await Promise.all([
-    prisma.stage.findMany({ orderBy: { order: "asc" } }),
-    prisma.performance.findMany({ orderBy: { startTime: "asc" } }),
+    prisma.stage.findMany({ where: { festivalId: festival.id }, orderBy: { order: "asc" } }),
+    prisma.performance.findMany({
+      where: { stage: { festivalId: festival.id } },
+      orderBy: { startTime: "asc" },
+    }),
   ]);
 
   const stageDTOs: StageDTO[] = stages.map((s) => ({

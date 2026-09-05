@@ -11,6 +11,9 @@ async function login(page: import("@playwright/test").Page) {
   await expect(page).toHaveURL(/\/admin\/login$/);
   await page.fill('input[name="password"]', ADMIN_PASSWORD!);
   await Promise.all([page.waitForURL("**/admin"), page.click('button[type="submit"]')]);
+  // Login lands on the festival picker; the schedule editor itself lives one
+  // level deeper, per festival.
+  await page.goto("/admin/pdc26");
 }
 
 test("unauthenticated visitors are redirected to the login page", async ({ page }) => {
@@ -24,6 +27,19 @@ test("wrong password is rejected", async ({ page }) => {
   await page.click('button[type="submit"]');
   await expect(page.getByText("Incorrect password.")).toBeVisible();
   await expect(page).toHaveURL(/\/admin\/login$/);
+});
+
+test("the admin picker lists festivals and links into their scoped editor", async ({ page }) => {
+  await page.goto("/admin");
+  await expect(page).toHaveURL(/\/admin\/login$/);
+  await page.fill('input[name="password"]', ADMIN_PASSWORD!);
+  await Promise.all([page.waitForURL("**/admin"), page.click('button[type="submit"]')]);
+
+  await Promise.all([
+    page.waitForURL("**/admin/pdc26"),
+    page.getByRole("link", { name: /Paredes de Coura 2026/ }).click(),
+  ]);
+  await expect(page.getByRole("heading", { name: /Paredes de Coura 2026 admin/ })).toBeVisible();
 });
 
 test("adding a recommended performance in the one-form admin shows it (with marker) publicly, and confirm-delete removes it", async ({
@@ -53,7 +69,7 @@ test("adding a recommended performance in the one-form admin shows it (with mark
   await expect(page.locator(`input[value="${uniqueName}"]`)).toBeVisible();
 
   const publicPage = await context.newPage();
-  await publicPage.goto("/");
+  await publicPage.goto("/pdc26");
   await publicPage.getByRole("tab", { name: /12/ }).click();
   await expect(publicPage.getByText(uniqueName)).toBeVisible();
   // Recommended, so the thumbs-up marker (an aria-hidden svg) is on the act.
@@ -69,7 +85,7 @@ test("adding a recommended performance in the one-form admin shows it (with mark
   await expect(page.locator(`input[value="${uniqueName}"]`)).toHaveCount(0);
 
   const publicPage2 = await context.newPage();
-  await publicPage2.goto("/");
+  await publicPage2.goto("/pdc26");
   await publicPage2.getByRole("tab", { name: /12/ }).click();
   await expect(publicPage2.getByText(uniqueName)).not.toBeVisible();
   await publicPage2.close();
@@ -122,7 +138,7 @@ test("the public recommendations toggle hides the marker and persists across a r
   await expect(page.locator(`input[value="${uniqueName}"]`)).toBeVisible();
 
   const pub = await context.newPage();
-  await pub.goto("/");
+  await pub.goto("/pdc26");
   await pub.getByRole("tab", { name: /12/ }).click();
   await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(1);
 

@@ -15,14 +15,14 @@ export interface UseScheduleResult {
 // up, without hammering the API from every device open during the festival.
 const POLL_INTERVAL_MS = 60_000;
 
-export function useSchedule(): UseScheduleResult {
+export function useSchedule(festivalSlug: string): UseScheduleResult {
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
-      const res = await fetch("/api/schedule");
+      const res = await fetch(`/api/festivals/${festivalSlug}/schedule`);
       if (!res.ok) throw new Error(`Request failed with ${res.status}`);
       const dto = await res.json();
       setSchedule(parseSchedule(dto));
@@ -35,7 +35,7 @@ export function useSchedule(): UseScheduleResult {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [festivalSlug]);
 
   useEffect(() => {
     // react-hooks/set-state-in-effect flags this because `load` eventually

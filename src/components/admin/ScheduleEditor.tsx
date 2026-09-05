@@ -132,6 +132,7 @@ function HeaderRow() {
 }
 
 interface ScheduleEditorProps {
+  festivalSlug: string;
   stages: EditableStage[];
   performances: EditablePerformance[];
   // Called with the save result right after it resolves. A save bumps every
@@ -142,7 +143,7 @@ interface ScheduleEditorProps {
   onSaved?: (state: SaveScheduleState) => void;
 }
 
-export function ScheduleEditor({ stages, performances, onSaved }: ScheduleEditorProps) {
+export function ScheduleEditor({ festivalSlug, stages, performances, onSaved }: ScheduleEditorProps) {
   async function saveAndReport(prevState: SaveScheduleState, formData: FormData) {
     const result = await saveScheduleAction(prevState, formData);
     onSaved?.(result);
@@ -159,12 +160,13 @@ export function ScheduleEditor({ stages, performances, onSaved }: ScheduleEditor
   function handleDelete(id: string, name: string) {
     if (!window.confirm(`Delete “${name}”? This can’t be undone.`)) return;
     startDelete(async () => {
-      await deletePerformanceById(id);
+      await deletePerformanceById(festivalSlug, id);
     });
   }
 
   return (
     <form action={action} className="flex flex-col gap-8">
+      <input type="hidden" name="festivalSlug" value={festivalSlug} />
       <input type="hidden" name="existingIds" value={existingIds.join(",")} />
       <input type="hidden" name="newKeys" value={newKeys.join(",")} />
       <input type="hidden" name="stageIds" value={stages.map((s) => s.id).join(",")} />
