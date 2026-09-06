@@ -8,7 +8,7 @@ function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
 }
 
-const layout = { top: 0, height: 90 };
+const layout = { offset: 0, extent: 90 };
 
 function performance(overrides: Partial<Performance> = {}): Performance {
   return {

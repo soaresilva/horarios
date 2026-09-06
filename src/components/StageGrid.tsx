@@ -5,7 +5,7 @@ import { PerformanceBlock } from "@/components/PerformanceBlock";
 import { TimeAxis } from "@/components/TimeAxis";
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
-import { blockLayout, computeDayWindow, windowHeight } from "@/lib/time";
+import { blockLayout, computeDayWindow, windowExtent } from "@/lib/time";
 
 interface StageGridProps {
   stages: Stage[];
@@ -22,7 +22,7 @@ export function StageGrid({ stages, performances, isStarred, onToggleStar }: Sta
     return <p className="p-4 text-sm text-zinc-500">No performances scheduled for this day yet.</p>;
   }
 
-  const height = windowHeight(window);
+  const height = windowExtent(window);
 
   return (
     <div className="flex">

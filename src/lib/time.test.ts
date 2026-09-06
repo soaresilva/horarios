@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  HORIZONTAL_SCALE,
   MIN_BLOCK_HEIGHT,
   PX_PER_MINUTE,
   blockLayout,
@@ -14,6 +15,7 @@ import {
   toLisbonClockValue,
   toLisbonDatetimeLocalValue,
   todayInFestivalTimezone,
+  windowExtent,
 } from "./time";
 
 // Helper mirroring prisma/seed.ts: build a Lisbon wall-clock instant.
@@ -58,17 +60,42 @@ describe("blockLayout", () => {
 
   it("positions a block at minutesFromStart * PX_PER_MINUTE", () => {
     const range = { startTime: lisbon("2026-08-13T19:40:00"), endTime: lisbon("2026-08-13T20:45:00") };
-    const { top, height } = blockLayout(window, range);
+    const { offset, extent } = blockLayout(window, range);
     // 19:40 is 220 minutes after the 16:00 window start.
-    expect(top).toBe(220 * PX_PER_MINUTE);
+    expect(offset).toBe(220 * PX_PER_MINUTE);
     // 65-minute set.
-    expect(height).toBe(65 * PX_PER_MINUTE);
+    expect(extent).toBe(65 * PX_PER_MINUTE);
   });
 
   it("floors very short sets to MIN_BLOCK_HEIGHT so the label stays legible", () => {
     const range = { startTime: lisbon("2026-08-13T16:00:00"), endTime: lisbon("2026-08-13T16:10:00") };
-    const { height } = blockLayout(window, range);
-    expect(height).toBe(MIN_BLOCK_HEIGHT);
+    const { extent } = blockLayout(window, range);
+    expect(extent).toBe(MIN_BLOCK_HEIGHT);
+  });
+
+  // The transposed (Left of the Dial) layout runs the same math along the X
+  // axis at a denser scale, so a 30-minute showcase set stays wide enough to
+  // read an artist name in.
+  it("scales to the horizontal grid when given HORIZONTAL_SCALE", () => {
+    const range = { startTime: lisbon("2026-08-13T19:40:00"), endTime: lisbon("2026-08-13T20:20:00") };
+    const { offset, extent } = blockLayout(window, range, HORIZONTAL_SCALE);
+    expect(offset).toBe(220 * HORIZONTAL_SCALE.pxPerMinute);
+    expect(extent).toBe(40 * HORIZONTAL_SCALE.pxPerMinute);
+  });
+
+  it("floors a short set to the horizontal scale's own minExtent", () => {
+    const range = { startTime: lisbon("2026-08-13T19:40:00"), endTime: lisbon("2026-08-13T19:50:00") };
+    const { extent } = blockLayout(window, range, HORIZONTAL_SCALE);
+    expect(extent).toBe(HORIZONTAL_SCALE.minExtent);
+  });
+});
+
+describe("windowExtent", () => {
+  const window = { start: lisbon("2026-08-13T16:00:00"), end: lisbon("2026-08-14T02:00:00") };
+
+  it("measures the whole window along the time axis, per scale", () => {
+    expect(windowExtent(window)).toBe(600 * PX_PER_MINUTE);
+    expect(windowExtent(window, HORIZONTAL_SCALE)).toBe(600 * HORIZONTAL_SCALE.pxPerMinute);
   });
 });
 
@@ -82,13 +109,19 @@ describe("currentTimeOffset", () => {
 
   it("places the line inside the Cass McCombs block (19:40-20:45) at 19:45", () => {
     const perf = { startTime: lisbon("2026-08-13T19:40:00"), endTime: lisbon("2026-08-13T20:45:00") };
-    const { top, height } = blockLayout(window, perf);
+    const { offset: blockOffset, extent } = blockLayout(window, perf);
     const now = lisbon("2026-08-13T19:45:00");
     const offset = currentTimeOffset(window, now);
 
     expect(offset).not.toBeNull();
-    expect(offset!).toBeGreaterThanOrEqual(top);
-    expect(offset!).toBeLessThanOrEqual(top + height);
+    expect(offset!).toBeGreaterThanOrEqual(blockOffset);
+    expect(offset!).toBeLessThanOrEqual(blockOffset + extent);
+  });
+
+  it("scales the marker position with the grid it's drawn on", () => {
+    const now = lisbon("2026-08-13T19:40:00");
+    expect(currentTimeOffset(window, now)).toBe(220 * PX_PER_MINUTE);
+    expect(currentTimeOffset(window, now, HORIZONTAL_SCALE)).toBe(220 * HORIZONTAL_SCALE.pxPerMinute);
   });
 });
 
@@ -206,9 +239,20 @@ describe("generateTimeTicks", () => {
     const window = { start: lisbon("2026-08-13T16:00:00"), end: lisbon("2026-08-13T17:00:00") };
     const ticks = generateTimeTicks(window, 30);
     expect(ticks).toEqual([
-      { offset: 0, label: "16:00", isHour: true },
-      { offset: 30 * PX_PER_MINUTE, label: "16:30", isHour: false },
-      { offset: 60 * PX_PER_MINUTE, label: "17:00", isHour: true },
+      { offset: 0, label: "16:00", isHour: true, minutes: 0 },
+      { offset: 30 * PX_PER_MINUTE, label: "16:30", isHour: false, minutes: 30 },
+      { offset: 60 * PX_PER_MINUTE, label: "17:00", isHour: true, minutes: 60 },
     ]);
+  });
+
+  // The transposed axis draws a tick every 10 minutes but labels only every
+  // 30, so it needs each tick's minute offset to decide which get a label.
+  it("carries each tick's minutes and honours the horizontal scale", () => {
+    const window = { start: lisbon("2026-08-13T16:00:00"), end: lisbon("2026-08-13T16:30:00") };
+    const ticks = generateTimeTicks(window, 10, HORIZONTAL_SCALE);
+
+    expect(ticks.map((t) => t.minutes)).toEqual([0, 10, 20, 30]);
+    expect(ticks.map((t) => t.offset)).toEqual([0, 40, 80, 120]);
+    expect(ticks.filter((t) => t.minutes % 30 === 0).map((t) => t.label)).toEqual(["16:00", "16:30"]);
   });
 });

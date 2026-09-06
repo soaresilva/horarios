@@ -28,7 +28,7 @@ export function PerformanceBlock({
   return (
     <div
       data-performance-id={performance.id}
-      style={{ top: layout.top, height: layout.height }}
+      style={{ top: layout.offset, height: layout.extent }}
       className={`absolute left-1 right-1 rounded-md transition-colors ${
         starred
           ? "bg-accent/20 ring-1 ring-accent"

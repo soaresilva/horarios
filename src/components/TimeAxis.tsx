@@ -1,9 +1,9 @@
-import { generateTimeTicks, windowHeight, type GridWindow } from "@/lib/time";
+import { generateTimeTicks, windowExtent, type GridWindow } from "@/lib/time";
 
 export function TimeAxis({ window }: { window: GridWindow }) {
   const ticks = generateTimeTicks(window);
   return (
-    <div className="relative w-11 shrink-0" style={{ height: windowHeight(window) }}>
+    <div className="relative w-11 shrink-0" style={{ height: windowExtent(window) }}>
       {ticks.map((tick) => (
         <div
           key={tick.offset}

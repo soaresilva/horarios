@@ -3,12 +3,33 @@
 // correctly regardless of the viewer's device timezone.
 export const FESTIVAL_TIMEZONE = "Europe/Lisbon";
 
-// Pixels per minute for the timetable grid. At this density a 45-minute
-// set (the shortest slot in the seeded schedule) renders at 90px, tall
-// enough to fit an artist name and start time comfortably on mobile.
-export const PX_PER_MINUTE = 2;
+// How minutes become pixels, and the floor below which a block stops being
+// readable. The two layouts need different densities because they spend the
+// axis differently: the vertical grid has a whole column width for the
+// artist name and only needs height for two lines, while the transposed grid
+// has a fixed 56px row height and must fit the name along the *time* axis,
+// so a short set needs far more pixels per minute to stay legible.
+export interface GridScale {
+  pxPerMinute: number;
+  /** Minimum size along the time axis: height when vertical, width when transposed. */
+  minExtent: number;
+}
 
-export const MIN_BLOCK_HEIGHT = 40;
+// A 45-minute set (the shortest slot in the seeded PdC schedule) renders at
+// 90px tall — room for an artist name and the set times on mobile.
+export const VERTICAL_SCALE: GridScale = { pxPerMinute: 2, minExtent: 40 };
+
+// A 40-minute set renders 160px wide and a clipped 30-minute one 120px, both
+// wide enough for a two-line artist name. A 15:00–00:40 festival day comes
+// out ~2320px, roughly six screen-widths on a 390px phone — enough to feel
+// the shape of the evening without endless swiping.
+export const HORIZONTAL_SCALE: GridScale = { pxPerMinute: 4, minExtent: 120 };
+
+// Kept as named exports: the vertical layout and its tests read these
+// directly, and they are what every existing import expects.
+export const PX_PER_MINUTE = VERTICAL_SCALE.pxPerMinute;
+
+export const MIN_BLOCK_HEIGHT = VERTICAL_SCALE.minExtent;
 
 export interface TimeRange {
   startTime: Date;
@@ -193,46 +214,72 @@ export function minutesFromWindowStart(window: GridWindow, date: Date): number {
   return (date.getTime() - window.start.getTime()) / 60000;
 }
 
-export function windowHeight(window: GridWindow): number {
-  return minutesFromWindowStart(window, window.end) * PX_PER_MINUTE;
+/** Total size of a day's window along the time axis. */
+export function windowExtent(window: GridWindow, scale: GridScale = VERTICAL_SCALE): number {
+  return minutesFromWindowStart(window, window.end) * scale.pxPerMinute;
 }
 
+// Deliberately axis-neutral names rather than {top, height}: the same math
+// drives `top`/`height` in the vertical grid and `left`/`width` in the
+// transposed one, and naming it after one of them hides that.
 export interface BlockLayout {
-  top: number;
-  height: number;
+  /** Distance from the window start along the time axis. */
+  offset: number;
+  /** Size along the time axis. */
+  extent: number;
 }
 
-export function blockLayout(window: GridWindow, range: TimeRange): BlockLayout {
-  const top = minutesFromWindowStart(window, range.startTime) * PX_PER_MINUTE;
-  const rawHeight =
-    ((range.endTime.getTime() - range.startTime.getTime()) / 60000) * PX_PER_MINUTE;
-  return { top, height: Math.max(rawHeight, MIN_BLOCK_HEIGHT) };
+export function blockLayout(
+  window: GridWindow,
+  range: TimeRange,
+  scale: GridScale = VERTICAL_SCALE,
+): BlockLayout {
+  const offset = minutesFromWindowStart(window, range.startTime) * scale.pxPerMinute;
+  const rawExtent =
+    ((range.endTime.getTime() - range.startTime.getTime()) / 60000) * scale.pxPerMinute;
+  return { offset, extent: Math.max(rawExtent, scale.minExtent) };
 }
 
-/** Offset in px of the "now" line within the window, or null if now falls outside it. */
-export function currentTimeOffset(window: GridWindow, now: Date): number | null {
+/** Offset in px of the "now" marker within the window, or null if now falls outside it. */
+export function currentTimeOffset(
+  window: GridWindow,
+  now: Date,
+  scale: GridScale = VERTICAL_SCALE,
+): number | null {
   if (now.getTime() < window.start.getTime() || now.getTime() > window.end.getTime()) {
     return null;
   }
-  return minutesFromWindowStart(window, now) * PX_PER_MINUTE;
+  return minutesFromWindowStart(window, now) * scale.pxPerMinute;
 }
 
 export interface TimeTick {
   offset: number;
   label: string;
   isHour: boolean;
+  /** Minutes from the window start, so a caller can label a subset of ticks. */
+  minutes: number;
 }
 
-/** Gridlines every `stepMinutes`, labeled on the hour to avoid clutter on mobile. */
-export function generateTimeTicks(window: GridWindow, stepMinutes = 30): TimeTick[] {
+/**
+ * Gridlines every `stepMinutes`. The vertical axis labels all of them and
+ * dims the off-hour ones; the transposed axis draws ticks every 10 minutes
+ * but labels only every 30, since horizontal labels sit side by side and
+ * would otherwise collide — hence `minutes` on each tick.
+ */
+export function generateTimeTicks(
+  window: GridWindow,
+  stepMinutes = 30,
+  scale: GridScale = VERTICAL_SCALE,
+): TimeTick[] {
   const ticks: TimeTick[] = [];
   const totalMinutes = minutesFromWindowStart(window, window.end);
   for (let m = 0; m <= totalMinutes; m += stepMinutes) {
     const tickDate = new Date(window.start.getTime() + m * 60000);
     ticks.push({
-      offset: m * PX_PER_MINUTE,
+      offset: m * scale.pxPerMinute,
       label: formatClock(tickDate),
-      isHour: tickDate.getUTCMinutes() % 60 === 0,
+      isHour: tickDate.getUTCMinutes() === 0,
+      minutes: m,
     });
   }
   return ticks;
