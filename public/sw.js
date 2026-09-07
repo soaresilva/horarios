@@ -8,10 +8,21 @@
 // Renamed from "pdc26-*" now that this app hosts more than one festival.
 // v5 also evicts schedule responses cached in the pre-zones/artists shape,
 // which an offline visitor would otherwise be served with missing arrays.
-const CACHE_VERSION = "horarios-v5";
+const CACHE_VERSION = "horarios-v6";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
+
+// Served when a navigation's network fetch fails AND that exact URL was
+// never cached (a returning visitor's still-active old service worker
+// hitting a route added after they last opened the app, plus any transient
+// fetch failure — an ad-blocker/privacy extension intercepting a
+// service-worker-context fetch, not just genuine offline). Without this,
+// networkFirst's rethrow makes the *browser* render its own hard
+// "can't be reached" page, since a rejected respondWith() is a network
+// error as far as the browser is concerned — this never reaches the app's
+// own code, so no in-app error handling can catch it either.
+const OFFLINE_FALLBACK_URL = "/offline.html";
 
 // The page that triggers SW registration is fetched before the worker can
 // intercept anything, so without an explicit precache here, a user who
@@ -22,7 +33,7 @@ const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
 // static file at build time, so precaching it here needs a matching edit —
 // the rest of the app still works offline without it, just without this
 // as-you-install head start.
-const SHELL_URLS = ["/", "/pdc26", "/lotd26", "/manifest.webmanifest"];
+const SHELL_URLS = ["/", "/pdc26", "/lotd26", "/manifest.webmanifest", OFFLINE_FALLBACK_URL];
 const SCHEDULE_URLS = ["/api/festivals/pdc26/schedule", "/api/festivals/lotd26/schedule"];
 
 self.addEventListener("install", (event) => {
@@ -69,6 +80,15 @@ async function networkFirst(request, cacheName) {
   }
 }
 
+async function offlineFallback() {
+  const cache = await caches.open(ASSET_CACHE);
+  const fallback = await cache.match(OFFLINE_FALLBACK_URL);
+  // Falls through to a real network error only if the fallback page itself
+  // was never precached (e.g. this exact install is mid-update) — same
+  // failure mode as before this fix existed, not a new one.
+  return fallback ?? Response.error();
+}
+
 async function staleWhileRevalidate(request, cacheName) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
@@ -106,7 +126,12 @@ self.addEventListener("fetch", (event) => {
   // twice, which made shipped fixes look like they had never deployed.
   // Offline still works: this falls back to the cached document.
   if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request, ASSET_CACHE));
+    // Only navigations get the offline-fallback-page safety net: the
+    // schedule API's networkFirst above must keep rethrowing on total
+    // failure so useSchedule's own "Refresh failed, tap to retry" notice
+    // still fires — swallowing that here would hide a real fetch failure
+    // behind a silently stale schedule instead.
+    event.respondWith(networkFirst(request, ASSET_CACHE).catch(offlineFallback));
     return;
   }
 
