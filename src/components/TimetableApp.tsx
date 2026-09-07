@@ -151,16 +151,22 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         </p>
       )}
 
-      {(copy?.legend ?? true) && (
-        <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
-          <RecommendationsToggle />
-          <span className="flex items-center gap-1">
-            <span aria-hidden className="text-accent">★</span>
-            your favorites
-          </span>
-          <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
-        </div>
-      )}
+      {/* Sync is independent of `legend`: that flag only controls the
+          recommends/favorites explainer row (redundant on some editions,
+          see festival-copy.ts), but cross-device sync is useful on every
+          festival regardless of whether this row shows. */}
+      <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
+        {(copy?.legend ?? true) && (
+          <>
+            <RecommendationsToggle />
+            <span className="flex items-center gap-1">
+              <span aria-hidden className="text-accent">★</span>
+              your favorites
+            </span>
+          </>
+        )}
+        <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
+      </div>
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
 
