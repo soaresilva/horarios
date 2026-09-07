@@ -34,6 +34,8 @@ export default async function AdminFestivalPage({ params }: Props) {
     name: s.name,
     slug: s.slug,
     order: s.order,
+    zoneId: s.zoneId,
+    address: s.address,
     updatedAt: s.updatedAt,
   }));
   const performances: (Performance & { updatedAt: Date })[] = performanceRows.map((p) => ({
@@ -45,6 +47,7 @@ export default async function AdminFestivalPage({ params }: Props) {
     notes: p.notes,
     recommended: p.recommended,
     stageId: p.stageId,
+    artistId: p.artistId,
     updatedAt: p.updatedAt,
   }));
 

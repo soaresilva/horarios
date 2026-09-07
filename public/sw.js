@@ -5,9 +5,10 @@
 // network-first for one API route — that a small vanilla worker is simpler
 // than fighting that incompatibility. Bump CACHE_VERSION on breaking
 // changes to force old caches to be dropped.
-// Renamed from "pdc26-*" now that this app hosts more than one festival —
-// bumped to v4 (was pdc26-v3) so the rename itself also drops old caches.
-const CACHE_VERSION = "horarios-v4";
+// Renamed from "pdc26-*" now that this app hosts more than one festival.
+// v5 also evicts schedule responses cached in the pre-zones/artists shape,
+// which an offline visitor would otherwise be served with missing arrays.
+const CACHE_VERSION = "horarios-v5";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
@@ -21,8 +22,8 @@ const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
 // static file at build time, so precaching it here needs a matching edit —
 // the rest of the app still works offline without it, just without this
 // as-you-install head start.
-const SHELL_URLS = ["/", "/pdc26", "/manifest.webmanifest"];
-const SCHEDULE_URLS = ["/api/festivals/pdc26/schedule"];
+const SHELL_URLS = ["/", "/pdc26", "/lotd26", "/manifest.webmanifest"];
+const SCHEDULE_URLS = ["/api/festivals/pdc26/schedule", "/api/festivals/lotd26/schedule"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -45,8 +46,8 @@ self.addEventListener("activate", (event) => {
         Promise.all(
           keys
             // Matches both this app's current prefix and its old "pdc26-*"
-            // one, so the v3->v4 rename above actually cleans up the caches
-            // it's replacing instead of leaving them orphaned.
+            // one, so a version bump or rename actually cleans up the caches
+            // it replaces instead of leaving them orphaned.
             .filter((key) => /^(horarios|pdc26)-/.test(key) && !CURRENT_CACHES.includes(key))
             .map((key) => caches.delete(key)),
         ),

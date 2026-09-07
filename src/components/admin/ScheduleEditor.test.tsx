@@ -15,7 +15,7 @@ vi.mock("@/app/admin/actions", () => ({
 
 const stageUpdatedAt = new Date("2026-08-01T12:00:00Z");
 const stages: (Stage & { updatedAt: Date })[] = [
-  { id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, updatedAt: stageUpdatedAt },
+  { id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, zoneId: null, address: null, updatedAt: stageUpdatedAt },
 ];
 
 function lisbon(iso: string) {
@@ -32,7 +32,7 @@ const performances: (Performance & { updatedAt: Date })[] = [
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
     recommended: true,
-    stageId: "vodafone",
+    stageId: "vodafone", artistId: null,
     updatedAt: performanceUpdatedAt,
   },
 ];

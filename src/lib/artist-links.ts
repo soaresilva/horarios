@@ -293,3 +293,28 @@ export function getArtistLinks(artistName: string): ArtistLinks {
   }
   return {};
 }
+
+/**
+ * Links for one performance, from whichever source that festival uses.
+ *
+ * Left of the Dial's ~160 acts come from the DB, imported from the festival's
+ * own act pages, so `artistId` resolves them directly. Paredes de Coura has no
+ * Artist rows — its links are hand-sourced and hand-verified in the table
+ * above — so it falls back to matching on the display name. One function, both
+ * festivals, rather than a second lookup path in the components.
+ */
+export function artistLinksFor(
+  performance: { artistId: string | null; artistName: string },
+  artistsById: Map<string, { spotifyUrl: string | null; instagramUrl: string | null }>,
+): ArtistLinks {
+  if (performance.artistId) {
+    const artist = artistsById.get(performance.artistId);
+    if (artist) {
+      return {
+        spotify: artist.spotifyUrl ?? undefined,
+        instagram: artist.instagramUrl ?? undefined,
+      };
+    }
+  }
+  return getArtistLinks(performance.artistName);
+}

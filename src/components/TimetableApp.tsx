@@ -8,20 +8,27 @@ import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
+import { TransposedGrid } from "@/components/TransposedGrid";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useStarred } from "@/hooks/useStarred";
+import { festivalCopy } from "@/lib/festival-copy";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
+import { showOrdinals } from "@/lib/shows";
 import { formatClock, todayInFestivalTimezone, type FestivalTime } from "@/lib/time";
+
+export type TimetableLayoutName = "VERTICAL" | "TRANSPOSED";
 
 interface TimetableAppProps {
   festivalSlug: string;
   // Comes from the Festival row via the server component, not the DTO: it
   // never changes for an edition, so there's nothing to refetch, and having
-  // it on the first render avoids formatting a single clock in the wrong zone.
+  // it on the first render avoids formatting a single clock in the wrong zone
+  // or flashing the wrong layout.
   ft: FestivalTime;
+  layout: TimetableLayoutName;
 }
 
-export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
+export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
   const { isStarred, toggle } = useStarred();
   // Holds only the user's explicit tab choice; the default (today, falling
@@ -29,8 +36,17 @@ export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
   // into state via an effect, since `days` isn't known until the schedule
   // has loaded.
   const [dayOverride, setDayOverride] = useState<string | null>(null);
+  // Which set walking distances are measured from, in the transposed layout.
+  // Tapping the same block again clears it.
+  const [originId, setOriginId] = useState<string | null>(null);
 
   const days = useMemo(() => (schedule ? uniqueSortedDates(schedule.performances) : []), [schedule]);
+  // Across the whole festival, not the selected day: the point of "#2/3" is
+  // that the other shows are on other days.
+  const ordinals = useMemo(
+    () => showOrdinals(schedule?.performances ?? []),
+    [schedule],
+  );
   const today = useMemo(() => todayInFestivalTimezone(ft), [ft]);
   const selectedDay = dayOverride && days.includes(dayOverride) ? dayOverride : (days.includes(today) ? today : (days[0] ?? null));
 
@@ -69,6 +85,8 @@ export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
   const main = mainStages(schedule.stages, dayPerformances);
   const other = otherStages(schedule.stages, dayPerformances);
   const mainPerformances = dayPerformances.filter((p) => main.some((s) => s.id === p.stageId));
+  const isTransposed = layout === "TRANSPOSED";
+  const copy = festivalCopy(festivalSlug);
 
   return (
     <div className="flex h-dvh flex-col bg-background text-zinc-100">
@@ -101,36 +119,29 @@ export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
 
       <InstallBanner />
 
-      <p className="px-3 pb-1 pt-1 text-[10px] leading-snug text-zinc-600">
-        End times are estimated since they are not officially revealed.
-        <br />
-        <a
-          href="https://open.spotify.com/playlist/2zBxbOfM0JV1TzJvvhkYBs"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-zinc-400"
-        >
-          Playlist
-        </a>
-        . Download printable timetables:{" "}
-        <a
-          href="/files/pdc26.xlsx"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-zinc-400"
-        >
-          xls
-        </a>
-        /
-        <a
-          href="/files/pdc26.pdf"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline hover:text-zinc-400"
-        >
-          pdf
-        </a>
-      </p>
+      {copy && (
+        <p className="px-3 pt-1 pb-1 text-[10px] leading-snug text-zinc-600">
+          {copy.disclaimer}
+          {copy.links && copy.links.length > 0 && (
+            <>
+              {" "}
+              {copy.links.map((link, i) => (
+                <span key={link.href}>
+                  {i > 0 && " · "}
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline hover:text-zinc-400"
+                  >
+                    {link.label}
+                  </a>
+                </span>
+              ))}
+            </>
+          )}
+        </p>
+      )}
 
       <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
         <RecommendationsToggle />
@@ -142,6 +153,21 @@ export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
 
+      {isTransposed ? (
+        <TransposedGrid
+          stages={schedule.stages}
+          zones={schedule.zones}
+          zoneWalks={schedule.zoneWalks}
+          performances={dayPerformances}
+          artistsById={schedule.artistsById}
+          ordinals={ordinals}
+          originPerformanceId={originId}
+          isStarred={isStarred}
+          ft={ft}
+          onSelectOrigin={(id) => setOriginId((current) => (current === id ? null : id))}
+          onToggleStar={toggle}
+        />
+      ) : (
       <div className="flex-1 overflow-y-auto pb-6">
         {other.map((stage) => (
           <SideStageSection
@@ -191,6 +217,7 @@ export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

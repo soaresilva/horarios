@@ -10,7 +10,7 @@ afterEach(() => {
   window.localStorage.clear();
 });
 
-const stages: Stage[] = [{ id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0 }];
+const stages: Stage[] = [{ id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, zoneId: null, address: null }];
 
 function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
@@ -25,7 +25,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T21:40:00"),
     notes: null,
     recommended: true,
-    stageId: "vodafone",
+    stageId: "vodafone", artistId: null,
   },
 ];
 

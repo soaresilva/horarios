@@ -4,7 +4,10 @@ import { useSchedule } from "./useSchedule";
 
 const scheduleResponse = {
   updatedAt: "2026-08-04T00:00:00.000Z",
+  zones: [],
+  zoneWalks: [],
   stages: [],
+  artists: [],
   performances: [],
 };
 

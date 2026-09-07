@@ -6,8 +6,8 @@ import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage } from "@/lib/schedule-client";
 
 const stages: Stage[] = [
-  { id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0 },
-  { id: "palco2", name: "Palco 2", slug: "palco-2", order: 1 },
+  { id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, zoneId: null, address: null },
+  { id: "palco2", name: "Palco 2", slug: "palco-2", order: 1, zoneId: null, address: null },
 ];
 
 function lisbon(iso: string) {
@@ -23,7 +23,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
     recommended: false,
-    stageId: "vodafone",
+    stageId: "vodafone", artistId: null,
   },
   {
     id: "p2",
@@ -33,7 +33,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T21:40:00"),
     notes: null,
     recommended: true,
-    stageId: "palco2",
+    stageId: "palco2", artistId: null,
   },
 ];
 

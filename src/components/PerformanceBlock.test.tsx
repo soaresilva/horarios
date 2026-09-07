@@ -20,7 +20,7 @@ function performance(overrides: Partial<Performance> = {}): Performance {
     endTime: lisbon("2026-08-13T00:20:00"),
     notes: null,
     recommended: false,
-    stageId: "vodafone",
+    stageId: "vodafone", artistId: null,
     ...overrides,
   };
 }

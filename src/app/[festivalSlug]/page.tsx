@@ -29,6 +29,7 @@ export default async function FestivalPage({ params }: Props) {
     <TimetableApp
       festivalSlug={festival.slug}
       ft={{ timezone: festival.timezone, locale: festival.locale }}
+      layout={festival.layout}
     />
   );
 }

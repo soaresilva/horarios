@@ -22,8 +22,12 @@ vi.mock("@/components/StageGrid", () => ({ StageGrid: () => null }));
 const mockUseSchedule = vi.mocked(useSchedule);
 
 const schedule: Schedule = {
+  zones: [],
+  zoneWalks: [],
+  artists: [],
+  artistsById: new Map(),
   updatedAt: new Date("2026-08-13T18:00:00Z"),
-  stages: [{ id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0 }],
+  stages: [{ id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, zoneId: null, address: null }],
   performances: [
     {
       id: "p1",
@@ -33,7 +37,7 @@ const schedule: Schedule = {
       endTime: new Date("2026-08-13T19:45:00Z"),
       notes: null,
       recommended: false,
-      stageId: "vodafone",
+      stageId: "vodafone", artistId: null,
     },
   ],
 };
@@ -41,7 +45,7 @@ const schedule: Schedule = {
 describe("TimetableApp loading/error states", () => {
   it("shows the full-page error screen when nothing has ever loaded", () => {
     mockUseSchedule.mockReturnValue({ schedule: null, loading: false, error: "boom", reload: vi.fn() });
-    render(<TimetableApp festivalSlug="pdc26" ft={ft} />);
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
     expect(screen.getByText("boom")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Try again" })).toBeInTheDocument();
   });
@@ -55,7 +59,7 @@ describe("TimetableApp loading/error states", () => {
   // good previously-loaded schedule still sitting in state.
   it("keeps showing the already-loaded schedule when a background refetch fails, instead of blanking the page", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: "Couldn't load the schedule.", reload: vi.fn() });
-    render(<TimetableApp festivalSlug="pdc26" ft={ft} />);
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
 
     // The real timetable UI is still up...
     expect(screen.getByText("Horários Bolachas")).toBeInTheDocument();
@@ -70,7 +74,7 @@ describe("TimetableApp loading/error states", () => {
 
   it("shows no stale-refresh notice once a refetch succeeds again", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
-    render(<TimetableApp festivalSlug="pdc26" ft={ft} />);
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
     expect(screen.queryByRole("button", { name: /refresh failed/i })).not.toBeInTheDocument();
   });
 });
@@ -78,10 +82,14 @@ describe("TimetableApp loading/error states", () => {
 // The 10-11 Aug shape: two stages pair up in the main grid, so both of their
 // names have to appear in the sticky header above it.
 const pairedSchedule: Schedule = {
+  zones: [],
+  zoneWalks: [],
+  artists: [],
+  artistsById: new Map(),
   updatedAt: new Date("2026-08-10T18:00:00Z"),
   stages: [
-    { id: "sobe-a-vila", name: "Sobe à Vila", slug: "sobe-a-vila", order: 2 },
-    { id: "xapas-lounge", name: "Xapas Lounge", slug: "xapas-lounge", order: 5 },
+    { id: "sobe-a-vila", name: "Sobe à Vila", slug: "sobe-a-vila", order: 2, zoneId: null, address: null },
+    { id: "xapas-lounge", name: "Xapas Lounge", slug: "xapas-lounge", order: 5, zoneId: null, address: null },
   ],
   performances: [
     {
@@ -92,7 +100,7 @@ const pairedSchedule: Schedule = {
       endTime: new Date("2026-08-10T23:00:00Z"),
       notes: null,
       recommended: false,
-      stageId: "sobe-a-vila",
+      stageId: "sobe-a-vila", artistId: null,
     },
     {
       id: "p2",
@@ -102,7 +110,7 @@ const pairedSchedule: Schedule = {
       endTime: new Date("2026-08-11T03:00:00Z"),
       notes: null,
       recommended: false,
-      stageId: "xapas-lounge",
+      stageId: "xapas-lounge", artistId: null,
     },
   ],
 };
@@ -112,7 +120,7 @@ describe("TimetableApp main-stage header", () => {
   // header until the visitor switched to another day and back.
   it("labels every paired main stage, not just the first", () => {
     mockUseSchedule.mockReturnValue({ schedule: pairedSchedule, loading: false, error: null, reload: vi.fn() });
-    render(<TimetableApp festivalSlug="pdc26" ft={ft} />);
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
 
     expect(screen.getByText("Sobe à Vila")).toBeInTheDocument();
     expect(screen.getByText("Xapas Lounge")).toBeInTheDocument();
@@ -125,7 +133,7 @@ describe("TimetableApp main-stage header", () => {
   // if it comes back, both bugs come back with it.
   it("keeps the sticky header opaque rather than backdrop-blurred", () => {
     mockUseSchedule.mockReturnValue({ schedule: pairedSchedule, loading: false, error: null, reload: vi.fn() });
-    const { container } = render(<TimetableApp festivalSlug="pdc26" ft={ft} />);
+    const { container } = render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
 
     const stickies = container.querySelectorAll(".sticky");
     expect(stickies.length).toBeGreaterThan(0);
