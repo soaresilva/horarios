@@ -51,11 +51,11 @@ export interface GridScale {
 // 90px tall — room for an artist name and the set times on mobile.
 export const VERTICAL_SCALE: GridScale = { pxPerMinute: 2, minExtent: 40 };
 
-// A 40-minute set renders 160px wide and a clipped 30-minute one 120px, both
-// wide enough for a two-line artist name. A 15:00–00:40 festival day comes
-// out ~2320px, roughly six screen-widths on a 390px phone — enough to feel
-// the shape of the evening without endless swiping.
-export const HORIZONTAL_SCALE: GridScale = { pxPerMinute: 4, minExtent: 120 };
+// A 40-minute set renders 200px wide and a clipped 30-minute one 150px —
+// more breathing room than a first pass at 4px/min gave the two-line artist
+// name and rail. A 15:00–00:40 festival day comes out ~2900px, about seven
+// screen-widths on a 390px phone.
+export const HORIZONTAL_SCALE: GridScale = { pxPerMinute: 5, minExtent: 140 };
 
 // Kept as named exports: the vertical layout and its tests read these
 // directly, and they are what every existing import expects.

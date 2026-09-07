@@ -310,7 +310,9 @@ describe("generateTimeTicks", () => {
     const ticks = generateTimeTicks(window, ft, 10, HORIZONTAL_SCALE);
 
     expect(ticks.map((t) => t.minutes)).toEqual([0, 10, 20, 30]);
-    expect(ticks.map((t) => t.offset)).toEqual([0, 40, 80, 120]);
+    expect(ticks.map((t) => t.offset)).toEqual(
+      [0, 10, 20, 30].map((m) => m * HORIZONTAL_SCALE.pxPerMinute),
+    );
     expect(ticks.filter((t) => t.minutes % 30 === 0).map((t) => t.label)).toEqual(["16:00", "16:30"]);
   });
 });

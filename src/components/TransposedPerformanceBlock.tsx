@@ -42,9 +42,6 @@ export function TransposedPerformanceBlock({
   onToggleStar,
 }: TransposedPerformanceBlockProps) {
   const showOrdinal = ordinal && ordinal.total > 1;
-  // A 30-minute set sits at the grid's minimum width; a full icon rail there
-  // would leave about seven characters for the name.
-  const compactRail = layout.extent < 150;
 
   return (
     <div
@@ -58,17 +55,24 @@ export function TransposedPerformanceBlock({
             : "bg-zinc-800/70"
       }`}
     >
-      {/* pr-14 clears the horizontal rail: star + two icons at p-1.5 with
-          gap-1.5 comes to roughly 56px. */}
+      {/* Star-only rail, not the full Spotify/Instagram one PerformanceBlock
+          uses: every block here caps at 40 minutes (200px at this scale), and
+          a full 3-icon rail (~96px reserved, per the rail's own right-2 +
+          p-1.5 + gap-1.5 geometry) would burn nearly half of even the widest
+          block on icons that could barely be read anyway on a 26-room grid —
+          which is exactly the crowding a first pass at this got complaints
+          for. The rail sits right-2 from the edge and the star alone needs
+          8 + 24 = 32px, hence pr-9. Spotify/Instagram are still one tap away
+          via the artist's own festival page. */}
       <button
         type="button"
         onClick={() => onSelectOrigin(performance.id)}
         aria-pressed={isOrigin}
         aria-label={`Measure walking times from ${performance.artistName}`}
-        className={`absolute inset-0 flex h-full w-full flex-col justify-center rounded-md py-1 pl-2 text-left ${compactRail ? "pr-7" : "pr-14"}`}
+        className="absolute inset-0 flex h-full w-full flex-col justify-center rounded-md py-1 pr-9 pl-2 text-left"
       />
 
-      <div className={`pointer-events-none relative flex h-full flex-col justify-center py-1 pl-2 ${compactRail ? "pr-7" : "pr-14"}`}>
+      <div className="pointer-events-none relative flex h-full flex-col justify-center py-1 pr-9 pl-2">
         <span className="line-clamp-2 text-xs leading-tight font-semibold text-zinc-100">
           {artist?.sourceUrl ? (
             <a
@@ -88,7 +92,6 @@ export function TransposedPerformanceBlock({
         </span>
         <span className="truncate text-[10px] leading-tight text-zinc-400">
           {formatClock(performance.startTime, ft)}
-          {artist?.country && <span className="text-zinc-500"> · {artist.country}</span>}
           {showOrdinal && (
             <span className="text-zinc-500">
               {" "}
@@ -103,7 +106,7 @@ export function TransposedPerformanceBlock({
         links={links}
         starred={starred}
         orientation="horizontal"
-        compact={compactRail}
+        compact
         onToggleStar={() => onToggleStar(performance.id)}
       />
     </div>
