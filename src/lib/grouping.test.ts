@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "./grouping";
+import { mainStages, otherStages, performancesForDate, uniqueSortedDates, activeStagesSortedByOrder, stagesByZone } from "./grouping";
 
 const stages = [
   { id: "vodafone", slug: "vodafone", order: 0 },
@@ -98,5 +98,59 @@ describe("mainStages / otherStages", () => {
       "jazz-na-relva",
       "xapas-lounge",
     ]);
+  });
+});
+
+describe("activeStagesSortedByOrder", () => {
+  it("returns only stages with a set that day, in display order", () => {
+    const stages = [
+      { id: "b", slug: "b", order: 2 },
+      { id: "a", slug: "a", order: 1 },
+      { id: "dark", slug: "dark", order: 0 },
+    ];
+    const perfs = [
+      { id: "p1", date: "2026-10-23", stageId: "a" },
+      { id: "p2", date: "2026-10-23", stageId: "b" },
+    ];
+    expect(activeStagesSortedByOrder(stages, perfs).map((s) => s.id)).toEqual(["a", "b"]);
+  });
+});
+
+describe("stagesByZone", () => {
+  const zones = [
+    { id: "z2", order: 1 },
+    { id: "z1", order: 0 },
+  ];
+  const stages = [
+    { id: "s3", slug: "s3", order: 0, zoneId: "z2" },
+    { id: "s1", slug: "s1", order: 1, zoneId: "z1" },
+    { id: "s2", slug: "s2", order: 0, zoneId: "z1" },
+  ];
+
+  it("groups by zone order, then stage order within each zone", () => {
+    const groups = stagesByZone(stages, zones);
+    expect(groups.map((g) => g.zone?.id)).toEqual(["z1", "z2"]);
+    expect(groups[0].stages.map((s) => s.id)).toEqual(["s2", "s1"]);
+    expect(groups[1].stages.map((s) => s.id)).toEqual(["s3"]);
+  });
+
+  // A day where a whole cluster is dark shouldn't leave a heading over nothing.
+  it("drops zones with no stages", () => {
+    const groups = stagesByZone([stages[1]], zones);
+    expect(groups.map((g) => g.zone?.id)).toEqual(["z1"]);
+  });
+
+  // A stage must never vanish just because its zone is missing.
+  it("collects unzoned stages into a trailing group rather than dropping them", () => {
+    const withOrphan = [...stages, { id: "orphan", slug: "orphan", order: 9, zoneId: null }];
+    const groups = stagesByZone(withOrphan, zones);
+    expect(groups.at(-1)!.zone).toBeNull();
+    expect(groups.at(-1)!.stages.map((s) => s.id)).toEqual(["orphan"]);
+  });
+
+  it("treats a stage pointing at an unknown zone as unzoned", () => {
+    const groups = stagesByZone([{ id: "x", slug: "x", order: 0, zoneId: "gone" }], zones);
+    expect(groups).toHaveLength(1);
+    expect(groups[0].zone).toBeNull();
   });
 });

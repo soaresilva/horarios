@@ -41,8 +41,82 @@ model Festival {
   // admin's own device timezone.
   timezone  String
   stages    Stage[]
+  zones     Zone[]
+  artists   Artist[]
   createdAt DateTime        @default(now())
   updatedAt DateTime        @default(now()) @updatedAt
+}
+
+// A cluster of venues close enough together that walking between them is
+// trivial. Timetable rows are grouped by zone so the venue axis doubles as a
+// map of the city — at a 26-room festival spread across Rotterdam, "can I
+// physically get there" matters as much as "is there a clash".
+model Zone {
+  id                 String     @id @default(cuid())
+  festivalId         String
+  festival           Festival   @relation(fields: [festivalId], references: [id], onDelete: Cascade)
+  name               String
+  slug               String
+  order              Int        @default(0)
+  /// Approximate walking minutes from the festival's hub — for Left of the
+  /// Dial, the Eendrachtsplein ticket desk.
+  walkMinutesFromHub Int?
+  stages             Stage[]
+  walksFrom          ZoneWalk[] @relation("ZoneWalkFrom")
+  walksTo            ZoneWalk[] @relation("ZoneWalkTo")
+
+  @@unique([festivalId, slug])
+  @@index([festivalId, order])
+}
+
+// Approximate walking minutes between two zones, stored once per unordered
+// pair; walkMinutesBetween() in src/lib/zones.ts normalises the direction so
+// callers never care which way round it was written.
+//
+// Deliberately a pair table rather than something derived from
+// walkMinutesFromHub: two zones both 10 minutes from the hub can be 1 minute
+// or 20 minutes from each other, so |a - b| is geometrically wrong and would
+// mislead exactly the decision this exists to support.
+model ZoneWalk {
+  id         String @id @default(cuid())
+  fromZoneId String
+  fromZone   Zone   @relation("ZoneWalkFrom", fields: [fromZoneId], references: [id], onDelete: Cascade)
+  toZoneId   String
+  toZone     Zone   @relation("ZoneWalkTo", fields: [toZoneId], references: [id], onDelete: Cascade)
+  minutes    Int
+
+  @@unique([fromZoneId, toZoneId])
+}
+
+// Per-festival artist reference data, populated by scripts/import-lotd.ts
+// from the festival's own act pages. Scoped to one festival: an act playing
+// two different festivals gets a row per edition rather than a shared
+// identity nobody maintains.
+//
+// Paredes de Coura does NOT use this table — its links stay hand-written and
+// hand-verified in src/lib/artist-links.ts (see the sourcing rules at the top
+// of that file). Don't migrate them.
+model Artist {
+  id           String        @id @default(cuid())
+  festivalId   String
+  festival     Festival      @relation(fields: [festivalId], references: [id], onDelete: Cascade)
+  /// Source-site slug ("al-cologne-uk"): the stable join key across importer
+  /// runs, since a display name can be re-typed but the URL is the record.
+  slug         String
+  name         String
+  /// As published: "UK", "AU", occasionally "FR/UK".
+  country      String?
+  /// As published, slash-separated: "folk / indie pop / pop".
+  genres       String?
+  spotifyUrl   String?
+  instagramUrl String?
+  /// The act's page on the festival's own site, linked from the artist name.
+  sourceUrl    String?
+  performances Performance[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+
+  @@unique([festivalId, slug])
 }
 
 // A stage/venue that hosts performances on one or more festival dates,
@@ -56,14 +130,25 @@ model Stage {
   id           String        @id @default(cuid())
   festivalId   String
   festival     Festival      @relation(fields: [festivalId], references: [id], onDelete: Cascade)
+  /// Which walking cluster this room sits in. Null for festivals that don't
+  /// need zones (Paredes de Coura is one site), so the vertical layout never
+  /// reads it.
+  zoneId       String?
+  zone         Zone?         @relation(fields: [zoneId], references: [id], onDelete: SetNull)
   name         String
   slug         String
+  /// Street address, used to build a Google Maps link from the venue name in
+  /// the timetable. Rooms sharing a building (Worm 1/2, the three Theater
+  /// Rotterdam rooms) simply repeat it — not worth a Venue entity for one
+  /// string.
+  address      String?
   order        Int           @default(0)
   performances Performance[]
   updatedAt    DateTime      @default(now()) @updatedAt
 
   @@unique([festivalId, slug])
   @@index([festivalId, order])
+  @@index([festivalId, zoneId, order])
 }
 
 model Performance {
@@ -85,8 +170,16 @@ model Performance {
   recommended Boolean  @default(false)
   stageId     String
   stage       Stage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  /// Optional enrichment link to imported reference data (bio links, country,
+  /// the act's own page). Nullable because Paredes de Coura has no Artist
+  /// rows, and SetNull rather than Cascade because deleting an artist must
+  /// never delete a scheduled set. `artistName` stays the source of truth for
+  /// what's displayed and what the admin form edits.
+  artistId    String?
+  artist      Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([date, stageId])
+  @@index([artistId])
 }
