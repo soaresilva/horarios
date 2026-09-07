@@ -75,6 +75,18 @@ function setIds(key: string, next: string[]) {
   for (const listener of listenersFor(key)) listener();
 }
 
+// Exported for useFavoritesSync.ts, so it can read/overwrite localStorage
+// (to push to the server, and after a pull/pairing-redeem) without reaching
+// into this module's private cache/listener state directly. Purely
+// additive — every existing caller and test of this hook is unaffected.
+export function getIds(festivalSlug: string): string[] {
+  return readIds(storageKey(festivalSlug));
+}
+
+export function replaceAll(festivalSlug: string, ids: string[]): void {
+  setIds(storageKey(festivalSlug), ids);
+}
+
 export interface UseStarredResult {
   isStarred: (id: string) => boolean;
   toggle: (id: string) => void;

@@ -12,7 +12,16 @@ import type { Schedule } from "@/lib/schedule-client";
 // the loading/error/schedule branching at the top of the component — so
 // every child is stubbed to keep the test focused and fast.
 vi.mock("@/hooks/useSchedule");
-vi.mock("@/hooks/useStarred", () => ({ useStarred: () => ({ isStarred: () => false, toggle: () => {} }) }));
+vi.mock("@/hooks/useFavoritesSync", () => ({
+  useFavoritesSync: () => ({
+    isStarred: () => false,
+    toggle: () => {},
+    synced: false,
+    startSync: async () => {},
+    generateCode: async () => ({ error: "not mocked" }),
+    redeemCode: async () => ({ error: "invalid" as const }),
+  }),
+}));
 vi.mock("@/components/DayTabs", () => ({ DayTabs: () => null }));
 vi.mock("@/components/FavoritesListView", () => ({ FavoritesListView: () => <div>FAVORITES LIST VIEW</div> }));
 vi.mock("@/components/InstallBanner", () => ({ InstallBanner: () => null }));
@@ -20,6 +29,7 @@ vi.mock("@/components/RecommendationsToggle", () => ({ RecommendationsToggle: ()
 vi.mock("@/components/SideStageSection", () => ({ SideStageSection: () => null }));
 vi.mock("@/components/SocialLinks", () => ({ SocialLinks: () => null }));
 vi.mock("@/components/StageGrid", () => ({ StageGrid: () => null }));
+vi.mock("@/components/SyncFavoritesButton", () => ({ SyncFavoritesButton: () => null }));
 // Real enough to drive from a test: a single button that flips grid<->list,
 // rather than the actual two-pill control — TimetableApp's own branching on
 // `view` is what's under test here, not ViewToggle's own rendering (that has

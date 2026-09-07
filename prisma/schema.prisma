@@ -177,9 +177,46 @@ model Performance {
   /// what's displayed and what the admin form edits.
   artistId    String?
   artist      Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  favorites   Favorite[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([date, stageId])
   @@index([artistId])
+}
+
+// A visitor's server-synced star on one performance, written only once a
+// visitor has explicitly opted into cross-device sync (see src/lib/visitor.ts
+// and src/app/favorites/actions.ts) — a visitor who never opts in leaves no
+// row here at all, favorites stay purely in localStorage (src/hooks/useStarred.ts).
+// `visitorId` is a bare opaque string (an httpOnly cookie value), not an FK to
+// a Visitor table: this app deliberately has no accounts, so there is nothing
+// else to model a visitor as. Cascades on Performance deletion — nothing
+// should stay "starred" once the set itself no longer exists.
+model Favorite {
+  id            String      @id @default(cuid())
+  visitorId     String
+  performanceId String
+  performance   Performance @relation(fields: [performanceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime    @default(now())
+
+  @@unique([visitorId, performanceId])
+  @@index([visitorId])
+}
+
+// A short-lived, single-use code that lets a second device adopt the
+// generating device's visitorId, syncing both to the same Favorite rows
+// going forward. No rate-limiting table behind this by design — see the
+// plan doc for cross-device favorites sync for the reasoning (worst case of
+// a guessed code is a stranger seeing another stranger's starred shows, not
+// a sensitive resource).
+model PairingCode {
+  id         String    @id @default(cuid())
+  code       String    @unique
+  visitorId  String
+  expiresAt  DateTime
+  redeemedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([expiresAt])
 }

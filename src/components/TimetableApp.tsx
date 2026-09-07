@@ -9,10 +9,11 @@ import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
+import { SyncFavoritesButton } from "@/components/SyncFavoritesButton";
 import { TransposedGrid } from "@/components/TransposedGrid";
 import { ViewToggle, type TimetableView } from "@/components/ViewToggle";
+import { useFavoritesSync } from "@/hooks/useFavoritesSync";
 import { useSchedule } from "@/hooks/useSchedule";
-import { useStarred } from "@/hooks/useStarred";
 import { festivalCopy } from "@/lib/festival-copy";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { showOrdinals } from "@/lib/shows";
@@ -32,7 +33,7 @@ interface TimetableAppProps {
 
 export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
-  const { isStarred, toggle } = useStarred(festivalSlug);
+  const { isStarred, toggle, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
   // Holds only the user's explicit tab choice; the default (today, falling
   // back to the first festival day) is derived below rather than pushed
   // into state via an effect, since `days` isn't known until the schedule
@@ -157,6 +158,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
             <span aria-hidden className="text-accent">★</span>
             your favorites
           </span>
+          <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
         </div>
       )}
 
