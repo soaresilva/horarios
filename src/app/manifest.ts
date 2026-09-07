@@ -4,11 +4,12 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Horários Bolachas",
     short_name: "Horários Bolachas",
-    description: "Archived offline-friendly stage timetable for Vodafone Paredes de Coura 2026.",
-    // Points at the actual timetable, not the archive index at "/" — this
-    // manifest (icons, name) was built for the PdC 2026 offline experience
-    // specifically, so an install should open straight into it.
-    start_url: "/pdc26",
+    description: "Offline-friendly festival stage timetables.",
+    // Opens on the live edition rather than the archive index: whoever
+    // installs this to a home screen is doing it to check set times at the
+    // festival, and "/" would cost them a tap every time. Update this when
+    // the next edition takes over.
+    start_url: "/lotd26",
     display: "standalone",
     background_color: "#09090b",
     theme_color: "#09090b",

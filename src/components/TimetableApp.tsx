@@ -30,7 +30,7 @@ interface TimetableAppProps {
 
 export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
-  const { isStarred, toggle } = useStarred();
+  const { isStarred, toggle } = useStarred(festivalSlug);
   // Holds only the user's explicit tab choice; the default (today, falling
   // back to the first festival day) is derived below rather than pushed
   // into state via an effect, since `days` isn't known until the schedule

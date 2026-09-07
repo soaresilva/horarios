@@ -8,7 +8,7 @@ afterEach(() => {
 
 describe("useStarred", () => {
   it("starts with nothing starred and persists a toggle to localStorage", async () => {
-    const { result } = renderHook(() => useStarred());
+    const { result } = renderHook(() => useStarred("pdc26"));
     expect(result.current.isStarred("p1")).toBe(false);
 
     act(() => {
@@ -20,7 +20,7 @@ describe("useStarred", () => {
   });
 
   it("toggling twice unstars it again and removes it from storage", () => {
-    const { result } = renderHook(() => useStarred());
+    const { result } = renderHook(() => useStarred("pdc26"));
 
     act(() => result.current.toggle("p1"));
     act(() => result.current.toggle("p1"));
@@ -32,7 +32,7 @@ describe("useStarred", () => {
   it("rehydrates previously-starred ids from localStorage on mount", async () => {
     window.localStorage.setItem("pdc26:starred", JSON.stringify(["p1", "p2"]));
 
-    const { result } = renderHook(() => useStarred());
+    const { result } = renderHook(() => useStarred("pdc26"));
 
     await waitFor(() => {
       expect(result.current.isStarred("p1")).toBe(true);

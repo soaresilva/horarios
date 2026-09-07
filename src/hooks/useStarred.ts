@@ -1,15 +1,31 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useCallback, useMemo, useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "pdc26:starred";
-const listeners = new Set<() => void>();
-let cachedIds: string[] | null = null;
+// Keyed by festival slug, so starring a Rotterdam set doesn't appear in the
+// Paredes de Coura archive. Paredes de Coura's slug is literally "pdc26", so
+// `${slug}:starred` is byte-identical to the key this used to hardcode and
+// existing visitors keep their stars — don't "tidy" the prefix away.
+const storageKey = (festivalSlug: string) => `${festivalSlug}:starred`;
+
+// Per-key stores rather than module-level singletons, now that two festivals
+// can be open in two tabs.
+const listenersByKey = new Map<string, Set<() => void>>();
+const cacheByKey = new Map<string, string[]>();
 const EMPTY_IDS: string[] = [];
 
-function readIds(): string[] {
+function listenersFor(key: string): Set<() => void> {
+  let set = listenersByKey.get(key);
+  if (!set) {
+    set = new Set();
+    listenersByKey.set(key, set);
+  }
+  return set;
+}
+
+function readIds(key: string): string[] {
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(key);
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -32,12 +48,14 @@ function idsEqual(a: string[], b: string[]): boolean {
 // nothing has changed (or it loops), but "nothing changed" has to be judged
 // by content, not by skipping the read entirely — a stale cache here would
 // miss edits made through any path other than this module's own setIds.
-function getSnapshot(): string[] {
-  const fresh = readIds();
-  if (cachedIds === null || !idsEqual(cachedIds, fresh)) {
-    cachedIds = fresh;
+function getSnapshotFor(key: string): string[] {
+  const fresh = readIds(key);
+  const cached = cacheByKey.get(key);
+  if (!cached || !idsEqual(cached, fresh)) {
+    cacheByKey.set(key, fresh);
+    return fresh;
   }
-  return cachedIds;
+  return cached;
 }
 
 // Exported for a regression test — must return a referentially stable
@@ -46,20 +64,15 @@ export function getServerSnapshot(): string[] {
   return EMPTY_IDS;
 }
 
-function subscribe(onStoreChange: () => void): () => void {
-  listeners.add(onStoreChange);
-  return () => listeners.delete(onStoreChange);
-}
-
-function setIds(next: string[]) {
-  cachedIds = next;
+function setIds(key: string, next: string[]) {
+  cacheByKey.set(key, next);
   try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    window.localStorage.setItem(key, JSON.stringify(next));
   } catch {
     // localStorage unavailable (private browsing, quota, etc.) — starring
     // just won't persist across reloads; not worth surfacing an error for.
   }
-  for (const listener of listeners) listener();
+  for (const listener of listenersFor(key)) listener();
 }
 
 export interface UseStarredResult {
@@ -67,16 +80,36 @@ export interface UseStarredResult {
   toggle: (id: string) => void;
 }
 
-export function useStarred(): UseStarredResult {
+export function useStarred(festivalSlug: string): UseStarredResult {
+  const key = storageKey(festivalSlug);
+
+  // subscribe and getSnapshot must be memoised on the key: useSyncExternalStore
+  // re-subscribes whenever `subscribe`'s identity changes, so inline arrows
+  // here would resubscribe every render.
+  const subscribe = useCallback(
+    (onStoreChange: () => void) => {
+      const listeners = listenersFor(key);
+      listeners.add(onStoreChange);
+      return () => {
+        listeners.delete(onStoreChange);
+      };
+    },
+    [key],
+  );
+  const getSnapshot = useCallback(() => getSnapshotFor(key), [key]);
+
   const ids = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const toggle = useCallback((id: string) => {
-    const current = getSnapshot();
-    const next = current.includes(id) ? current.filter((existing) => existing !== id) : [...current, id];
-    setIds(next);
-  }, []);
+  const toggle = useCallback(
+    (id: string) => {
+      const current = getSnapshotFor(key);
+      const next = current.includes(id) ? current.filter((existing) => existing !== id) : [...current, id];
+      setIds(key, next);
+    },
+    [key],
+  );
 
   const isStarred = useCallback((id: string) => ids.includes(id), [ids]);
 
-  return { isStarred, toggle };
+  return useMemo(() => ({ isStarred, toggle }), [isStarred, toggle]);
 }
