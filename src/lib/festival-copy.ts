@@ -24,9 +24,11 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     ],
   },
   lotd26: {
-    // Kept to one line: the transposed grid is the point of this page, and
-    // every line here is a line of grid the visitor doesn't see.
-    disclaimer: "Start times only — sets show 40 min. Tap one for walking distances.",
+    // The transposed grid has four separate tap targets on one block (star,
+    // name, body, venue cell), each doing something different — this spells
+    // them out rather than leaving a first-time visitor to guess.
+    disclaimer:
+      "Tap the star to add it to your favorites. Tap the artist name to navigate to their page on the LOTD website. Tap a show to see rough walking distances to other venues. Tap a venue name to navigate on Google Maps.",
     links: [{ label: "leftofthedial.nl", href: "https://leftofthedial.nl" }],
   },
 };
