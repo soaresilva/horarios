@@ -12,7 +12,7 @@ export default defineConfig({
       jsdom: { url: "http://localhost" },
     },
     setupFiles: ["./vitest.setup.ts"],
-    include: ["src/**/*.test.{ts,tsx}"],
+    include: ["src/**/*.test.{ts,tsx}", "scripts/**/*.test.{ts,tsx}"],
   },
   resolve: {
     alias: {

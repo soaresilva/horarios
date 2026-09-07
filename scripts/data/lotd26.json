@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-07T04:55:07.501Z",
+  "fetchedAt": "2026-09-07T14:25:47.980Z",
   "edition": 2026,
   "acts": [
     {
@@ -982,13 +982,13 @@
       "shows": [
         {
           "day": "THURSDAY",
-          "venue": "TR FOYER",
-          "time": "20:50"
+          "venue": "ARMINIUS UP",
+          "time": "19:40"
         },
         {
           "day": "FRIDAY",
-          "venue": "BAANHOF",
-          "time": "22:20"
+          "venue": "SALSABILITY",
+          "time": "22:00"
         }
       ]
     },
@@ -1833,7 +1833,7 @@
       "name": "Bloodworm",
       "country": "UK",
       "genres": "post-punk / rock / wave",
-      "spotifyUrl": null,
+      "spotifyUrl": "https://open.spotify.com/artist/2l4nW5oXWqgGxKWOTzvqQs",
       "instagramUrl": "https://www.instagram.com/bloodwormband/",
       "sourceUrl": "https://leftofthedial.nl/acts/bloodworm-uk/",
       "shows": [
@@ -2609,7 +2609,7 @@
       "name": "Black Nylon",
       "country": "IE",
       "genres": "post-punk / rock",
-      "spotifyUrl": null,
+      "spotifyUrl": "https://open.spotify.com/artist/1evn9tfLQgLDCaNfcy7lge",
       "instagramUrl": "https://www.instagram.com/blacknylonband/",
       "sourceUrl": "https://leftofthedial.nl/acts/black-nylon-ie/",
       "shows": [
@@ -2919,13 +2919,13 @@
       "shows": [
         {
           "day": "THURSDAY",
-          "venue": "ANNABEL DOWN",
-          "time": "23:30"
+          "venue": "TR FOYER",
+          "time": "20:50"
         },
         {
           "day": "FRIDAY",
-          "venue": "REMASTERED",
-          "time": "19:20"
+          "venue": "BAANHOF",
+          "time": "22:20"
         }
       ]
     },

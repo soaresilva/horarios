@@ -22,6 +22,7 @@ import { parseActPage, isEditionYear, type ParsedAct } from "../src/lib/lotd-par
 import { withDerivedEndTimes } from "../src/lib/lotd-endtimes";
 import { fromFestivalDayTime, type FestivalTime } from "../src/lib/time";
 import { fetchSequentially, politeFetch } from "./lotd/http";
+import { applyShowOverrides } from "./lotd/overrides";
 import { dateForDay, stageSlugForVenue } from "./lotd/venues";
 
 const FESTIVAL_ID = "lotd26";
@@ -100,20 +101,29 @@ async function runFetch(limit?: number) {
     },
   );
 
-  const withShows = acts.filter((a) => a.shows.length > 0);
-  const showCount = acts.reduce((n, a) => n + a.shows.length, 0);
+  // Applied before every summary/write below, not just once: this importer
+  // is built to be re-run right up to the festival (see the header
+  // comment), and leftofthedial.nl hasn't corrected the underlying acts —
+  // a plain hand-edit of the committed snapshot would be silently
+  // clobbered by the next `--fetch`. See scripts/lotd/overrides.ts.
+  const corrected = applyShowOverrides(acts);
+  const overriddenSlugs = corrected.filter((a, i) => a.shows !== acts[i].shows).map((a) => a.slug);
+  if (overriddenSlugs.length) console.log(`Applied known-source-error overrides: ${overriddenSlugs.join(", ")}`);
+
+  const withShows = corrected.filter((a) => a.shows.length > 0);
+  const showCount = corrected.reduce((n, a) => n + a.shows.length, 0);
   console.log(
-    `Parsed ${acts.length} acts, ${withShows.length} with a scheduled set, ${showCount} performances.`,
+    `Parsed ${corrected.length} acts, ${withShows.length} with a scheduled set, ${showCount} performances.`,
   );
   if (skipped.length) console.log(`Skipped ${skipped.length}: ${skipped.slice(0, 10).join(", ")}`);
 
   // Fail before writing if any venue is unrecognised, so a renamed room is a
   // loud error rather than a silently missing row.
-  const venues = new Set(acts.flatMap((a) => a.shows.map((s) => s.venue)));
+  const venues = new Set(corrected.flatMap((a) => a.shows.map((s) => s.venue)));
   for (const venue of venues) stageSlugForVenue(venue);
   console.log(`All ${venues.size} venue names map to known rooms.`);
 
-  const snapshot: Snapshot = { fetchedAt: new Date().toISOString(), edition: EDITION_YEAR, acts };
+  const snapshot: Snapshot = { fetchedAt: new Date().toISOString(), edition: EDITION_YEAR, acts: corrected };
   await mkdir(path.dirname(SNAPSHOT), { recursive: true });
   await writeFile(SNAPSHOT, `${JSON.stringify(snapshot, null, 2)}\n`);
   console.log(`Wrote ${SNAPSHOT} — review the diff before applying.`);
