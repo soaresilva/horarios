@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
+import { FavoritesListView } from "@/components/FavoritesListView";
 import { InstallBanner } from "@/components/InstallBanner";
 import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
 import { TransposedGrid } from "@/components/TransposedGrid";
+import { ViewToggle, type TimetableView } from "@/components/ViewToggle";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useStarred } from "@/hooks/useStarred";
 import { festivalCopy } from "@/lib/festival-copy";
@@ -39,6 +41,11 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   // Which set walking distances are measured from, in the transposed layout.
   // Tapping the same block again clears it.
   const [originId, setOriginId] = useState<string | null>(null);
+  // Grid (either layout) vs. the favorites-only list. Orthogonal to
+  // `layout`, so it isn't reset when the day changes — a visitor who
+  // switched into their favorites list for one day almost certainly wants
+  // it for the next one too.
+  const [view, setView] = useState<TimetableView>("grid");
 
   const days = useMemo(() => (schedule ? uniqueSortedDates(schedule.performances) : []), [schedule]);
   // Across the whole festival, not the selected day: the point of "#2/3" is
@@ -155,7 +162,22 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
 
-      {isTransposed ? (
+      <div className="flex justify-end px-3 pb-2">
+        <ViewToggle view={view} onChange={setView} />
+      </div>
+
+      {view === "list" ? (
+        <FavoritesListView
+          performances={dayPerformances}
+          stages={schedule.stages}
+          zoneWalks={schedule.zoneWalks}
+          artistsById={schedule.artistsById}
+          ordinals={ordinals}
+          isStarred={isStarred}
+          ft={ft}
+          onToggleStar={toggle}
+        />
+      ) : isTransposed ? (
         <TransposedGrid
           stages={schedule.stages}
           zones={schedule.zones}

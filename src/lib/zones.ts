@@ -31,6 +31,27 @@ export function walkMinutesBetween(
   return match ? match.minutes : null;
 }
 
+export interface WalkSegment {
+  sameStage: boolean;
+  /** Minutes between the two stages' zones, or null when that pair was never measured (e.g. PdC, which has no zones at all). */
+  minutes: number | null;
+}
+
+/**
+ * The walk between two consecutive shows in a favorites list: same venue,
+ * a measured zone-to-zone distance, or nothing honest to show. Stays a thin
+ * wrapper over walkMinutesBetween rather than a second lookup, so the two
+ * never drift on what "no data" means.
+ */
+export function walkSegmentBetweenStages<S extends { id: string; zoneId: string | null }>(
+  walks: ZoneWalkLike[],
+  fromStage: S,
+  toStage: S,
+): WalkSegment {
+  if (fromStage.id === toStage.id) return { sameStage: true, minutes: 0 };
+  return { sameStage: false, minutes: walkMinutesBetween(walks, fromStage.zoneId, toStage.zoneId) };
+}
+
 /**
  * How a zone's walking distance reads on the timetable. With no origin
  * chosen it's the distance from the festival hub; once a visitor taps a set,

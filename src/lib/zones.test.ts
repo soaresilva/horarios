@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { walkMinutesBetween, zoneWalkLabel, type ZoneLike, type ZoneWalkLike } from "./zones";
+import { walkMinutesBetween, walkSegmentBetweenStages, zoneWalkLabel, type ZoneLike, type ZoneWalkLike } from "./zones";
 
 const walks: ZoneWalkLike[] = [
   { fromZoneId: "eendrachtsplein", toZoneId: "museumpark", minutes: 4 },
@@ -53,5 +53,42 @@ describe("zoneWalkLabel", () => {
   it("shows nothing when a zone has no hub distance recorded", () => {
     const unknown: ZoneLike = { id: "x", name: "X", order: 0, walkMinutesFromHub: null };
     expect(zoneWalkLabel(unknown, walks, null, null)).toBeNull();
+  });
+});
+
+describe("walkSegmentBetweenStages", () => {
+  const eendrachtsplein = { id: "worm-1", zoneId: "eendrachtsplein" };
+  const museumpark = { id: "kunsthal", zoneId: "museumpark" };
+  const zoho = { id: "wolphaert", zoneId: "zoho" };
+  const vodafone = { id: "vodafone", zoneId: null };
+  const palco2 = { id: "palco2", zoneId: null };
+
+  it("is a zero-minute same-venue segment when consecutive shows share a stage", () => {
+    expect(walkSegmentBetweenStages(walks, eendrachtsplein, eendrachtsplein)).toEqual({
+      sameStage: true,
+      minutes: 0,
+    });
+  });
+
+  it("carries the measured zone-to-zone minutes for two different stages with a known pair", () => {
+    expect(walkSegmentBetweenStages(walks, eendrachtsplein, museumpark)).toEqual({
+      sameStage: false,
+      minutes: 4,
+    });
+    // Symmetric regardless of which show comes first in the list.
+    expect(walkSegmentBetweenStages(walks, museumpark, eendrachtsplein)).toEqual({
+      sameStage: false,
+      minutes: 4,
+    });
+  });
+
+  it("has no minutes for a zone pair that was never measured", () => {
+    expect(walkSegmentBetweenStages(walks, museumpark, zoho)).toEqual({ sameStage: false, minutes: null });
+  });
+
+  // The PdC case: stages with no zone at all (a single-site festival), so
+  // there's nothing honest to show rather than a guessed distance.
+  it("has no minutes for stages with no zone data", () => {
+    expect(walkSegmentBetweenStages(walks, vodafone, palco2)).toEqual({ sameStage: false, minutes: null });
   });
 });

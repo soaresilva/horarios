@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { TimetableApp } from "./TimetableApp";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import { useSchedule } from "@/hooks/useSchedule";
@@ -13,11 +14,21 @@ import type { Schedule } from "@/lib/schedule-client";
 vi.mock("@/hooks/useSchedule");
 vi.mock("@/hooks/useStarred", () => ({ useStarred: () => ({ isStarred: () => false, toggle: () => {} }) }));
 vi.mock("@/components/DayTabs", () => ({ DayTabs: () => null }));
+vi.mock("@/components/FavoritesListView", () => ({ FavoritesListView: () => <div>FAVORITES LIST VIEW</div> }));
 vi.mock("@/components/InstallBanner", () => ({ InstallBanner: () => null }));
 vi.mock("@/components/RecommendationsToggle", () => ({ RecommendationsToggle: () => null }));
 vi.mock("@/components/SideStageSection", () => ({ SideStageSection: () => null }));
 vi.mock("@/components/SocialLinks", () => ({ SocialLinks: () => null }));
 vi.mock("@/components/StageGrid", () => ({ StageGrid: () => null }));
+// Real enough to drive from a test: a single button that flips grid<->list,
+// rather than the actual two-pill control — TimetableApp's own branching on
+// `view` is what's under test here, not ViewToggle's own rendering (that has
+// its own test file).
+vi.mock("@/components/ViewToggle", () => ({
+  ViewToggle: ({ view, onChange }: { view: "grid" | "list"; onChange: (v: "grid" | "list") => void }) => (
+    <button onClick={() => onChange(view === "grid" ? "list" : "grid")}>toggle view</button>
+  ),
+}));
 
 const mockUseSchedule = vi.mocked(useSchedule);
 
@@ -114,6 +125,18 @@ const pairedSchedule: Schedule = {
     },
   ],
 };
+
+describe("TimetableApp view toggle", () => {
+  it("shows the grid by default and swaps to the favorites list view when toggled", async () => {
+    mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
+
+    expect(screen.queryByText("FAVORITES LIST VIEW")).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("button", { name: "toggle view" }));
+    expect(screen.getByText("FAVORITES LIST VIEW")).toBeInTheDocument();
+  });
+});
 
 describe("TimetableApp main-stage header", () => {
   // Regression for a reported bug where "Xapas Lounge" was missing from the

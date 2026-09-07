@@ -9,6 +9,7 @@ import { artistLinksFor } from "@/lib/artist-links";
 import { activeStagesSortedByOrder, stagesByZone } from "@/lib/grouping";
 import type { Artist, Performance, Stage, Zone, ZoneWalk } from "@/lib/schedule-client";
 import type { ShowOrdinal } from "@/lib/shows";
+import { stageMapsUrl } from "@/lib/venues";
 import { zoneWalkLabel } from "@/lib/zones";
 import {
   blockLayout,
@@ -40,12 +41,6 @@ interface TransposedGridProps {
   ft: FestivalTime;
   onSelectOrigin: (id: string) => void;
   onToggleStar: (id: string) => void;
-}
-
-function mapsUrl(stage: Stage): string {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${stage.name}, ${stage.address ?? "Rotterdam"}`,
-  )}`;
 }
 
 export function TransposedGrid({
@@ -137,7 +132,7 @@ export function TransposedGrid({
                       className={`sticky left-0 z-20 ${VENUE_COL} flex shrink-0 items-center border-r border-zinc-800 bg-background px-2`}
                     >
                       <a
-                        href={mapsUrl(stage)}
+                        href={stageMapsUrl(stage)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="line-clamp-2 text-[10px] leading-tight text-zinc-400 hover:text-accent"
