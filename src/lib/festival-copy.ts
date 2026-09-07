@@ -12,6 +12,14 @@ export interface FestivalCopy {
   /** One line explaining how to read the times on this festival's grid. */
   disclaimer: string;
   links?: FestivalLink[];
+  /**
+   * Whether to show the "bolachas recommends" toggle + starred-favourites
+   * legend row. Defaults to true. The recommends half only means anything
+   * for a festival whose admin actually curates `Performance.recommended`
+   * rows — set false for one that doesn't, rather than showing a toggle
+   * with nothing to toggle.
+   */
+  legend?: boolean;
 }
 
 export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
@@ -30,6 +38,10 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     disclaimer:
       "Tap the star to add it to your favorites. Tap the artist name to navigate to their page on the LOTD website. Tap a show to see rough walking distances to other venues. Tap a venue name to navigate on Google Maps.",
     links: [{ label: "leftofthedial.nl", href: "https://leftofthedial.nl" }],
+    // No recommends curation planned for this edition, and the disclaimer
+    // above already covers starring — the legend row would be redundant on
+    // an already-dense grid.
+    legend: false,
   },
 };
 

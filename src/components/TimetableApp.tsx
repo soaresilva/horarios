@@ -143,13 +143,15 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         </p>
       )}
 
-      <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
-        <RecommendationsToggle />
-        <span className="flex items-center gap-1">
-          <span aria-hidden className="text-accent">★</span>
-          your favorites
-        </span>
-      </div>
+      {(copy?.legend ?? true) && (
+        <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
+          <RecommendationsToggle />
+          <span className="flex items-center gap-1">
+            <span aria-hidden className="text-accent">★</span>
+            your favorites
+          </span>
+        </div>
+      )}
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
 
