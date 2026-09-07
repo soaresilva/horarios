@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StageGrid } from "./StageGrid";
+import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage } from "@/lib/schedule-client";
 
 const stages: Stage[] = [
@@ -39,7 +40,8 @@ const performances: Performance[] = [
 describe("StageGrid", () => {
   it("renders one block per performance, positioned by its own stage column", () => {
     const { container } = render(
-      <StageGrid stages={stages} performances={performances} isStarred={() => false} onToggleStar={() => {}} />,
+      <StageGrid stages={stages} performances={performances} ft={ft}
+        isStarred={() => false} onToggleStar={() => {}} />,
     );
 
     expect(screen.getByText("Cass McCombs")).toBeInTheDocument();
@@ -50,7 +52,8 @@ describe("StageGrid", () => {
   });
 
   it("shows an empty-state message instead of a grid when there are no performances", () => {
-    render(<StageGrid stages={stages} performances={[]} isStarred={() => false} onToggleStar={() => {}} />);
+    render(<StageGrid stages={stages} performances={[]} ft={ft}
+        isStarred={() => false} onToggleStar={() => {}} />);
     expect(screen.getByText(/no performances scheduled/i)).toBeInTheDocument();
   });
 
@@ -58,7 +61,8 @@ describe("StageGrid", () => {
     const onToggleStar = vi.fn();
     const user = userEvent.setup();
     render(
-      <StageGrid stages={stages} performances={performances} isStarred={() => false} onToggleStar={onToggleStar} />,
+      <StageGrid stages={stages} performances={performances} ft={ft}
+        isStarred={() => false} onToggleStar={onToggleStar} />,
     );
 
     await user.click(screen.getByRole("button", { name: /Cass McCombs/ }));
@@ -67,7 +71,8 @@ describe("StageGrid", () => {
 
   it("shows the bolachas-recommends marker only on recommended performances", () => {
     render(
-      <StageGrid stages={stages} performances={performances} isStarred={() => false} onToggleStar={() => {}} />,
+      <StageGrid stages={stages} performances={performances} ft={ft}
+        isStarred={() => false} onToggleStar={() => {}} />,
     );
 
     // Perfume Genius is recommended (fixture), Cass McCombs is not. The marker
@@ -83,6 +88,7 @@ describe("StageGrid", () => {
       <StageGrid
         stages={stages}
         performances={performances}
+        ft={ft}
         isStarred={(id) => id === "p1"}
         onToggleStar={() => {}}
       />,

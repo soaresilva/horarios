@@ -15,7 +15,7 @@ import type { Performance, Stage } from "@/lib/schedule-client";
 type EditableStage = Stage & { updatedAt: Date };
 type EditablePerformance = Performance & { updatedAt: Date };
 import { performancesForDate, uniqueSortedDates } from "@/lib/grouping";
-import { formatDayTabLabel, toLisbonClockValue } from "@/lib/time";
+import { formatDayTabLabel, toFestivalClockValue, type FestivalTime } from "@/lib/time";
 
 const initialState: SaveScheduleState = {};
 
@@ -40,11 +40,14 @@ const TIME_OPTIONS: string[] = (() => {
 // between the hour and minute segments of a native datetime input. If a
 // stored time falls off the 5-minute grid it's injected as an extra option so
 // the value still round-trips instead of silently blanking.
-function TimeSelect({ name, defaultValue }: { name: string; defaultValue?: string }) {
+function TimeSelect({ name, defaultValue, ft }: { name: string; defaultValue?: string; ft: FestivalTime }) {
   const dv = defaultValue ?? "";
   const options = dv && !TIME_OPTIONS.includes(dv) ? [dv, ...TIME_OPTIONS] : TIME_OPTIONS;
+  // Times are always entered in the festival's own wall clock, so name the
+  // city rather than saying "Lisbon" at a Rotterdam festival.
+  const cityLabel = ft.timezone.split("/").pop()?.replace(/_/g, " ") ?? ft.timezone;
   return (
-    <select name={name} defaultValue={dv} title="Lisbon time" className={inputClass}>
+    <select name={name} defaultValue={dv} title={`${cityLabel} time`} className={inputClass}>
       <option value="">—</option>
       {options.map((t) => (
         <option key={t} value={t}>
@@ -58,6 +61,7 @@ function TimeSelect({ name, defaultValue }: { name: string; defaultValue?: strin
 interface RowProps {
   stages: Stage[];
   keyName: string;
+  ft: FestivalTime;
   performance?: EditablePerformance;
   defaultDate?: string;
   onDelete?: (id: string, name: string) => void;
@@ -66,7 +70,7 @@ interface RowProps {
 // One row of grid cells (a Fragment, so the cells land directly in the parent
 // grid). `keyName` namespaces its field names — the performance id for an
 // existing row, a synthetic "new-*" key for an add row.
-function PerformanceRow({ stages, keyName, performance, defaultDate, onDelete }: RowProps) {
+function PerformanceRow({ stages, keyName, ft, performance, defaultDate, onDelete }: RowProps) {
   const field = (name: string) => `perf.${keyName}.${name}`;
   return (
     <Fragment>
@@ -91,8 +95,8 @@ function PerformanceRow({ stages, keyName, performance, defaultDate, onDelete }:
         defaultValue={performance?.date ?? defaultDate}
         className={inputClass}
       />
-      <TimeSelect name={field("start")} defaultValue={performance ? toLisbonClockValue(performance.startTime) : undefined} />
-      <TimeSelect name={field("end")} defaultValue={performance ? toLisbonClockValue(performance.endTime) : undefined} />
+      <TimeSelect name={field("start")} ft={ft} defaultValue={performance ? toFestivalClockValue(performance.startTime, ft) : undefined} />
+      <TimeSelect name={field("end")} ft={ft} defaultValue={performance ? toFestivalClockValue(performance.endTime, ft) : undefined} />
       <input type="text" name={field("notes")} defaultValue={performance?.notes ?? ""} placeholder="Notes" className={inputClass} />
       <label className="flex items-center justify-center" title="bolachas recommends">
         <input
@@ -133,6 +137,7 @@ function HeaderRow() {
 
 interface ScheduleEditorProps {
   festivalSlug: string;
+  ft: FestivalTime;
   stages: EditableStage[];
   performances: EditablePerformance[];
   // Called with the save result right after it resolves. A save bumps every
@@ -143,7 +148,7 @@ interface ScheduleEditorProps {
   onSaved?: (state: SaveScheduleState) => void;
 }
 
-export function ScheduleEditor({ festivalSlug, stages, performances, onSaved }: ScheduleEditorProps) {
+export function ScheduleEditor({ festivalSlug, ft, stages, performances, onSaved }: ScheduleEditorProps) {
   async function saveAndReport(prevState: SaveScheduleState, formData: FormData) {
     const result = await saveScheduleAction(prevState, formData);
     onSaved?.(result);
@@ -199,7 +204,7 @@ export function ScheduleEditor({ festivalSlug, stages, performances, onSaved }: 
       <section className="flex flex-col gap-6 overflow-x-auto">
         <h2 className="text-sm font-semibold text-zinc-400">Performances</h2>
         {days.map((day) => {
-          const { weekday, day: dayNum } = formatDayTabLabel(new Date(`${day}T12:00:00Z`));
+          const { weekday, day: dayNum } = formatDayTabLabel(new Date(`${day}T12:00:00Z`), ft);
           const dayPerformances = performancesForDate(performances, day)
             .slice()
             .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
@@ -215,12 +220,13 @@ export function ScheduleEditor({ festivalSlug, stages, performances, onSaved }: 
                   <PerformanceRow
                     key={performance.id}
                     stages={stages}
+                    ft={ft}
                     keyName={performance.id}
                     performance={performance}
                     onDelete={handleDelete}
                   />
                 ))}
-                <PerformanceRow stages={stages} keyName={`new-${day}`} defaultDate={day} />
+                <PerformanceRow stages={stages} ft={ft} keyName={`new-${day}`} defaultDate={day} />
               </div>
             </div>
           );
@@ -230,7 +236,7 @@ export function ScheduleEditor({ festivalSlug, stages, performances, onSaved }: 
           <h3 className="mb-1 text-sm font-medium text-zinc-300">Add a new day</h3>
           <div className={`grid ${gridCols} items-center gap-x-2 gap-y-1`}>
             <HeaderRow />
-            <PerformanceRow stages={stages} keyName="new-blank" />
+            <PerformanceRow stages={stages} ft={ft} keyName="new-blank" />
           </div>
         </div>
       </section>

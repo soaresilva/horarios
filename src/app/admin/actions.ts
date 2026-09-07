@@ -8,6 +8,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createSession, deleteSession, requireSession } from "@/lib/session";
 import { buildPerformanceData, isStaleSnapshot, rowUnchanged } from "@/lib/admin-performance";
+import type { FestivalTime } from "@/lib/time";
 
 export interface LoginState {
   error?: string;
@@ -77,6 +78,11 @@ export async function saveScheduleAction(
   const festival = await prisma.festival.findUnique({ where: { slug: festivalSlug } });
   if (!festival) return { error: "Unknown festival." };
 
+  // Clock times in the form are the festival's own wall-clock time, so every
+  // instant written below is resolved against this festival's zone — not a
+  // hardcoded Lisbon offset, which would store Rotterdam sets an hour out.
+  const ft: FestivalTime = { timezone: festival.timezone, locale: festival.locale };
+
   const existingIds = String(formData.get("existingIds") ?? "").split(",").filter(Boolean);
   const newKeys = String(formData.get("newKeys") ?? "").split(",").filter(Boolean);
   const stageIds = String(formData.get("stageIds") ?? "").split(",").filter(Boolean);
@@ -129,7 +135,7 @@ export async function saveScheduleAction(
     // every save): skip it entirely rather than round-tripping it through
     // validation, so an unrelated edit elsewhere can never be blocked by a
     // row the admin didn't touch.
-    if (rowUnchanged(raw, current)) continue;
+    if (rowUnchanged(raw, current, ft)) continue;
     const snapshotUpdatedAt = String(formData.get(`perf.${id}.updatedAt`) ?? "");
     if (isStaleSnapshot(snapshotUpdatedAt, current)) {
       return {
@@ -139,7 +145,7 @@ export async function saveScheduleAction(
     if (raw.stageId !== current.stageId && !stageById.has(raw.stageId)) {
       return { error: `${current.artistName}: unknown stage.` };
     }
-    const built = buildPerformanceData(raw, current);
+    const built = buildPerformanceData(raw, ft, current);
     if ("error" in built) return { error: built.error };
     ops.push(prisma.performance.update({ where: { id }, data: built.data }));
   }
@@ -151,7 +157,7 @@ export async function saveScheduleAction(
     if (!stageById.has(raw.stageId)) {
       return { error: `${raw.artistName}: unknown stage.` };
     }
-    const built = buildPerformanceData(raw);
+    const built = buildPerformanceData(raw, ft);
     if ("error" in built) return { error: built.error };
     ops.push(prisma.performance.create({ data: built.data }));
   }

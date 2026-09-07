@@ -5,16 +5,17 @@ import { PerformanceBlock } from "@/components/PerformanceBlock";
 import { TimeAxis } from "@/components/TimeAxis";
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
-import { blockLayout, computeDayWindow, windowExtent } from "@/lib/time";
+import { blockLayout, computeDayWindow, windowExtent, type FestivalTime } from "@/lib/time";
 
 interface StageGridProps {
   stages: Stage[];
   performances: Performance[];
   isStarred: (id: string) => boolean;
+  ft: FestivalTime;
   onToggleStar: (id: string) => void;
 }
 
-export function StageGrid({ stages, performances, isStarred, onToggleStar }: StageGridProps) {
+export function StageGrid({ stages, performances, isStarred, ft, onToggleStar }: StageGridProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const window = computeDayWindow(performances);
 
@@ -26,7 +27,7 @@ export function StageGrid({ stages, performances, isStarred, onToggleStar }: Sta
 
   return (
     <div className="flex">
-      <TimeAxis window={window} />
+      <TimeAxis window={window} ft={ft} />
       <div className="relative flex flex-1">
         {stages.map((stage, stageIndex) => {
           const stagePerformances = performances
@@ -47,13 +48,14 @@ export function StageGrid({ stages, performances, isStarred, onToggleStar }: Sta
                   alternate={i % 2 === 0}
                   starred={isStarred(performance.id)}
                   showRecommendation={showRecommendations}
+                  ft={ft}
                   onToggleStar={onToggleStar}
                 />
               ))}
             </div>
           );
         })}
-        <CurrentTimeLine window={window} />
+        <CurrentTimeLine window={window} ft={ft} />
       </div>
     </div>
   );

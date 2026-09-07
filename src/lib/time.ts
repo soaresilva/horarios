@@ -1,7 +1,39 @@
+// Which timezone a festival's clock times mean, and which locale its day
+// labels read in. Every formatting and parsing helper below takes this
+// explicitly rather than defaulting: the app now hosts festivals in two
+// countries, and a call site that forgot to pass it would silently render
+// Amsterdam times as Lisbon ones — an hour off, with nothing to notice.
+// Required parameters make the compiler enumerate the call sites instead.
+export interface FestivalTime {
+  /** IANA zone, e.g. "Europe/Lisbon", "Europe/Amsterdam". */
+  timezone: string;
+  /** BCP-47 tag driving weekday abbreviations, e.g. "pt-PT", "en-GB". */
+  locale: string;
+}
+
 // Paredes de Coura runs in mainland Portugal (WEST, UTC+1 in August).
-// All display formatting is pinned to this timezone so set times read
-// correctly regardless of the viewer's device timezone.
-export const FESTIVAL_TIMEZONE = "Europe/Lisbon";
+// Kept as a named constant for prisma/seed.ts and the PdC tests, which are
+// about that festival specifically; runtime code reads the Festival row.
+export const PDC_FESTIVAL_TIME: FestivalTime = { timezone: "Europe/Lisbon", locale: "pt-PT" };
+
+/**
+ * The UTC offset a timezone is on for a given festival-day label, as an ISO
+ * suffix ("+01:00"). Probed at midday UTC on that day, so it's the day's
+ * settled offset rather than one sampled inside a DST transition hour — no
+ * festival programmes a set during the ambiguous 02:00–03:00 window.
+ *
+ * This replaces a hardcoded "+01:00" that was correct only for Portugal in
+ * August. Europe/Amsterdam is +02:00 across all four Left of the Dial days.
+ * ICU renders a zero offset as a bare "GMT" with no digits, hence the fallback.
+ */
+export function zoneOffset(timezone: string, dayISO: string): string {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timezone,
+    timeZoneName: "longOffset",
+  }).formatToParts(new Date(`${dayISO}T12:00:00Z`));
+  const name = parts.find((p) => p.type === "timeZoneName")?.value ?? "";
+  return name.replace("GMT", "") || "+00:00";
+}
 
 // How minutes become pixels, and the floor below which a block stops being
 // readable. The two layouts need different densities because they spend the
@@ -53,13 +85,13 @@ const ACTIVE_DAY_ROLLOVER_HOUR = 8;
 
 /**
  * The active festival day as YYYY-MM-DD, for matching against performance
- * `date` labels. Doesn't roll to the next calendar day at Lisbon midnight —
- * only once it's past ACTIVE_DAY_ROLLOVER_HOUR (8am) Lisbon time, since the
- * programme regularly runs into the small hours.
+ * `date` labels. Doesn't roll to the next calendar day at local midnight —
+ * only once it's past ACTIVE_DAY_ROLLOVER_HOUR (8am) festival time, since
+ * the programme regularly runs into the small hours.
  */
-export function todayInFestivalTimezone(now: Date = new Date()): string {
+export function todayInFestivalTimezone(ft: FestivalTime, now: Date = new Date()): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: FESTIVAL_TIMEZONE,
+    timeZone: ft.timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -78,14 +110,12 @@ export function todayInFestivalTimezone(now: Date = new Date()): string {
 
 /**
  * For `<input type="datetime-local">` in the admin panel. The admin always
- * edits in Lisbon wall-clock time (not their own browser's timezone), which
- * matches how every other time in this app is anchored, and Portugal is
- * fixed at WEST (UTC+1) for the whole festival window, so the offset is a
- * constant rather than something that needs DST-aware lookup.
+ * edits in the *festival's* wall-clock time, not their own browser's, which
+ * matches how every other time in this app is anchored.
  */
-export function toLisbonDatetimeLocalValue(date: Date): string {
+export function toFestivalDatetimeLocalValue(date: Date, ft: FestivalTime): string {
   const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: FESTIVAL_TIMEZONE,
+    timeZone: ft.timezone,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -97,8 +127,8 @@ export function toLisbonDatetimeLocalValue(date: Date): string {
   return `${get("year")}-${get("month")}-${get("day")}T${get("hour")}:${get("minute")}`;
 }
 
-export function fromLisbonDatetimeLocalValue(value: string): Date {
-  return new Date(`${value}:00+01:00`);
+export function fromFestivalDatetimeLocalValue(value: string, ft: FestivalTime): Date {
+  return new Date(`${value}:00${zoneOffset(ft.timezone, value.slice(0, 10))}`);
 }
 
 // Boundary hour between "the small hours of the next calendar day" (rolls)
@@ -134,27 +164,28 @@ export function festivalTimeRolls(hhmm: string): boolean {
 }
 
 /**
- * Resolve a festival-day label ("YYYY-MM-DD") plus an "HH:MM" Lisbon
+ * Resolve a festival-day label ("YYYY-MM-DD") plus an "HH:MM" festival
  * wall-clock time into a real UTC instant, rolling past-midnight times onto
- * the next calendar day. Portugal is fixed at WEST (UTC+1) for the whole
- * August festival window, so the offset is a constant (matches seed.ts).
+ * the next calendar day. The offset is looked up per day and zone, so this
+ * is correct for Lisbon in August (+01:00) and Amsterdam in October (+02:00)
+ * alike — it used to be a hardcoded "+01:00".
  */
-export function fromFestivalDayTime(dayISO: string, hhmm: string): Date {
-  const base = new Date(`${dayISO}T${hhmm}:00+01:00`);
+export function fromFestivalDayTime(dayISO: string, hhmm: string, ft: FestivalTime): Date {
+  const base = new Date(`${dayISO}T${hhmm}:00${zoneOffset(ft.timezone, dayISO)}`);
   if (festivalTimeRolls(hhmm)) {
     base.setUTCDate(base.getUTCDate() + 1);
   }
   return base;
 }
 
-/** "HH:MM" Lisbon wall-clock time of an instant, for pre-filling the admin time pickers. */
-export function toLisbonClockValue(date: Date): string {
-  return toLisbonDatetimeLocalValue(date).slice(11);
+/** "HH:MM" festival wall-clock time of an instant, for pre-filling the admin time pickers. */
+export function toFestivalClockValue(date: Date, ft: FestivalTime): string {
+  return toFestivalDatetimeLocalValue(date, ft).slice(11);
 }
 
-export function formatClock(date: Date): string {
-  return new Intl.DateTimeFormat("pt-PT", {
-    timeZone: FESTIVAL_TIMEZONE,
+export function formatClock(date: Date, ft: FestivalTime): string {
+  return new Intl.DateTimeFormat(ft.locale, {
+    timeZone: ft.timezone,
     hour: "2-digit",
     minute: "2-digit",
     hour12: false,
@@ -175,16 +206,20 @@ const WEEKDAY_PT: Record<string, string> = {
   Sat: "SÁB",
 };
 
-export function formatDayTabLabel(date: Date): { weekday: string; day: string } {
+export function formatDayTabLabel(date: Date, ft: FestivalTime): { weekday: string; day: string } {
   const enWeekday = new Intl.DateTimeFormat("en-US", {
     weekday: "short",
-    timeZone: FESTIVAL_TIMEZONE,
+    timeZone: ft.timezone,
   }).format(date);
-  const day = new Intl.DateTimeFormat("pt-PT", {
+  const day = new Intl.DateTimeFormat(ft.locale, {
     day: "2-digit",
-    timeZone: FESTIVAL_TIMEZONE,
+    timeZone: ft.timezone,
   }).format(date);
-  return { weekday: WEEKDAY_PT[enWeekday] ?? enWeekday.toUpperCase(), day };
+  // The hand-written Portuguese abbreviations exist to match bolachas.org's
+  // own timetable; every other locale takes Intl's short weekday, uppercased,
+  // which gives Left of the Dial WED/THU/FRI/SAT with no new data.
+  const weekday = ft.locale === "pt-PT" ? (WEEKDAY_PT[enWeekday] ?? enWeekday.toUpperCase()) : enWeekday.toUpperCase();
+  return { weekday, day };
 }
 
 const HOUR_ROUND_MS = 60 * 60 * 1000;
@@ -268,6 +303,7 @@ export interface TimeTick {
  */
 export function generateTimeTicks(
   window: GridWindow,
+  ft: FestivalTime,
   stepMinutes = 30,
   scale: GridScale = VERTICAL_SCALE,
 ): TimeTick[] {
@@ -277,7 +313,7 @@ export function generateTimeTicks(
     const tickDate = new Date(window.start.getTime() + m * 60000);
     ticks.push({
       offset: m * scale.pxPerMinute,
-      label: formatClock(tickDate),
+      label: formatClock(tickDate, ft),
       isHour: tickDate.getUTCMinutes() === 0,
       minutes: m,
     });

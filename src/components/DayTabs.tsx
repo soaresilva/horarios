@@ -1,19 +1,20 @@
 "use client";
 
-import { formatDayTabLabel } from "@/lib/time";
+import { formatDayTabLabel, type FestivalTime } from "@/lib/time";
 
 interface DayTabsProps {
   days: string[];
   selected: string;
   today: string;
+  ft: FestivalTime;
   onSelect: (day: string) => void;
 }
 
-export function DayTabs({ days, selected, today, onSelect }: DayTabsProps) {
+export function DayTabs({ days, selected, today, ft, onSelect }: DayTabsProps) {
   return (
     <div className="flex gap-1.5 overflow-x-auto px-3 py-2" role="tablist" aria-label="Festival day">
       {days.map((day) => {
-        const { weekday, day: dayNum } = formatDayTabLabel(new Date(`${day}T12:00:00Z`));
+        const { weekday, day: dayNum } = formatDayTabLabel(new Date(`${day}T12:00:00Z`), ft);
         const isSelected = day === selected;
         return (
           <button

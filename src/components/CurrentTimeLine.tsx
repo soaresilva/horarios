@@ -2,9 +2,9 @@
 
 import { useEffect, useRef } from "react";
 import { useNow } from "@/hooks/useNow";
-import { currentTimeOffset, formatClock, type GridWindow } from "@/lib/time";
+import { currentTimeOffset, formatClock, type FestivalTime, type GridWindow } from "@/lib/time";
 
-export function CurrentTimeLine({ window }: { window: GridWindow }) {
+export function CurrentTimeLine({ window, ft }: { window: GridWindow; ft: FestivalTime }) {
   const now = useNow(30_000);
   const lineRef = useRef<HTMLDivElement>(null);
   const hasScrolledRef = useRef(false);
@@ -27,7 +27,7 @@ export function CurrentTimeLine({ window }: { window: GridWindow }) {
     <div ref={lineRef} className="pointer-events-none absolute inset-x-0 z-10" style={{ top: offset }}>
       <div className="flex items-center">
         <span className="-ml-px rounded bg-red-500 px-1 text-[10px] font-semibold leading-tight text-white">
-          {formatClock(now!)}
+          {formatClock(now!, ft)}
         </span>
         <div className="h-px flex-1 bg-red-500" />
       </div>

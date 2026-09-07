@@ -2,7 +2,7 @@
 
 import type { Performance } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
-import type { BlockLayout } from "@/lib/time";
+import type { BlockLayout, FestivalTime } from "@/lib/time";
 import { Instagram, Spotify, ThumbsUp } from "@/components/icons";
 import { getArtistLinks } from "@/lib/artist-links";
 
@@ -12,6 +12,7 @@ interface PerformanceBlockProps {
   alternate: boolean;
   starred: boolean;
   showRecommendation: boolean;
+  ft: FestivalTime;
   onToggleStar: (id: string) => void;
 }
 
@@ -21,6 +22,7 @@ export function PerformanceBlock({
   alternate,
   starred,
   showRecommendation,
+  ft,
   onToggleStar,
 }: PerformanceBlockProps) {
   const links = getArtistLinks(performance.artistName);
@@ -51,7 +53,7 @@ export function PerformanceBlock({
           )}
         </span>
         <span className="text-[10px] leading-tight text-zinc-400 sm:text-xs">
-          {formatClock(performance.startTime)}–{formatClock(performance.endTime)}
+          {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
         </span>
       </button>
 

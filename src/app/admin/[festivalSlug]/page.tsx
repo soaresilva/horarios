@@ -73,6 +73,7 @@ export default async function AdminFestivalPage({ params }: Props) {
 
       <AdminScheduleShell
         festivalSlug={festival.slug}
+        ft={{ timezone: festival.timezone, locale: festival.locale }}
         editorKey={editorKey}
         stages={stages}
         performances={performances}

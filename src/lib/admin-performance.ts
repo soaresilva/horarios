@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { fromFestivalDayTime, toLisbonClockValue } from "@/lib/time";
+import { fromFestivalDayTime, toFestivalClockValue, type FestivalTime } from "@/lib/time";
 
 // One "HH:MM" time picker per start/end plus a festival-day label, resolved
 // into instants via fromFestivalDayTime. Notes and the recommended checkbox
@@ -46,23 +46,28 @@ export interface PerformanceData {
 export function timeFieldsUnchanged(
   raw: { date: string; start: string; end: string },
   current: StoredPerformance,
+  ft: FestivalTime,
 ): boolean {
   return (
     raw.date === current.date.toISOString().slice(0, 10) &&
-    raw.start === toLisbonClockValue(current.startTime) &&
-    raw.end === toLisbonClockValue(current.endTime)
+    raw.start === toFestivalClockValue(current.startTime, ft) &&
+    raw.end === toFestivalClockValue(current.endTime, ft)
   );
 }
 
 // Whether every field of a row is unchanged from what's already stored, so
 // the save can skip it entirely (no Prisma op, no validation).
-export function rowUnchanged(raw: RawPerformanceRow, current: StoredPerformance): boolean {
+export function rowUnchanged(
+  raw: RawPerformanceRow,
+  current: StoredPerformance,
+  ft: FestivalTime,
+): boolean {
   return (
     raw.artistName.trim() === current.artistName &&
     raw.stageId === current.stageId &&
     (raw.notes ?? "") === (current.notes ?? "") &&
     raw.recommended === current.recommended &&
-    timeFieldsUnchanged(raw, current)
+    timeFieldsUnchanged(raw, current, ft)
   );
 }
 
@@ -106,6 +111,7 @@ export function isStaleSnapshot(snapshotUpdatedAt: string, current: { updatedAt:
 // blocking the whole save even though its own row was never touched.
 export function buildPerformanceData(
   raw: RawPerformanceRow,
+  ft: FestivalTime,
   current?: StoredPerformance,
 ): { data: PerformanceData } | { error: string } {
   const parsed = RowInput.safeParse(raw);
@@ -118,12 +124,12 @@ export function buildPerformanceData(
 
   let startTime: Date;
   let endTime: Date;
-  if (current && timeFieldsUnchanged(parsed.data, current)) {
+  if (current && timeFieldsUnchanged(parsed.data, current, ft)) {
     startTime = current.startTime;
     endTime = current.endTime;
   } else {
-    startTime = fromFestivalDayTime(date, start);
-    endTime = fromFestivalDayTime(date, end);
+    startTime = fromFestivalDayTime(date, start, ft);
+    endTime = fromFestivalDayTime(date, end, ft);
     if (endTime.getTime() <= startTime.getTime()) {
       return { error: `${label}: end time must be after start time.` };
     }

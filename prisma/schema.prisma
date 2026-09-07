@@ -10,25 +10,39 @@ datasource db {
   provider = "postgresql"
 }
 
+// How a festival's timetable is drawn. Paredes de Coura has two stages and
+// reads well as columns with time running down; Left of the Dial has ~26
+// rooms, which only fit as rows with time running across.
+enum TimetableLayout {
+  VERTICAL
+  TRANSPOSED
+}
+
 // One festival edition (Paredes de Coura 2026, Left of the Dial 2026, ...).
 // Each gets its own public route at /<slug> and admin route at
 // /admin/<slug>; there is no `archived` column — a festival reads as past
 // once `endDate` has gone by (see isFestivalOver in src/lib/festival.ts),
 // so nothing needs remembering to flip a flag when an edition wraps up.
 model Festival {
-  id        String   @id @default(cuid())
-  slug      String   @unique
+  id        String          @id @default(cuid())
+  slug      String          @unique
   name      String
   location  String
-  startDate DateTime @db.Date
-  endDate   DateTime @db.Date
+  startDate DateTime        @db.Date
+  endDate   DateTime        @db.Date
+  layout    TimetableLayout @default(VERTICAL)
+  // BCP-47 tag for weekday abbreviations and clock formatting. "pt-PT" keeps
+  // the Portuguese QUA/QUI/SEX labels matching bolachas.org's own timetable;
+  // any other locale falls through to Intl's short weekday (see
+  // formatDayTabLabel in src/lib/time.ts).
+  locale    String          @default("pt-PT")
   // IANA zone (e.g. "Europe/Lisbon", "Europe/Amsterdam") every performance
   // time for this festival is anchored to, regardless of a viewer's or
   // admin's own device timezone.
   timezone  String
   stages    Stage[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @default(now()) @updatedAt
 }
 
 // A stage/venue that hosts performances on one or more festival dates,

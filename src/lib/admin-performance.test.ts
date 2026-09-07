@@ -6,6 +6,7 @@ import {
   type RawPerformanceRow,
   type StoredPerformance,
 } from "./admin-performance";
+import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 
 function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
@@ -43,7 +44,7 @@ describe("buildPerformanceData", () => {
     // must be after start time" because every existing row (including
     // untouched ones like Dupplo) was re-derived from its prefilled HH:MM
     // inputs via the naive roll heuristic.
-    const result = buildPerformanceData(dupploRowUnchanged, dupplo);
+    const result = buildPerformanceData(dupploRowUnchanged, ft, dupplo);
     expect(result).toEqual({
       data: {
         artistName: "Dupplo",
@@ -58,7 +59,7 @@ describe("buildPerformanceData", () => {
   });
 
   it("still reuses the stored instants when only a non-time field changes", () => {
-    const result = buildPerformanceData({ ...dupploRowUnchanged, recommended: true }, dupplo);
+    const result = buildPerformanceData({ ...dupploRowUnchanged, recommended: true }, ft, dupplo);
     expect("error" in result).toBe(false);
     if ("error" in result) return;
     expect(result.data.startTime).toEqual(dupplo.startTime);
@@ -67,7 +68,7 @@ describe("buildPerformanceData", () => {
   });
 
   it("re-derives and validates when the admin actually edits a straddling row's own start/end", () => {
-    const result = buildPerformanceData({ ...dupploRowUnchanged, start: "04:25" }, dupplo);
+    const result = buildPerformanceData({ ...dupploRowUnchanged, start: "04:25" }, ft, dupplo);
     expect(result).toEqual({ error: "Dupplo: end time must be after start time." });
   });
 
@@ -80,7 +81,7 @@ describe("buildPerformanceData", () => {
       end: "22:00",
       notes: undefined,
       recommended: false,
-    });
+    }, ft);
     expect(result).toEqual({ error: "Bad Act: end time must be after start time." });
   });
 
@@ -93,7 +94,7 @@ describe("buildPerformanceData", () => {
       end: "02:40",
       notes: undefined,
       recommended: false,
-    });
+    }, ft);
     expect("error" in result).toBe(false);
     if ("error" in result) return;
     expect(result.data.startTime).toEqual(lisbon("2026-08-13T01:25:00"));
@@ -103,15 +104,15 @@ describe("buildPerformanceData", () => {
 
 describe("rowUnchanged", () => {
   it("is true when every field round-trips to the stored row", () => {
-    expect(rowUnchanged(dupploRowUnchanged, dupplo)).toBe(true);
+    expect(rowUnchanged(dupploRowUnchanged, dupplo, ft)).toBe(true);
   });
 
   it("is false when a scalar field differs", () => {
-    expect(rowUnchanged({ ...dupploRowUnchanged, recommended: true }, dupplo)).toBe(false);
+    expect(rowUnchanged({ ...dupploRowUnchanged, recommended: true }, dupplo, ft)).toBe(false);
   });
 
   it("is false when the start time differs", () => {
-    expect(rowUnchanged({ ...dupploRowUnchanged, start: "04:25" }, dupplo)).toBe(false);
+    expect(rowUnchanged({ ...dupploRowUnchanged, start: "04:25" }, dupplo, ft)).toBe(false);
   });
 });
 

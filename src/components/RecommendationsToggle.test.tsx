@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { RecommendationsToggle } from "./RecommendationsToggle";
 import { StageGrid } from "./StageGrid";
+import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage } from "@/lib/schedule-client";
 
 afterEach(() => {
@@ -48,7 +49,7 @@ describe("RecommendationsToggle", () => {
     render(
       <>
         <RecommendationsToggle />
-        <StageGrid stages={stages} performances={performances} isStarred={() => false} onToggleStar={() => {}} />
+        <StageGrid stages={stages} performances={performances} ft={ft} isStarred={() => false} onToggleStar={() => {}} />
       </>,
     );
 

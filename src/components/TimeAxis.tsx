@@ -1,7 +1,7 @@
-import { generateTimeTicks, windowExtent, type GridWindow } from "@/lib/time";
+import { generateTimeTicks, windowExtent, type FestivalTime, type GridWindow } from "@/lib/time";
 
-export function TimeAxis({ window }: { window: GridWindow }) {
-  const ticks = generateTimeTicks(window);
+export function TimeAxis({ window, ft }: { window: GridWindow; ft: FestivalTime }) {
+  const ticks = generateTimeTicks(window, ft);
   return (
     <div className="relative w-11 shrink-0" style={{ height: windowExtent(window) }}>
       {ticks.map((tick) => (

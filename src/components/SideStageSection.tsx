@@ -1,7 +1,7 @@
 "use client";
 
 import type { Performance, Stage } from "@/lib/schedule-client";
-import { formatClock } from "@/lib/time";
+import { formatClock, type FestivalTime } from "@/lib/time";
 import { Instagram, Spotify, ThumbsUp } from "@/components/icons";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { getArtistLinks } from "@/lib/artist-links";
@@ -10,6 +10,7 @@ interface SideStageSectionProps {
   stage: Stage;
   performances: Performance[];
   isStarred: (id: string) => boolean;
+  ft: FestivalTime;
   onToggleStar: (id: string) => void;
 }
 
@@ -19,7 +20,7 @@ interface SideStageSectionProps {
 // header below it — as you scroll past this section, the main stages'
 // header naturally takes over the sticky slot, so whichever stage is
 // actually on screen is always the one labeled at the top.
-export function SideStageSection({ stage, performances, isStarred, onToggleStar }: SideStageSectionProps) {
+export function SideStageSection({ stage, performances, isStarred, ft, onToggleStar }: SideStageSectionProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const sorted = [...performances].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   if (sorted.length === 0) return null;
@@ -53,7 +54,7 @@ export function SideStageSection({ stage, performances, isStarred, onToggleStar 
                   )}
                 </span>
                 <span className="text-xs text-zinc-400">
-                  {formatClock(performance.startTime)}–{formatClock(performance.endTime)}
+                  {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
                 </span>
               </button>
 

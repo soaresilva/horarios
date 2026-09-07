@@ -11,13 +11,17 @@ import { StageGrid } from "@/components/StageGrid";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useStarred } from "@/hooks/useStarred";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
-import { formatClock, todayInFestivalTimezone } from "@/lib/time";
+import { formatClock, todayInFestivalTimezone, type FestivalTime } from "@/lib/time";
 
 interface TimetableAppProps {
   festivalSlug: string;
+  // Comes from the Festival row via the server component, not the DTO: it
+  // never changes for an edition, so there's nothing to refetch, and having
+  // it on the first render avoids formatting a single clock in the wrong zone.
+  ft: FestivalTime;
 }
 
-export function TimetableApp({ festivalSlug }: TimetableAppProps) {
+export function TimetableApp({ festivalSlug, ft }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
   const { isStarred, toggle } = useStarred();
   // Holds only the user's explicit tab choice; the default (today, falling
@@ -27,7 +31,7 @@ export function TimetableApp({ festivalSlug }: TimetableAppProps) {
   const [dayOverride, setDayOverride] = useState<string | null>(null);
 
   const days = useMemo(() => (schedule ? uniqueSortedDates(schedule.performances) : []), [schedule]);
-  const today = useMemo(() => todayInFestivalTimezone(), []);
+  const today = useMemo(() => todayInFestivalTimezone(ft), [ft]);
   const selectedDay = dayOverride && days.includes(dayOverride) ? dayOverride : (days.includes(today) ? today : (days[0] ?? null));
 
   if (loading) {
@@ -81,7 +85,7 @@ export function TimetableApp({ festivalSlug }: TimetableAppProps) {
         </div>
         <div className="flex flex-col items-end gap-1">
           <SocialLinks />
-          <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt)}</span>
+          <span className="text-[10px] text-zinc-600">Updated {formatClock(schedule.updatedAt, ft)}</span>
           {error && (
             <button
               type="button"
@@ -136,7 +140,7 @@ export function TimetableApp({ festivalSlug }: TimetableAppProps) {
         </span>
       </div>
 
-      <DayTabs days={days} selected={selectedDay} today={today} onSelect={setDayOverride} />
+      <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
 
       <div className="flex-1 overflow-y-auto pb-6">
         {other.map((stage) => (
@@ -145,6 +149,7 @@ export function TimetableApp({ festivalSlug }: TimetableAppProps) {
             stage={stage}
             performances={dayPerformances.filter((p) => p.stageId === stage.id)}
             isStarred={isStarred}
+            ft={ft}
             onToggleStar={toggle}
           />
         ))}
@@ -182,7 +187,7 @@ export function TimetableApp({ festivalSlug }: TimetableAppProps) {
             </div>
           </div>
           <div className="px-3">
-            <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} onToggleStar={toggle} />
+            <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} ft={ft} onToggleStar={toggle} />
           </div>
         </div>
       </div>

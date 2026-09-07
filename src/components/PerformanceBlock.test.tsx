@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PerformanceBlock } from "./PerformanceBlock";
+import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance } from "@/lib/schedule-client";
 
 function lisbon(iso: string) {
@@ -32,6 +33,7 @@ describe("PerformanceBlock", () => {
         layout={layout}
         alternate={false}
         starred={false}
+        ft={ft}
         showRecommendation={false}
         onToggleStar={() => {}}
       />,
@@ -55,6 +57,7 @@ describe("PerformanceBlock", () => {
         layout={layout}
         alternate={false}
         starred={false}
+        ft={ft}
         showRecommendation={false}
         onToggleStar={() => {}}
       />,
@@ -71,6 +74,7 @@ describe("PerformanceBlock", () => {
         layout={layout}
         alternate={false}
         starred={false}
+        ft={ft}
         showRecommendation={false}
         onToggleStar={() => {}}
       />,
@@ -88,6 +92,7 @@ describe("PerformanceBlock", () => {
         layout={layout}
         alternate={false}
         starred={false}
+        ft={ft}
         showRecommendation={false}
         onToggleStar={onToggleStar}
       />,
@@ -110,6 +115,7 @@ describe("PerformanceBlock", () => {
         layout={layout}
         alternate={false}
         starred={false}
+        ft={ft}
         showRecommendation={false}
         onToggleStar={onToggleStar}
       />,

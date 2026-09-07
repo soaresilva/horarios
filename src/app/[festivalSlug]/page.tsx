@@ -25,5 +25,10 @@ export default async function FestivalPage({ params }: Props) {
   const festival = await prisma.festival.findUnique({ where: { slug: festivalSlug } });
   if (!festival) notFound();
 
-  return <TimetableApp festivalSlug={festival.slug} />;
+  return (
+    <TimetableApp
+      festivalSlug={festival.slug}
+      ft={{ timezone: festival.timezone, locale: festival.locale }}
+    />
+  );
 }
