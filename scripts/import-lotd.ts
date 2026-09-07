@@ -264,7 +264,14 @@ async function runApply({ prune, dryRun }: { prune: boolean; dryRun: boolean }) 
     return;
   }
 
-  if (ops.length > 0) await prisma.$transaction(ops);
+  // Prisma's default batch-transaction timeout is 5s, tuned for the small
+  // admin bulk-saves elsewhere in this app (tens of rows on a local or
+  // low-latency connection). A full import is ~500 ops, and over Neon's
+  // pooled connection that alone exceeds 5s before any work is done — it
+  // failed exactly this way against production on the first run. A failed
+  // batch transaction rolls back cleanly (verified: 0 rows written that
+  // time), so this is a performance fix, not a safety one.
+  if (ops.length > 0) await prisma.$transaction(ops, { timeout: 60_000 });
 
   if (orphaned.length > 0) {
     if (prune) {
