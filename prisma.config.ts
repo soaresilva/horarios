@@ -2,6 +2,7 @@
 // npm install --save-dev prisma dotenv
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
+import { migrationDatabaseUrl } from "./src/lib/database-url";
 
 export default defineConfig({
   schema: "prisma/schema.prisma",
@@ -10,6 +11,8 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // NOT process.env.DATABASE_URL — migrations need the direct endpoint,
+    // not Neon's pooler. See the comment in src/lib/database-url.ts.
+    url: migrationDatabaseUrl(),
   },
 });
