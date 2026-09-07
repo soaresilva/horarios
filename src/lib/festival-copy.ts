@@ -24,8 +24,9 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     ],
   },
   lotd26: {
-    disclaimer:
-      "Only start times are published. Each set shows 40 minutes, or until the next set in the same room — whichever is shorter. Tap a set to see how far the other venues are from it.",
+    // Kept to one line: the transposed grid is the point of this page, and
+    // every line here is a line of grid the visitor doesn't see.
+    disclaimer: "Start times only — sets show 40 min. Tap one for walking distances.",
     links: [{ label: "leftofthedial.nl", href: "https://leftofthedial.nl" }],
   },
 };

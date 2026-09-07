@@ -42,6 +42,9 @@ export function TransposedPerformanceBlock({
   onToggleStar,
 }: TransposedPerformanceBlockProps) {
   const showOrdinal = ordinal && ordinal.total > 1;
+  // A 30-minute set sits at the grid's minimum width; a full icon rail there
+  // would leave about seven characters for the name.
+  const compactRail = layout.extent < 150;
 
   return (
     <div
@@ -62,11 +65,11 @@ export function TransposedPerformanceBlock({
         onClick={() => onSelectOrigin(performance.id)}
         aria-pressed={isOrigin}
         aria-label={`Measure walking times from ${performance.artistName}`}
-        className="absolute inset-0 flex h-full w-full flex-col justify-center rounded-md py-1 pl-2 pr-14 text-left"
+        className={`absolute inset-0 flex h-full w-full flex-col justify-center rounded-md py-1 pl-2 text-left ${compactRail ? "pr-7" : "pr-14"}`}
       />
 
-      <div className="pointer-events-none relative flex h-full flex-col justify-center py-1 pl-2 pr-14">
-        <span className="truncate text-xs leading-tight font-semibold text-zinc-100">
+      <div className={`pointer-events-none relative flex h-full flex-col justify-center py-1 pl-2 ${compactRail ? "pr-7" : "pr-14"}`}>
+        <span className="line-clamp-2 text-xs leading-tight font-semibold text-zinc-100">
           {artist?.sourceUrl ? (
             <a
               href={artist.sourceUrl}
@@ -100,6 +103,7 @@ export function TransposedPerformanceBlock({
         links={links}
         starred={starred}
         orientation="horizontal"
+        compact={compactRail}
         onToggleStar={() => onToggleStar(performance.id)}
       />
     </div>

@@ -12,7 +12,8 @@
     "test:watch": "NODE_OPTIONS=--no-experimental-webstorage vitest",
     "test:e2e": "playwright test",
     "prepare": "husky",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "import:lotd": "tsx scripts/import-lotd.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.0",

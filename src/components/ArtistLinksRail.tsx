@@ -17,6 +17,13 @@ interface ArtistLinksRailProps {
    * there aren't two controls doing the same thing.
    */
   onToggleStar?: () => void;
+  /**
+   * Drop the streaming icons and keep only the star. A 30-minute set renders
+   * at the grid's minimum width, where a full rail would leave about seven
+   * characters for the artist name — the name matters more than the icons,
+   * and the act's own page is still one tap away via the name link.
+   */
+  compact?: boolean;
 }
 
 // The links are layered ABOVE the block's own full-bleed button and are its
@@ -30,6 +37,7 @@ export function ArtistLinksRail({
   starred,
   orientation,
   onToggleStar,
+  compact = false,
 }: ArtistLinksRailProps) {
   const wrapper =
     orientation === "vertical"
@@ -54,7 +62,7 @@ export function ArtistLinksRail({
         </span>
       )}
 
-      {links.spotify && (
+      {!compact && links.spotify && (
         <a
           href={links.spotify}
           target="_blank"
@@ -65,7 +73,7 @@ export function ArtistLinksRail({
           <Spotify className="h-3.5 w-3.5" />
         </a>
       )}
-      {links.instagram && (
+      {!compact && links.instagram && (
         <a
           href={links.instagram}
           target="_blank"

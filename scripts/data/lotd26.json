@@ -1,0 +1,3468 @@
+{
+  "fetchedAt": "2026-09-07T04:55:07.501Z",
+  "edition": 2026,
+  "acts": [
+    {
+      "slug": "the-north-uk",
+      "name": "the north",
+      "country": "UK",
+      "genres": "alternative rock / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2DOGRYfLhyYwjyBNeYIM6v",
+      "instagramUrl": "https://www.instagram.com/thenorth.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-north-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ROTOWN",
+          "time": "19:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR UP",
+          "time": "17:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "00:10"
+        }
+      ]
+    },
+    {
+      "slug": "the-paris-match-uk",
+      "name": "The Paris Match",
+      "country": "UK",
+      "genres": "garage / indie rock / powerpop",
+      "spotifyUrl": "https://open.spotify.com/artist/3MLgfzmTrdEtUnT8FdTYOa",
+      "instagramUrl": "https://www.instagram.com/ttheparismatch/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-paris-match-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "SALSABILITY",
+          "time": "23:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V11",
+          "time": "16:40"
+        }
+      ]
+    },
+    {
+      "slug": "part-time-model-uk",
+      "name": "Part-Time Model",
+      "country": "UK",
+      "genres": "indie rock / rock / synth pop",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/parttimemodelband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/part-time-model-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN UP",
+          "time": "23:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "16:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SAHARA",
+          "time": "22:10"
+        }
+      ]
+    },
+    {
+      "slug": "toast-club-uk",
+      "name": "TOAST CLUB",
+      "country": "UK",
+      "genres": "indie pop / pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7Fxkd4fNZApzhdE10tlixG",
+      "instagramUrl": "https://www.instagram.com/toastclub/",
+      "sourceUrl": "https://leftofthedial.nl/acts/toast-club-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "20:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS UP",
+          "time": "18:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SALSABILITY",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "ferguson-hi-fi-uk",
+      "name": "Ferguson Hi-Fi",
+      "country": "UK",
+      "genres": "garage / powerpop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6lOgAwO6yOGHLOqdplm0Cl",
+      "instagramUrl": "https://www.instagram.com/fergusonhifi/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ferguson-hi-fi-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "V11",
+          "time": "22:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN UP",
+          "time": "23:40"
+        }
+      ]
+    },
+    {
+      "slug": "corin-v-uk",
+      "name": "Corin V",
+      "country": "UK",
+      "genres": "folk / indie rock / singer-songwriter",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/corin.v/",
+      "sourceUrl": "https://leftofthedial.nl/acts/corin-v-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "PARADIJSKERK",
+          "time": "21:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SAHARA",
+          "time": "19:10"
+        }
+      ]
+    },
+    {
+      "slug": "cordelia-gartside-uk",
+      "name": "Cordelia Gartside",
+      "country": "UK",
+      "genres": "art-rock / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3dvaL6yNcqOneqRzb6UsBP",
+      "instagramUrl": "https://www.instagram.com/cordeliagartside/",
+      "sourceUrl": "https://leftofthedial.nl/acts/cordelia-gartside-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL UP",
+          "time": "21:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR FOYER",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "lots-of-uk",
+      "name": "Lots Of",
+      "country": "UK",
+      "genres": "math rock / noise / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2h15UaO8azMnTMclQ7jtS1",
+      "instagramUrl": "https://www.instagram.com/lotsofband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lots-of-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "UNIEK",
+          "time": "22:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 2",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "nico-linus-uk",
+      "name": "Nico & Linus",
+      "country": "UK",
+      "genres": "indie pop / indie rock / psych",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/nicoandlinus/",
+      "sourceUrl": "https://leftofthedial.nl/acts/nico-linus-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "TR FOYER",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SALSABILITY",
+          "time": "17:00"
+        }
+      ]
+    },
+    {
+      "slug": "nadeem-din-gabisi-uk",
+      "name": "Nadeem Din-Gabisi",
+      "country": "UK",
+      "genres": "alt-hip hop / alt-soul / lyrical-poetry",
+      "spotifyUrl": "https://open.spotify.com/artist/4ckH39T1k1Dz6Lmo6dmno6",
+      "instagramUrl": "https://www.instagram.com/nadeemdingabisi/",
+      "sourceUrl": "https://leftofthedial.nl/acts/nadeem-din-gabisi-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BIRD",
+          "time": "19:20"
+        },
+        {
+          "day": "THURSDAY",
+          "venue": "PARADIJSKERK",
+          "time": "22:50"
+        }
+      ]
+    },
+    {
+      "slug": "what-jen-wants-uk",
+      "name": "What Jen Wants",
+      "country": "UK",
+      "genres": "dream pop / grunge / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/whatjenwants/",
+      "sourceUrl": "https://leftofthedial.nl/acts/what-jen-wants-uk/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "BIRD",
+          "time": "16:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS UP",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "nina-winder-lind-se-uk",
+      "name": "Nina Winder-Lind",
+      "country": "SE/UK",
+      "genres": "folk / lyrical-poetry / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1hsdZQJ4mGNTv5cuuIRp1j",
+      "instagramUrl": "https://www.instagram.com/ninawinderlind/",
+      "sourceUrl": "https://leftofthedial.nl/acts/nina-winder-lind-se-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "PARADIJSKERK",
+          "time": "19:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 1",
+          "time": "16:10"
+        }
+      ]
+    },
+    {
+      "slug": "rian-brazil-uk",
+      "name": "Rian Brazil",
+      "country": "UK",
+      "genres": "alt-hip hop / alt-pop / alt-rave",
+      "spotifyUrl": "https://open.spotify.com/artist/1O4STden5bjJI5SLsY8GGH",
+      "instagramUrl": "https://www.instagram.com/rianbrazil2003/",
+      "sourceUrl": "https://leftofthedial.nl/acts/rian-brazil-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BIRD",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 2",
+          "time": "17:50"
+        }
+      ]
+    },
+    {
+      "slug": "family-stereo-uk",
+      "name": "Family Stereo",
+      "country": "UK",
+      "genres": "alt-country / folk / lyrical-poetry",
+      "spotifyUrl": "https://open.spotify.com/artist/4HUyWDdAowsbbtJQQEn5RT",
+      "instagramUrl": "https://www.instagram.com/family.stereo/",
+      "sourceUrl": "https://leftofthedial.nl/acts/family-stereo-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS UP",
+          "time": "21:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SALSABILITY",
+          "time": "18:40"
+        }
+      ]
+    },
+    {
+      "slug": "august-uk",
+      "name": "August",
+      "country": "UK",
+      "genres": "art-pop / art-rock / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/augustbyproxy/",
+      "sourceUrl": "https://leftofthedial.nl/acts/august-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "UNIEK",
+          "time": "20:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ROTOWN",
+          "time": "16:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR UP",
+          "time": "21:00"
+        }
+      ]
+    },
+    {
+      "slug": "goodbye-uk",
+      "name": "Goodbye",
+      "country": "UK",
+      "genres": "indie pop / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0WokaEWmxIYHY8yI2V1g7z",
+      "instagramUrl": "https://www.instagram.com/goodbye.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/goodbye-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "17:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WAALSE KERK",
+          "time": "20:00"
+        }
+      ]
+    },
+    {
+      "slug": "the-heavenly-bodes-uk",
+      "name": "The Heavenly Bodes",
+      "country": "UK",
+      "genres": "garage / pop / psych",
+      "spotifyUrl": "https://open.spotify.com/artist/3bvrrRepHGlIE8jV8bk7B5",
+      "instagramUrl": "https://www.instagram.com/theheavenlybodes/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-heavenly-bodes-uk/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "MONO",
+          "time": "16:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SAHARA",
+          "time": "23:40"
+        }
+      ]
+    },
+    {
+      "slug": "mf-tomlinson-uk",
+      "name": "MF Tomlinson",
+      "country": "UK",
+      "genres": "folk / singer-songwriter / slowcore",
+      "spotifyUrl": "https://open.spotify.com/artist/2gx6mjo6HEXy2MPcJlzQmk",
+      "instagramUrl": "https://www.instagram.com/mf_tomlinson/",
+      "sourceUrl": "https://leftofthedial.nl/acts/mf-tomlinson-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "PARADIJSKERK",
+          "time": "19:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL UP",
+          "time": "17:20"
+        }
+      ]
+    },
+    {
+      "slug": "newbuild-uk",
+      "name": "Newbuild",
+      "country": "UK",
+      "genres": "dream pop / experimental / post-punk",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/newbuild___/",
+      "sourceUrl": "https://leftofthedial.nl/acts/newbuild-uk/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "BAANHOF",
+          "time": "17:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "23:20"
+        }
+      ]
+    },
+    {
+      "slug": "gwen-uk",
+      "name": "Gwen",
+      "country": "UK",
+      "genres": "industrial / rock / wave",
+      "spotifyUrl": "https://open.spotify.com/artist/4c4wf4XVbeybXKtpnAtQei",
+      "instagramUrl": "https://www.instagram.com/gwenmusic.gwenmusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/gwen-uk/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "SAHARA",
+          "time": "17:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WAALSE KERK",
+          "time": "21:30"
+        }
+      ]
+    },
+    {
+      "slug": "charlie-noordewier-uk",
+      "name": "Charlie Noordewier",
+      "country": "UK",
+      "genres": "alt-soul / folk / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/0SDfEluak7Z8ML7o1K2Ljk",
+      "instagramUrl": "https://www.instagram.com/charlienoordewier/",
+      "sourceUrl": "https://leftofthedial.nl/acts/charlie-noordewier-uk/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "TR FOYER",
+          "time": "17:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "UNIEK",
+          "time": "22:50"
+        }
+      ]
+    },
+    {
+      "slug": "foot-foot-uk",
+      "name": "foot foot",
+      "country": "UK",
+      "genres": "art-rock / folk / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2p5r5XfjZiMvulO5tvIMw3",
+      "instagramUrl": "https://www.instagram.com/footfootband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/foot-foot-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "SALSABILITY",
+          "time": "20:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BARRIO",
+          "time": "18:00"
+        }
+      ]
+    },
+    {
+      "slug": "maicin-ie",
+      "name": "Maicín",
+      "country": "IE",
+      "genres": "folk / indie pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0yysmf9ZqDgiy4CL7zHUq2",
+      "instagramUrl": "https://www.instagram.com/maicin_band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/maicin-ie/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "SAHARA",
+          "time": "19:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WAALSE KERK",
+          "time": "18:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN UP",
+          "time": "22:20"
+        }
+      ]
+    },
+    {
+      "slug": "omerta-uk",
+      "name": "Omertà",
+      "country": "UK",
+      "genres": "garage / noise / punk",
+      "spotifyUrl": "https://open.spotify.com/artist/0n2WPBNd27H8UAQsKlgbJq",
+      "instagramUrl": "https://www.instagram.com/omertabandmusicverycool/",
+      "sourceUrl": "https://leftofthedial.nl/acts/omerta-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "SAHARA",
+          "time": "21:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "UNIEK",
+          "time": "16:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SALSABILITY",
+          "time": "23:30"
+        }
+      ]
+    },
+    {
+      "slug": "stonks-be",
+      "name": "Stonks",
+      "country": "BE",
+      "genres": "dance-punk / noise / punk",
+      "spotifyUrl": "https://open.spotify.com/artist/0iwWvPe7sbKfFHkuFnXzgt",
+      "instagramUrl": "https://www.instagram.com/stonksssssssss/",
+      "sourceUrl": "https://leftofthedial.nl/acts/stonks-be/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN UP",
+          "time": "16:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "21:50"
+        }
+      ]
+    },
+    {
+      "slug": "hammok-no",
+      "name": "Hammok",
+      "country": "NO",
+      "genres": "heavy / noise / punk",
+      "spotifyUrl": "https://open.spotify.com/artist/5R1AfWkXVaAraHY3Tk9bMY",
+      "instagramUrl": "https://www.instagram.com/hammokband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/hammok-no/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "hamburger-uk",
+      "name": "Hamburger",
+      "country": "UK",
+      "genres": "college rock / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5spxoIIPxJl8HYNGlKJwUD",
+      "instagramUrl": "https://www.instagram.com/the.band.hamburger/",
+      "sourceUrl": "https://leftofthedial.nl/acts/hamburger-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "SALSABILITY",
+          "time": "21:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V11",
+          "time": "19:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BAANHOF",
+          "time": "22:20"
+        }
+      ]
+    },
+    {
+      "slug": "lucky-iris-uk",
+      "name": "Lucky Iris",
+      "country": "UK",
+      "genres": "alt-disco / alt-pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/7IvhQ1o9oI4ybFDpisgvkC",
+      "instagramUrl": "https://www.instagram.com/luckyirisband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lucky-iris-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 2",
+          "time": "23:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "MONO",
+          "time": "22:50"
+        }
+      ]
+    },
+    {
+      "slug": "shrink-uk",
+      "name": "Shrink",
+      "country": "UK",
+      "genres": "indie rock / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/shrinkband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/shrink-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ROTOWN",
+          "time": "20:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BAANHOF",
+          "time": "20:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "20:30"
+        }
+      ]
+    },
+    {
+      "slug": "any-young-mechanic-au",
+      "name": "Any Young Mechanic",
+      "country": "AU",
+      "genres": "folk / pop / slacker rock",
+      "spotifyUrl": "https://open.spotify.com/artist/49uksCFEefMvzh3YRMnZmf",
+      "instagramUrl": "https://www.instagram.com/anyyoungmechanicband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/any-young-mechanic-au/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BARRIO",
+          "time": "19:00"
+        },
+        {
+          "day": "THURSDAY",
+          "venue": "SALSABILITY",
+          "time": "23:00"
+        }
+      ]
+    },
+    {
+      "slug": "kelly-no-brakes-se-fr",
+      "name": "Kelly No Brakes",
+      "country": "SE/FR",
+      "genres": "dream pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/0ZnVWrM636IZszLw8naK0V",
+      "instagramUrl": "https://www.instagram.com/kellynobrakes/",
+      "sourceUrl": "https://leftofthedial.nl/acts/kelly-no-brakes-se-fr/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "22:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BAANHOF",
+          "time": "16:20"
+        }
+      ]
+    },
+    {
+      "slug": "arkayla-uk",
+      "name": "Arkayla",
+      "country": "UK",
+      "genres": "indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/09w9cxzjdgXxzACb0N3C50",
+      "instagramUrl": "https://www.instagram.com/arkaylaband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/arkayla-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "19:00"
+        },
+        {
+          "day": "THURSDAY",
+          "venue": "BARRIO",
+          "time": "23:30"
+        }
+      ]
+    },
+    {
+      "slug": "bert-uk",
+      "name": "Bert",
+      "country": "UK",
+      "genres": "alt-soul / folk / singer-songwriter",
+      "spotifyUrl": "https://open.spotify.com/artist/7oHUE5iM2Mn1lughMs1H00",
+      "instagramUrl": "https://www.instagram.com/bert.uk/",
+      "sourceUrl": "https://leftofthedial.nl/acts/bert-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BIRD",
+          "time": "19:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS UP",
+          "time": "16:40"
+        }
+      ]
+    },
+    {
+      "slug": "shark-school-ie",
+      "name": "Shark School",
+      "country": "IE",
+      "genres": "punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/39fpkhOwJADA84IcUobmAh",
+      "instagramUrl": "https://www.instagram.com/shark_school_ire/",
+      "sourceUrl": "https://leftofthedial.nl/acts/shark-school-ie/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BAANHOF",
+          "time": "19:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V11",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "leather-head-uk",
+      "name": "leather.head",
+      "country": "UK",
+      "genres": "experimental / post-rock / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/leather.head_/",
+      "sourceUrl": "https://leftofthedial.nl/acts/leather-head-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "TR DOWN",
+          "time": "18:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "UNIEK",
+          "time": "21:20"
+        }
+      ]
+    },
+    {
+      "slug": "pales-fr",
+      "name": "Pales",
+      "country": "FR",
+      "genres": "heavy / noise / post-punk",
+      "spotifyUrl": "https://open.spotify.com/artist/4sOzPsR34wv1akDd5nwQFX",
+      "instagramUrl": "https://www.instagram.com/pales.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/pales-fr/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 1",
+          "time": "22:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR UP",
+          "time": "16:00"
+        }
+      ]
+    },
+    {
+      "slug": "ugly-ozo-uk",
+      "name": "Ugly Ozo",
+      "country": "UK",
+      "genres": "grunge / indie pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1AUCiV4sfdNn5Ch5sTe4UI",
+      "instagramUrl": "https://www.instagram.com/uglyozo/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ugly-ozo-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL UP",
+          "time": "19:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "UNIEK",
+          "time": "21:20"
+        }
+      ]
+    },
+    {
+      "slug": "jawdropped-us",
+      "name": "Jawdropped",
+      "country": "US",
+      "genres": "rock / slacker rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6AxlwzQp9748SDpdoSjqQa",
+      "instagramUrl": "https://www.instagram.com/jawdroppedtheband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/jawdropped-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "19:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ROTOWN",
+          "time": "17:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BARRIO",
+          "time": "22:20"
+        }
+      ]
+    },
+    {
+      "slug": "the-glowworms",
+      "name": "The Glowworms",
+      "country": "UK",
+      "genres": "folk / indie rock / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/2xGAcRTIUWUaE6tggIZyOx",
+      "instagramUrl": "https://www.instagram.com/the.glowworms/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-glowworms/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS UP",
+          "time": "18:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V2_",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "esmeralda-road-ie",
+      "name": "Esmeralda Road",
+      "country": "IE",
+      "genres": "math rock / post-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6S9cVNSaKsE2rdeVqban5w",
+      "instagramUrl": "https://www.instagram.com/esmeraldaroad/",
+      "sourceUrl": "https://leftofthedial.nl/acts/esmeralda-road-ie/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL UP",
+          "time": "21:10"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN UP",
+          "time": "16:20"
+        }
+      ]
+    },
+    {
+      "slug": "spanish-horses-uk",
+      "name": "Spanish Horses",
+      "country": "FR/UK",
+      "genres": "indie pop / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3YrLAGmnU9JltcICs5wBy1",
+      "instagramUrl": "https://www.instagram.com/_spanishorses/",
+      "sourceUrl": "https://leftofthedial.nl/acts/spanish-horses-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "17:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR DOWN",
+          "time": "21:40"
+        }
+      ]
+    },
+    {
+      "slug": "maquina-pt",
+      "name": "MAQUINA.",
+      "country": "PT",
+      "genres": "alt-rave / heavy / industrial",
+      "spotifyUrl": "https://open.spotify.com/artist/0U1D3GEq0HYA82J6WWw3DT",
+      "instagramUrl": "https://www.instagram.com/maquiiinaria/",
+      "sourceUrl": "https://leftofthedial.nl/acts/maquina-pt/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "TR UP",
+          "time": "19:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "23:30"
+        }
+      ]
+    },
+    {
+      "slug": "mixed-waste-be",
+      "name": "Mixed Waste",
+      "country": "BE",
+      "genres": "post-punk / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/mixedwaste.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/mixed-waste-be/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "19:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BARRIO",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "sunken-uk",
+      "name": "Sunken",
+      "country": "UK",
+      "genres": "indie pop / rock / shoegaze",
+      "spotifyUrl": "https://open.spotify.com/artist/7KkGto8VYz1WpvIsaSGsFs",
+      "instagramUrl": "https://www.instagram.com/sunken___/",
+      "sourceUrl": "https://leftofthedial.nl/acts/sunken-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "WORM 1",
+          "time": "22:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "REMASTERED",
+          "time": "20:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ROTOWN",
+          "time": "23:30"
+        }
+      ]
+    },
+    {
+      "slug": "tracey-nelson-us",
+      "name": "Tracey Nelson",
+      "country": "US",
+      "genres": "alt-country / folk",
+      "spotifyUrl": "https://open.spotify.com/artist/7Ak3CpBzopE7eewhyodH7J",
+      "instagramUrl": "https://www.instagram.com/traceynels0n/",
+      "sourceUrl": "https://leftofthedial.nl/acts/tracey-nelson-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR FOYER",
+          "time": "20:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BAANHOF",
+          "time": "22:20"
+        }
+      ]
+    },
+    {
+      "slug": "state-of-grace-uk",
+      "name": "State Of Grace",
+      "country": "IE",
+      "genres": "alt-soul / rock",
+      "spotifyUrl": null,
+      "instagramUrl": null,
+      "sourceUrl": "https://leftofthedial.nl/acts/state-of-grace-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "DE DOELEN UP",
+          "time": "20:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL UP",
+          "time": "23:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ROTOWN",
+          "time": "20:30"
+        }
+      ]
+    },
+    {
+      "slug": "beige-nl",
+      "name": "Beige",
+      "country": "NL",
+      "genres": "college rock / indie rock / shoegaze",
+      "spotifyUrl": "https://open.spotify.com/artist/5ccfmhy9EyzMN6BC5F81kn",
+      "instagramUrl": "https://www.instagram.com/beigeband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/beige-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "ROTOWN",
+          "time": "20:40"
+        }
+      ]
+    },
+    {
+      "slug": "doom-fever-nl",
+      "name": "Doom Fever",
+      "country": "NL",
+      "genres": "grunge / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6jo7uQUCEzjBdefA1KEvqA",
+      "instagramUrl": "https://www.instagram.com/doomfever.fm/",
+      "sourceUrl": "https://leftofthedial.nl/acts/doom-fever-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "19:50"
+        }
+      ]
+    },
+    {
+      "slug": "ebby-nl",
+      "name": "Ebby",
+      "country": "NL",
+      "genres": "art-pop / experimental / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6Ac9GlYRIQdvpzRuO6K6UH",
+      "instagramUrl": "https://www.instagram.com/ebbyband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ebby-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "22:30"
+        }
+      ]
+    },
+    {
+      "slug": "fellatio-nl",
+      "name": "Fellatio",
+      "country": "NL",
+      "genres": "alt-disco / alt-rave / avant-garde",
+      "spotifyUrl": "https://open.spotify.com/artist/6ZZjX94x3t55GigdSiidr4",
+      "instagramUrl": "https://www.instagram.com/fellatioband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/fellatio-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "ROTOWN",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "leela-rosa-nl",
+      "name": "Leela Rosa",
+      "country": "NL",
+      "genres": "art-pop / dream pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1ljyZt4G3QAhA5WPBL7r66",
+      "instagramUrl": "https://www.instagram.com/leelarosa_/",
+      "sourceUrl": "https://leftofthedial.nl/acts/leela-rosa-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "UNIEK",
+          "time": "22:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "PARADIJSKERK",
+          "time": "18:20"
+        }
+      ]
+    },
+    {
+      "slug": "library-card-nl-2",
+      "name": "Library Card",
+      "country": "NL",
+      "genres": "lyrical-poetry / post-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2PNgtvSYvlo95zq1d5uEiT",
+      "instagramUrl": "https://www.instagram.com/thisislibrarycard/",
+      "sourceUrl": "https://leftofthedial.nl/acts/library-card-nl-2/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "loveth-besamoh-nl",
+      "name": "Loveth Besamoh",
+      "country": "NL",
+      "genres": "post-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1VFftaa0TUrjjQ1bhpBCvX",
+      "instagramUrl": "https://www.instagram.com/loveth_besamoh/",
+      "sourceUrl": "https://leftofthedial.nl/acts/loveth-besamoh-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "21:20"
+        }
+      ]
+    },
+    {
+      "slug": "smudged-nl",
+      "name": "Smudged",
+      "country": "NL",
+      "genres": "alt-rave / rock / synth pop",
+      "spotifyUrl": "https://open.spotify.com/artist/6f0EyrNSov8s8uYRUwTHRm",
+      "instagramUrl": "https://www.instagram.com/smudgedband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/smudged-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "20:00"
+        }
+      ]
+    },
+    {
+      "slug": "systeemfalen-nl",
+      "name": "Systeemfalen",
+      "country": "NL",
+      "genres": "punk / rock / sludge",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/systeemfalen.rotterdam/",
+      "sourceUrl": "https://leftofthedial.nl/acts/systeemfalen-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "UNIEK",
+          "time": "20:50"
+        }
+      ]
+    },
+    {
+      "slug": "thrilled-nl-2",
+      "name": "thrilled",
+      "country": "NL",
+      "genres": "rock / shoegaze",
+      "spotifyUrl": "https://open.spotify.com/artist/2kY4Oq4jvXfIgNydqsEobW",
+      "instagramUrl": "https://www.instagram.com/thrilledband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/thrilled-nl-2/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "poodle-nl",
+      "name": "Poodle",
+      "country": "NL",
+      "genres": "art-punk / garage / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0WmSbfz1i784E1Mth5VWiL",
+      "instagramUrl": null,
+      "sourceUrl": "https://leftofthedial.nl/acts/poodle-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "UNIEK",
+          "time": "19:30"
+        }
+      ]
+    },
+    {
+      "slug": "michael-ian-cummings-us",
+      "name": "Michael Ian Cummings",
+      "country": "US",
+      "genres": "rock / singer-songwriter",
+      "spotifyUrl": "https://open.spotify.com/artist/7y5ROtqqNUbCYdM9B5iMQZ",
+      "instagramUrl": "https://www.instagram.com/michaeliancummings/",
+      "sourceUrl": "https://leftofthedial.nl/acts/michael-ian-cummings-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 2",
+          "time": "17:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "PARADIJSKERK",
+          "time": "21:20"
+        }
+      ]
+    },
+    {
+      "slug": "twenty-one-children-za",
+      "name": "Twenty One Children",
+      "country": "ZA",
+      "genres": "heavy / punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3OXVOLG6MltdnZGyQrJBmo",
+      "instagramUrl": "https://www.instagram.com/twentyonechildren/",
+      "sourceUrl": "https://leftofthedial.nl/acts/twenty-one-children-za/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "REIJNGOUD",
+          "time": "17:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "gnarcissists-us",
+      "name": "Gnarcissists",
+      "country": "US",
+      "genres": "punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/4anUpRRW45sftMo8cdGTdR",
+      "instagramUrl": "https://www.instagram.com/gnarcissists/",
+      "sourceUrl": "https://leftofthedial.nl/acts/gnarcissists-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V11",
+          "time": "23:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "16:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 1",
+          "time": "22:50"
+        }
+      ]
+    },
+    {
+      "slug": "bed-jp",
+      "name": "bed",
+      "country": "JP",
+      "genres": "alt-rave / heavy / industrial",
+      "spotifyUrl": "https://open.spotify.com/artist/5nJqGF6KUDFS2jVMW9Oix9",
+      "instagramUrl": "https://www.instagram.com/bedsleepwell/",
+      "sourceUrl": "https://leftofthedial.nl/acts/bed-jp/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "WORM 1",
+          "time": "19:10"
+        },
+        {
+          "day": "THURSDAY",
+          "venue": "TR UP",
+          "time": "23:10"
+        }
+      ]
+    },
+    {
+      "slug": "max-sloan-uk",
+      "name": "Max Sloan",
+      "country": "UK",
+      "genres": "folk / indie pop / singer-songwriter",
+      "spotifyUrl": "https://open.spotify.com/artist/0ufbHu8rTthwHbdtukXun8",
+      "instagramUrl": "https://www.instagram.com/maxsloanmusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/max-sloan-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BIRD",
+          "time": "20:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "WAALSE KERK",
+          "time": "18:30"
+        }
+      ]
+    },
+    {
+      "slug": "studio20-uk",
+      "name": "studio20",
+      "country": "UK",
+      "genres": "alt-pop / experimental",
+      "spotifyUrl": "https://open.spotify.com/artist/2RLTzU6T70BdbKDd7Fcata",
+      "instagramUrl": "https://www.instagram.com/studio20.archive/",
+      "sourceUrl": "https://leftofthedial.nl/acts/studio20-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "SALSABILITY",
+          "time": "20:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V2_",
+          "time": "16:40"
+        }
+      ]
+    },
+    {
+      "slug": "mindsigh-uk",
+      "name": "Mindsigh",
+      "country": "UK",
+      "genres": "alternative rock / grunge / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5G1Fktka6OeKaM918AMRQc",
+      "instagramUrl": "https://www.instagram.com/mindsigh__/",
+      "sourceUrl": "https://leftofthedial.nl/acts/mindsigh-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN UP",
+          "time": "22:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "REIJNGOUD",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "gordi-au",
+      "name": "Gordi",
+      "country": "AU",
+      "genres": "indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/6UBMFaCTZnL1Hr1nTOEblM",
+      "instagramUrl": "https://www.instagram.com/gordimusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/gordi-au/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 2",
+          "time": "20:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "PARADIJSKERK",
+          "time": "16:50"
+        }
+      ]
+    },
+    {
+      "slug": "noonzy-be",
+      "name": "Noonzy",
+      "country": "BE",
+      "genres": "indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/6dfDwONzmFyAlH27BUuiqJ",
+      "instagramUrl": "https://www.instagram.com/noonzy_/",
+      "sourceUrl": "https://leftofthedial.nl/acts/noonzy-be/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL UP",
+          "time": "22:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "REMASTERED",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "ben-kidson-uk",
+      "name": "Ben Kidson",
+      "country": "UK",
+      "genres": "alt-hip hop / indie pop / lyrical-poetry",
+      "spotifyUrl": "https://open.spotify.com/artist/0byPxKkZ5TBvzQKL6NjqOq",
+      "instagramUrl": "https://www.instagram.com/benkidson_/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ben-kidson-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ROTOWN",
+          "time": "22:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BIRD",
+          "time": "16:00"
+        }
+      ]
+    },
+    {
+      "slug": "shitkid-se",
+      "name": "ShitKid",
+      "country": "SE",
+      "genres": "alt-pop / garage / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6TnRsbEEAkxaOYJLcEWd5m",
+      "instagramUrl": "https://www.instagram.com/xshitkidx/",
+      "sourceUrl": "https://leftofthedial.nl/acts/shitkid-se/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "SAHARA",
+          "time": "23:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 1",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "rageflower-au",
+      "name": "RAGEFLOWER",
+      "country": "AU",
+      "genres": "indie rock / pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0jHAwb83XpyQCuKAsrNaNG",
+      "instagramUrl": "https://www.instagram.com/rage_flower/",
+      "sourceUrl": "https://leftofthedial.nl/acts/rageflower-au/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BIRD",
+          "time": "17:30"
+        }
+      ]
+    },
+    {
+      "slug": "norman-d-loco-uk",
+      "name": "Norman D. Loco",
+      "country": "UK",
+      "genres": "art-pop / indie pop / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/63DZCA1Ltxmv5CrMes9RYE",
+      "instagramUrl": "https://www.instagram.com/norman.d.loco/",
+      "sourceUrl": "https://leftofthedial.nl/acts/norman-d-loco-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 1",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SAHARA",
+          "time": "20:40"
+        }
+      ]
+    },
+    {
+      "slug": "jackson-roy-uk",
+      "name": "Jackson Roy",
+      "country": "UK",
+      "genres": "experimental / folk / indie pop",
+      "spotifyUrl": "https://open.spotify.com/artist/5XOwtNpLocMTSa3mH3iIrh",
+      "instagramUrl": "https://www.instagram.com/jacksonroymusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/jackson-roy-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN UP",
+          "time": "20:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "PARADIJSKERK",
+          "time": "19:50"
+        }
+      ]
+    },
+    {
+      "slug": "monde-ufo-us",
+      "name": "Monde UFO",
+      "country": "US",
+      "genres": "indie pop / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0zU3wUdqv85zN0yPJEozBN",
+      "instagramUrl": "https://www.instagram.com/mondeufo/",
+      "sourceUrl": "https://leftofthedial.nl/acts/monde-ufo-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "V2_",
+          "time": "19:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "17:30"
+        }
+      ]
+    },
+    {
+      "slug": "sundayclub-ca",
+      "name": "sundayclub",
+      "country": "CA",
+      "genres": "indie pop / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7dcTyitRlZLvXG825D7AqM",
+      "instagramUrl": "https://www.instagram.com/sundayclub.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/sundayclub-ca/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V2_",
+          "time": "22:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BARRIO",
+          "time": "16:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "cherryholt-uk",
+      "name": "Cherryholt",
+      "country": "UK",
+      "genres": "indie pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1WBHF5t4j9ytpgcNhFWGwW",
+      "instagramUrl": "https://www.instagram.com/cherryholtstereo/",
+      "sourceUrl": "https://leftofthedial.nl/acts/cherryholt-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "TR DOWN",
+          "time": "21:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BARRIO",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "the-slow-country-uk",
+      "name": "The Slow Country",
+      "country": "UK",
+      "genres": "folk / slacker rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5kD1IXOvV30AavIW5so1tA",
+      "instagramUrl": "https://www.instagram.com/theslowcountryband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-slow-country-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "SAHARA",
+          "time": "19:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "UNIEK",
+          "time": "18:20"
+        }
+      ]
+    },
+    {
+      "slug": "spike-fuck-au",
+      "name": "Spike Fuck",
+      "country": "AU",
+      "genres": "noir / singer-songwriter / wave",
+      "spotifyUrl": "https://open.spotify.com/artist/1BCTAGmHZ4djDWQ0KtfKdZ",
+      "instagramUrl": "https://www.instagram.com/spike_fcuk/",
+      "sourceUrl": "https://leftofthedial.nl/acts/spike-fuck-au/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "19:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ROTOWN",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "paulie-swan-uk",
+      "name": "Paulie Swan",
+      "country": "UK",
+      "genres": "lyrical-poetry / singer-songwriter",
+      "spotifyUrl": "https://open.spotify.com/artist/3gg7C3cr0fDp7MqpdZB9iQ",
+      "instagramUrl": "https://www.instagram.com/paulie.swan/",
+      "sourceUrl": "https://leftofthedial.nl/acts/paulie-swan-uk/",
+      "shows": [
+        {
+          "day": "SATURDAY",
+          "venue": "REMASTERED",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "rampressure-uk",
+      "name": "Rampressure",
+      "country": "UK",
+      "genres": "garage / heavy / noise",
+      "spotifyUrl": "https://open.spotify.com/artist/5j6jHZdtT0Z8FkeO7k8jFD",
+      "instagramUrl": "https://www.instagram.com/rampressure/",
+      "sourceUrl": "https://leftofthedial.nl/acts/rampressure-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "MONO",
+          "time": "19:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "my-purse-nl",
+      "name": "My Purse",
+      "country": "NL",
+      "genres": "art-pop / post-punk",
+      "spotifyUrl": "https://open.spotify.com/artist/72xKwzomFXRApIyHghBrO4",
+      "instagramUrl": "https://www.instagram.com/its_mypurse/",
+      "sourceUrl": "https://leftofthedial.nl/acts/my-purse-nl/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "SAHARA",
+          "time": "22:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 1",
+          "time": "19:30"
+        }
+      ]
+    },
+    {
+      "slug": "newhvn-ie",
+      "name": "newhvn",
+      "country": "IE",
+      "genres": "alternative rock / grunge / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/77UoDI9DORxjrexne9KCTo",
+      "instagramUrl": "https://www.instagram.com/new.hvn/",
+      "sourceUrl": "https://leftofthedial.nl/acts/newhvn-ie/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "19:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN UP",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "yoo-doo-right-ca",
+      "name": "Yoo Doo Right",
+      "country": "CA",
+      "genres": "post-rock / psych / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2pVonF82aN2ttqFHsynVeW",
+      "instagramUrl": "https://www.instagram.com/yoodoowrong/",
+      "sourceUrl": "https://leftofthedial.nl/acts/yoo-doo-right-ca/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "REMASTERED",
+          "time": "22:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BIRD",
+          "time": "19:00"
+        }
+      ]
+    },
+    {
+      "slug": "painkiller-uk",
+      "name": "Painkiller",
+      "country": "UK",
+      "genres": "garage / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/painkiller____00000/",
+      "sourceUrl": "https://leftofthedial.nl/acts/painkiller-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "19:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR DOWN",
+          "time": "20:00"
+        }
+      ]
+    },
+    {
+      "slug": "wyatt-uk",
+      "name": "Wyatt",
+      "country": "UK",
+      "genres": "alt-country / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/wyatt__band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/wyatt-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "V2_",
+          "time": "22:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR DOWN",
+          "time": "16:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS UP",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "juni-habel-no",
+      "name": "Juni Habel",
+      "country": "NO",
+      "genres": "folk / singer-songwriter",
+      "spotifyUrl": "https://open.spotify.com/artist/2Kn9TqqVY8YLi0ijUAAQqZ",
+      "instagramUrl": "https://www.instagram.com/junihabel/",
+      "sourceUrl": "https://leftofthedial.nl/acts/juni-habel-no/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "PARADIJSKERK",
+          "time": "22:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "18:20"
+        }
+      ]
+    },
+    {
+      "slug": "telekura-ie",
+      "name": "Telekura",
+      "country": "IE",
+      "genres": "pop / synth pop",
+      "spotifyUrl": "https://open.spotify.com/artist/4RVcjmP8ppJczQZCUn25NV",
+      "instagramUrl": "https://www.instagram.com/telekura/",
+      "sourceUrl": "https://leftofthedial.nl/acts/telekura-ie/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BIRD",
+          "time": "17:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL UP",
+          "time": "21:50"
+        }
+      ]
+    },
+    {
+      "slug": "villager-us",
+      "name": "villagerrr",
+      "country": "US",
+      "genres": "alt-country / folk",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/villagerrrrrrrr/",
+      "sourceUrl": "https://leftofthedial.nl/acts/villager-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR UP",
+          "time": "20:10"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL UP",
+          "time": "17:20"
+        }
+      ]
+    },
+    {
+      "slug": "bloodworm-uk",
+      "name": "Bloodworm",
+      "country": "UK",
+      "genres": "post-punk / rock / wave",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/bloodwormband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/bloodworm-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ROTOWN",
+          "time": "23:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "18:20"
+        }
+      ]
+    },
+    {
+      "slug": "milkweed-uk",
+      "name": "Milkweed",
+      "country": "UK",
+      "genres": "experimental / folk",
+      "spotifyUrl": "https://open.spotify.com/artist/2n8wLKXfDnrSoZ9hKffIVW",
+      "instagramUrl": "https://www.instagram.com/mlkwd_/",
+      "sourceUrl": "https://leftofthedial.nl/acts/milkweed-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ROTOWN",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V11",
+          "time": "18:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "23:30"
+        }
+      ]
+    },
+    {
+      "slug": "lawn-chair-us-de",
+      "name": "LAWN CHAIR",
+      "country": "US/DE",
+      "genres": "punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6DV8F2dujEPQRsjcNqnwr4",
+      "instagramUrl": "https://www.instagram.com/lawnchairmusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lawn-chair-us-de/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "18:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "MONO",
+          "time": "21:20"
+        }
+      ]
+    },
+    {
+      "slug": "glasshouse-red-spider-mite-uk",
+      "name": "Glasshouse Red Spider Mite",
+      "country": "UK",
+      "genres": "art-pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/7uT24Q40bMgOOCwcUVWwli",
+      "instagramUrl": "https://www.instagram.com/glasshouseredspidermite/",
+      "sourceUrl": "https://leftofthedial.nl/acts/glasshouse-red-spider-mite-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V2_",
+          "time": "18:10"
+        }
+      ]
+    },
+    {
+      "slug": "normal-village-uk",
+      "name": "Normal Village",
+      "country": "UK",
+      "genres": "art-punk / avant-garde / post-punk",
+      "spotifyUrl": "https://open.spotify.com/artist/3oeKZkNMobMXjfDXmS6EJO",
+      "instagramUrl": "https://www.instagram.com/normalvillage/",
+      "sourceUrl": "https://leftofthedial.nl/acts/normal-village-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "V11",
+          "time": "19:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SAHARA",
+          "time": "16:10"
+        }
+      ]
+    },
+    {
+      "slug": "pyncher-uk",
+      "name": "Pyncher",
+      "country": "UK",
+      "genres": "art-punk / garage / post-rock",
+      "spotifyUrl": "https://open.spotify.com/artist/66NBYDmR4OTIL8AuMvKTK7",
+      "instagramUrl": "https://www.instagram.com/pyncher/",
+      "sourceUrl": "https://leftofthedial.nl/acts/pyncher-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "REIJNGOUD",
+          "time": "19:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ROTOWN",
+          "time": "19:00"
+        }
+      ]
+    },
+    {
+      "slug": "wing-uk",
+      "name": "wing!",
+      "country": "UK",
+      "genres": "alt-hip hop / experimental / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/17zzsvpeBPUpP5XittRxEs",
+      "instagramUrl": "https://www.instagram.com/wingroulette/",
+      "sourceUrl": "https://leftofthedial.nl/acts/wing-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "REMASTERED",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BIRD",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "child-of-prague-ie",
+      "name": "Child of Prague",
+      "country": "IE",
+      "genres": "alt-country / folk / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1IcvTflmKzSDZDWWNFvDma",
+      "instagramUrl": "https://www.instagram.com/childofpragueband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/child-of-prague-ie/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR UP",
+          "time": "21:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ROTOWN",
+          "time": "19:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "19:40"
+        }
+      ]
+    },
+    {
+      "slug": "brooki-ie",
+      "name": "Brooki",
+      "country": "IE",
+      "genres": "alternative rock / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/brooki.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/brooki-ie/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BIRD",
+          "time": "22:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR UP",
+          "time": "16:00"
+        }
+      ]
+    },
+    {
+      "slug": "scotstown-dance-band-uk",
+      "name": "Scotstown Dance Band",
+      "country": "UK",
+      "genres": "alt-country / pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5Pk0eOOXEgxWOmvrW97Bhx",
+      "instagramUrl": "https://www.instagram.com/scotstowndanceband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/scotstown-dance-band-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "UNIEK",
+          "time": "16:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V11",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "tooth-uk",
+      "name": "Tooth",
+      "country": "UK",
+      "genres": "alternative rock / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7ALR0GlSnIni4l9iZwJW7s",
+      "instagramUrl": "https://www.instagram.com/toothband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/tooth-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "TR DOWN",
+          "time": "23:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "18:10"
+        }
+      ]
+    },
+    {
+      "slug": "mry-uk",
+      "name": "mry",
+      "country": "UK",
+      "genres": "dream pop / post-rock / shoegaze",
+      "spotifyUrl": "https://open.spotify.com/artist/4IRQjESogpSF2aKYjzg6Un",
+      "instagramUrl": "https://www.instagram.com/mrymrymry___/",
+      "sourceUrl": "https://leftofthedial.nl/acts/mry-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "PARADIJSKERK",
+          "time": "21:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS UP",
+          "time": "19:40"
+        }
+      ]
+    },
+    {
+      "slug": "zilcho-hamblin-uk",
+      "name": "Zilcho Hamblin",
+      "country": "UK",
+      "genres": "alt-country / pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/11iuThR9R3AmXtzc6c6AEd",
+      "instagramUrl": "https://www.instagram.com/zilcho_hamblin/",
+      "sourceUrl": "https://leftofthedial.nl/acts/zilcho-hamblin-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ARMINIUS UP",
+          "time": "22:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "SALSABILITY",
+          "time": "18:40"
+        }
+      ]
+    },
+    {
+      "slug": "hillsboro-ca",
+      "name": "Hillsboro",
+      "country": "CA",
+      "genres": "indie rock / post-rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6mQZnxZqes84WGzpVEJ7sP",
+      "instagramUrl": "https://www.instagram.com/hillsboroinc/",
+      "sourceUrl": "https://leftofthedial.nl/acts/hillsboro-ca/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "UNIEK",
+          "time": "19:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "BARRIO",
+          "time": "20:50"
+        }
+      ]
+    },
+    {
+      "slug": "holly-head-uk",
+      "name": "Holly Head",
+      "country": "UK",
+      "genres": "dance-punk / post-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2RKrLNjGSuGH6TzEvOCSmC",
+      "instagramUrl": "https://www.instagram.com/hollyhead.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/holly-head-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V11",
+          "time": "22:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "MONO",
+          "time": "18:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "19:50"
+        }
+      ]
+    },
+    {
+      "slug": "girlfriend-ie",
+      "name": "girlfriend.",
+      "country": "IE",
+      "genres": "grunge / rock / shoegaze",
+      "spotifyUrl": "https://open.spotify.com/artist/3w2hr2LR5vg8YaqxmNIl4o",
+      "instagramUrl": "https://www.instagram.com/girlfriendband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/girlfriend-ie/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BAANHOF",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN UP",
+          "time": "20:50"
+        }
+      ]
+    },
+    {
+      "slug": "ropeburn-uk-ie",
+      "name": "Ropeburn",
+      "country": "UK/IE",
+      "genres": "folk / math rock / post-rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/ropeburnropeburnropeburn/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ropeburn-uk-ie/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "UNIEK",
+          "time": "22:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "WAALSE KERK",
+          "time": "17:00"
+        }
+      ]
+    },
+    {
+      "slug": "perfect-binding-uk",
+      "name": "Perfect Binding",
+      "country": "UK",
+      "genres": "folk / indie rock / post-rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7guexKHSspsfD9QBco76EY",
+      "instagramUrl": "https://www.instagram.com/perfectbindingband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/perfect-binding-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "21:50"
+        }
+      ]
+    },
+    {
+      "slug": "hyd-us",
+      "name": "Hyd",
+      "country": "US",
+      "genres": "alt-disco / experimental / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/3pYle1qnqjdGhG0agFZLj5",
+      "instagramUrl": "https://www.instagram.com/hyd.earth/",
+      "sourceUrl": "https://leftofthedial.nl/acts/hyd-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "SAHARA",
+          "time": "17:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "SALSABILITY",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "cosign-uk",
+      "name": "Cosign",
+      "country": "UK",
+      "genres": "dream pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/3cdbzyqUBksxenoZ407Nru",
+      "instagramUrl": "https://www.instagram.com/cosign333/",
+      "sourceUrl": "https://leftofthedial.nl/acts/cosign-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V2_",
+          "time": "20:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR FOYER",
+          "time": "18:40"
+        }
+      ]
+    },
+    {
+      "slug": "echo-northstar-ie",
+      "name": "Echo Northstar",
+      "country": "IE",
+      "genres": "alternative rock / indie rock / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/5q66lhChITVZtqRdZABjec",
+      "instagramUrl": "https://www.instagram.com/echonorthstar/",
+      "sourceUrl": "https://leftofthedial.nl/acts/echo-northstar-ie/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 1",
+          "time": "19:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR DOWN",
+          "time": "18:20"
+        }
+      ]
+    },
+    {
+      "slug": "the-healing-power-of-horses-uk",
+      "name": "The Healing Power of Horses",
+      "country": "UK",
+      "genres": "alt-pop / indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/4ps9FIxIQatbBhudrWSK3J",
+      "instagramUrl": "https://www.instagram.com/thehealingpowerofhorses/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-healing-power-of-horses-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "20:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "16:00"
+        }
+      ]
+    },
+    {
+      "slug": "hungry-uk",
+      "name": "Hungry",
+      "country": "UK",
+      "genres": "dance-punk / post-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6lr8Gb15x6gGfOhldr8M4P",
+      "instagramUrl": "https://www.instagram.com/hungryhungree/",
+      "sourceUrl": "https://leftofthedial.nl/acts/hungry-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL UP",
+          "time": "20:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR FOYER",
+          "time": "18:40"
+        }
+      ]
+    },
+    {
+      "slug": "tough-cookie-uk",
+      "name": "Tough Cookie",
+      "country": "UK",
+      "genres": "alternative rock / grunge / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7uLaDKp4v0Ne2AAJjJZ1ZQ",
+      "instagramUrl": "https://www.instagram.com/toughcookie/",
+      "sourceUrl": "https://leftofthedial.nl/acts/tough-cookie-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V11",
+          "time": "20:40"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "20:30"
+        }
+      ]
+    },
+    {
+      "slug": "the-guest-list-uk",
+      "name": "The Guest List",
+      "country": "UK",
+      "genres": "dance-punk / indie pop / indie rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3MlBGzJspD6CjrHRYbR4OQ",
+      "instagramUrl": "https://www.instagram.com/theguestlist.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-guest-list-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ROTOWN",
+          "time": "23:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR UP",
+          "time": "17:40"
+        }
+      ]
+    },
+    {
+      "slug": "benchwarmer-uk",
+      "name": "benchwarmer",
+      "country": "UK",
+      "genres": "alternative rock / rock / shoegaze",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/benchwarmeruk/",
+      "sourceUrl": "https://leftofthedial.nl/acts/benchwarmer-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR DOWN",
+          "time": "21:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "SAHARA",
+          "time": "16:10"
+        }
+      ]
+    },
+    {
+      "slug": "compost-compost-compost-uk",
+      "name": "COMPOST COMPOST COMPOST",
+      "country": "UK",
+      "genres": null,
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/compostcompostcompost/",
+      "sourceUrl": "https://leftofthedial.nl/acts/compost-compost-compost-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "22:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN UP",
+          "time": "19:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR UP",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "la-flemme-fr",
+      "name": "LA FLEMME",
+      "country": "FR",
+      "genres": "garage / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5a3pyEb34YV5TyHDnprIxp",
+      "instagramUrl": "https://www.instagram.com/laflemme_band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/la-flemme-fr/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "WORM 1",
+          "time": "20:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR FOYER",
+          "time": "17:00"
+        }
+      ]
+    },
+    {
+      "slug": "lots-of-hands-uk",
+      "name": "lots of hands",
+      "country": "UK",
+      "genres": "experimental / indie pop",
+      "spotifyUrl": "https://open.spotify.com/artist/6sNcyjEVdNlZ0dpgr7EcT9",
+      "instagramUrl": "https://www.instagram.com/lotsofhands/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lots-of-hands-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "23:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 1",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BARRIO",
+          "time": "22:20"
+        }
+      ]
+    },
+    {
+      "slug": "tokyo-sea-dragons-uk",
+      "name": "Tokyo Sea Dragons",
+      "country": "UK",
+      "genres": "alt-pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3BnrRutEQF21uO16b7AsD5",
+      "instagramUrl": "https://www.instagram.com/tokyoseadragons/",
+      "sourceUrl": "https://leftofthedial.nl/acts/tokyo-sea-dragons-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ARMINIUS UP",
+          "time": "21:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BAANHOF",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "mekdrdr-be",
+      "name": "Mek’Dr’Dr",
+      "country": "BE",
+      "genres": "alt-pop / pop / post-punk",
+      "spotifyUrl": "https://open.spotify.com/artist/6rBhtNjPQ7SKPa8OCYguk5",
+      "instagramUrl": "https://www.instagram.com/mekdrdrband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/mekdrdr-be/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BARRIO",
+          "time": "20:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "MONO",
+          "time": "21:20"
+        }
+      ]
+    },
+    {
+      "slug": "monks-uk",
+      "name": "Monks",
+      "country": "UK",
+      "genres": "alt-rave / rock / synth pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1EESBfYnqZ9pylHg8n6lBP",
+      "instagramUrl": "https://www.instagram.com/monksband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/monks-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "TR DOWN",
+          "time": "16:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL UP",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "magasin-nl",
+      "name": "Magasin",
+      "country": "NL",
+      "genres": "art-pop / post-punk / wave",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/magasin.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/magasin-nl/",
+      "shows": [
+        {
+          "day": "WEDNESDAY",
+          "venue": "ROTOWN",
+          "time": "19:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN UP",
+          "time": "17:50"
+        }
+      ]
+    },
+    {
+      "slug": "daufodt-no",
+      "name": "DAUFØDT",
+      "country": "NO",
+      "genres": "heavy / noise / punk",
+      "spotifyUrl": "https://open.spotify.com/artist/0lYwNo6c3pXmv6ZQDkuEMt",
+      "instagramUrl": "https://www.instagram.com/daufodt/",
+      "sourceUrl": "https://leftofthedial.nl/acts/daufodt-no/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR FOYER",
+          "time": "22:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 2",
+          "time": "18:40"
+        }
+      ]
+    },
+    {
+      "slug": "jana-horn-us",
+      "name": "Jana Horn",
+      "country": "US",
+      "genres": "folk / lyrical-poetry / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1LrML89CKJhZjgji63Bvx1",
+      "instagramUrl": "https://www.instagram.com/janus__janus/",
+      "sourceUrl": "https://leftofthedial.nl/acts/jana-horn-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "PARADIJSKERK",
+          "time": "18:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 2",
+          "time": "18:40"
+        }
+      ]
+    },
+    {
+      "slug": "mleko-uk",
+      "name": "MLEKO",
+      "country": "UK",
+      "genres": "art-rock / post-rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2FsA3E38MJNvzKQbQOeb4q",
+      "instagramUrl": "https://www.instagram.com/mleko.mcr/",
+      "sourceUrl": "https://leftofthedial.nl/acts/mleko-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V2_",
+          "time": "19:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "V11",
+          "time": "16:40"
+        }
+      ]
+    },
+    {
+      "slug": "black-nylon-ie",
+      "name": "Black Nylon",
+      "country": "IE",
+      "genres": "post-punk / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/blacknylonband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/black-nylon-ie/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BARRIO",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "16:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL UP",
+          "time": "23:20"
+        }
+      ]
+    },
+    {
+      "slug": "curiosity-shop-uk",
+      "name": "Curiosity Shop",
+      "country": "UK",
+      "genres": "alt-country / folk / indie pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1T0VltNs70p1wi7Tgh2rTy",
+      "instagramUrl": "https://www.instagram.com/curiosityshopmusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/curiosity-shop-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WAALSE KERK",
+          "time": "20:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BIRD",
+          "time": "20:30"
+        }
+      ]
+    },
+    {
+      "slug": "alice-costelloe-uk",
+      "name": "Alice Costelloe",
+      "country": "UK",
+      "genres": "folk / indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1xbZZl0gYutFPyiUAXuJLy",
+      "instagramUrl": "https://www.instagram.com/alicecostelloe/",
+      "sourceUrl": "https://leftofthedial.nl/acts/alice-costelloe-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "23:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "PARADIJSKERK",
+          "time": "16:50"
+        }
+      ]
+    },
+    {
+      "slug": "bog-band-ire",
+      "name": "bog band",
+      "country": "IE",
+      "genres": "alt-soul / indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/5D0qbEzkwg6intmu57jeBx",
+      "instagramUrl": "https://www.instagram.com/bog.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/bog-band-ire/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BIRD",
+          "time": "20:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 2",
+          "time": "22:00"
+        }
+      ]
+    },
+    {
+      "slug": "oslo-twins-uk",
+      "name": "Oslo Twins",
+      "country": "UK",
+      "genres": "alt-disco / alt-rave / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/2rpkPoe2Qc5unwCOmWpN5y",
+      "instagramUrl": "https://www.instagram.com/oslo_twins/",
+      "sourceUrl": "https://leftofthedial.nl/acts/oslo-twins-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "TR UP",
+          "time": "22:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "UNIEK",
+          "time": "19:50"
+        }
+      ]
+    },
+    {
+      "slug": "imaginary-husband-uk",
+      "name": "Imaginary Husband",
+      "country": "UK",
+      "genres": "math rock / punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1WMBPRbQ20tWy4bqYzmif2",
+      "instagramUrl": "https://www.instagram.com/imaginaryhus_band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/imaginary-husband-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "23:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BARRIO",
+          "time": "20:50"
+        }
+      ]
+    },
+    {
+      "slug": "casual-smart-uk",
+      "name": "casual smart",
+      "country": "UK",
+      "genres": "alt-country / folk / indie pop",
+      "spotifyUrl": "https://open.spotify.com/artist/6hQ9aQfQsvuN6Y7NK1J7ou",
+      "instagramUrl": "https://www.instagram.com/casualsmartband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/casual-smart-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "20:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "V2_",
+          "time": "16:40"
+        }
+      ]
+    },
+    {
+      "slug": "lacuna-uk",
+      "name": "Lacuna",
+      "country": "UK",
+      "genres": "dream pop / folk / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/5XG9KwVdGoHTfnHLwkpT14",
+      "instagramUrl": "https://www.instagram.com/lacuna.music/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lacuna-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR FOYER",
+          "time": "19:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR UP",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "ashnymph-uk",
+      "name": "ashnymph",
+      "country": "UK",
+      "genres": "alt-rave / industrial / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1zVKP29Wt1d7hF2yRpZV5o",
+      "instagramUrl": "https://www.instagram.com/_ashnymph/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ashnymph-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "SAHARA",
+          "time": "22:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 1",
+          "time": "16:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "REMASTERED",
+          "time": "22:20"
+        }
+      ]
+    },
+    {
+      "slug": "ringlets-nz",
+      "name": "Ringlets",
+      "country": "NZ",
+      "genres": "post-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5CgTsJzu2AaHviFIlpoLwa",
+      "instagramUrl": "https://www.instagram.com/_ringlets/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ringlets-nz/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN UP",
+          "time": "17:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V2_",
+          "time": "19:40"
+        }
+      ]
+    },
+    {
+      "slug": "melanie-baker-uk",
+      "name": "Melanie Baker",
+      "country": "UK",
+      "genres": "grunge / pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/71VckCz8JMieQkjjAXzR5y",
+      "instagramUrl": "https://www.instagram.com/melaniebakermusic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/melanie-baker-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "18:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BAANHOF",
+          "time": "20:50"
+        }
+      ]
+    },
+    {
+      "slug": "lemonsuckr-uk",
+      "name": "Lemonsuckr",
+      "country": "UK",
+      "genres": "alt-rave / dance-punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3GOEpVQKFuVvZeFAyu8a8M",
+      "instagramUrl": "https://www.instagram.com/lemonsuckr.wav/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lemonsuckr-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "23:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR UP",
+          "time": "21:00"
+        }
+      ]
+    },
+    {
+      "slug": "jj-bull-uk",
+      "name": "JJ Bull",
+      "country": "UK",
+      "genres": "alt-disco / alt-rave / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/2cEHoqIh6TEPXEKi2NE8zf",
+      "instagramUrl": "https://www.instagram.com/fitbathatba/",
+      "sourceUrl": "https://leftofthedial.nl/acts/jj-bull-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 2",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "REIJNGOUD",
+          "time": "20:30"
+        }
+      ]
+    },
+    {
+      "slug": "lttl-mort-uk",
+      "name": "lttl mort",
+      "country": "UK",
+      "genres": "alt-rave / industrial / rock",
+      "spotifyUrl": null,
+      "instagramUrl": "https://www.instagram.com/lttlmort/",
+      "sourceUrl": "https://leftofthedial.nl/acts/lttl-mort-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "UNIEK",
+          "time": "23:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "MONO",
+          "time": "22:50"
+        }
+      ]
+    },
+    {
+      "slug": "trip-westerns-uk",
+      "name": "Trip Westerns",
+      "country": "UK",
+      "genres": "alt-country / psych / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/46hMs98otvKZptb2jAPK2a",
+      "instagramUrl": "https://www.instagram.com/trip.westerns/",
+      "sourceUrl": "https://leftofthedial.nl/acts/trip-westerns-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "23:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "REMASTERED",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "the-jump-cuts-us",
+      "name": "The Jump Cuts",
+      "country": "US",
+      "genres": "garage / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3hanaZBkEkcbCIgQIgye1g",
+      "instagramUrl": "https://www.instagram.com/thejumpcutsrock/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-jump-cuts-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "23:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "REIJNGOUD",
+          "time": "23:20"
+        }
+      ]
+    },
+    {
+      "slug": "milo-korbenski-uk-2",
+      "name": "Milo Korbenski",
+      "country": "UK",
+      "genres": "indie pop / indie rock / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/6AcfbTxwwz9q4dxJP9sZTI",
+      "instagramUrl": "https://www.instagram.com/milokorbenski/",
+      "sourceUrl": "https://leftofthedial.nl/acts/milo-korbenski-uk-2/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "WORM 2",
+          "time": "20:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "V2_",
+          "time": "21:10"
+        }
+      ]
+    },
+    {
+      "slug": "iskandr-nl",
+      "name": "Iskandr",
+      "country": "NL",
+      "genres": "folk / industrial",
+      "spotifyUrl": "https://open.spotify.com/artist/5d7BLDjtYp7Rk85ww9uxOu",
+      "instagramUrl": "https://www.instagram.com/omariskandr/",
+      "sourceUrl": "https://leftofthedial.nl/acts/iskandr-nl/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "WORM 2",
+          "time": "23:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "WAALSE KERK",
+          "time": "21:30"
+        }
+      ]
+    },
+    {
+      "slug": "insider-trading-uk",
+      "name": "Insider Trading",
+      "country": "UK",
+      "genres": "math rock / post-punk / post-rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1JHKepRiJ6ho8THY8R3UfB",
+      "instagramUrl": "https://www.instagram.com/insidertradingband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/insider-trading-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "MONO",
+          "time": "16:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "V2_",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "serena-clara-uk",
+      "name": "Serena Clara",
+      "country": "UK",
+      "genres": "art-pop / lyrical-poetry / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1PO51wEepI6XjVQnfl0ve1",
+      "instagramUrl": "https://www.instagram.com/serenaclara.world/",
+      "sourceUrl": "https://leftofthedial.nl/acts/serena-clara-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "WORM 2",
+          "time": "21:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 2",
+          "time": "17:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "PARADIJSKERK",
+          "time": "22:40"
+        }
+      ]
+    },
+    {
+      "slug": "al-cologne-uk",
+      "name": "Al Cologne",
+      "country": "UK",
+      "genres": "folk / indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/20GIMu9xDZkvrLWKMKap4O",
+      "instagramUrl": "https://www.instagram.com/alcologn3/",
+      "sourceUrl": "https://leftofthedial.nl/acts/al-cologne-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS UP",
+          "time": "22:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "MONO",
+          "time": "18:20"
+        }
+      ]
+    },
+    {
+      "slug": "midscale-fr",
+      "name": "Midscale",
+      "country": "FR",
+      "genres": "post-rock / rock / shoegaze",
+      "spotifyUrl": "https://open.spotify.com/artist/0a9KGUJsMk1TX8ah70qfD5",
+      "instagramUrl": "https://www.instagram.com/midscaleband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/midscale-fr/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "DE DOELEN UP",
+          "time": "19:10"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "plainhead-de",
+      "name": "plainhead",
+      "country": "DE",
+      "genres": "dream pop / folk / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/7pc3VOBHqWhvMw5IW3GFPs",
+      "instagramUrl": "https://www.instagram.com/plainhead00/",
+      "sourceUrl": "https://leftofthedial.nl/acts/plainhead-de/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "V11",
+          "time": "19:20"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "SAHARA",
+          "time": "20:40"
+        }
+      ]
+    },
+    {
+      "slug": "turnspit-uk",
+      "name": "TURNSPIT",
+      "country": "UK",
+      "genres": "alt-rave / pop / synth pop",
+      "spotifyUrl": "https://open.spotify.com/artist/1HbKJU6NYDySoBXuAi5dNB",
+      "instagramUrl": "https://www.instagram.com/_turnspit_/",
+      "sourceUrl": "https://leftofthedial.nl/acts/turnspit-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "23:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "REMASTERED",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "stoop-kid-be",
+      "name": "Stoop Kid",
+      "country": "BE",
+      "genres": "indie pop / pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3CsiUaKAgs5sjBHghFrGIJ",
+      "instagramUrl": "https://www.instagram.com/stoopkiddiest/",
+      "sourceUrl": "https://leftofthedial.nl/acts/stoop-kid-be/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR DOWN",
+          "time": "19:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "UNIEK",
+          "time": "19:50"
+        }
+      ]
+    },
+    {
+      "slug": "flowers-for-the-dead-us",
+      "name": "Flowers for the Dead",
+      "country": "US",
+      "genres": "alternative rock / grunge / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/3V7IFV2GWxFGnUlX1Z7euS",
+      "instagramUrl": "https://www.instagram.com/flowersforthedead/",
+      "sourceUrl": "https://leftofthedial.nl/acts/flowers-for-the-dead-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "V11",
+          "time": "21:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "MONO",
+          "time": "19:50"
+        }
+      ]
+    },
+    {
+      "slug": "the-sewing-club-us",
+      "name": "The Sewing Club",
+      "country": "US",
+      "genres": "alternative rock / grunge / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/4dEUp9bmI8xPLDdVfEN24Q",
+      "instagramUrl": "https://www.instagram.com/sewingclubband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/the-sewing-club-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "UNIEK",
+          "time": "18:20"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR DOWN",
+          "time": "20:00"
+        }
+      ]
+    },
+    {
+      "slug": "thank-uk",
+      "name": "Thank",
+      "country": "UK",
+      "genres": "alt-rave / heavy / industrial",
+      "spotifyUrl": "https://open.spotify.com/artist/6ddEDDmrnWb8WDt1VEMhcC",
+      "instagramUrl": "https://www.instagram.com/thankleeds/",
+      "sourceUrl": "https://leftofthedial.nl/acts/thank-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "BARRIO",
+          "time": "23:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ROTOWN",
+          "time": "17:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR DOWN",
+          "time": "23:30"
+        }
+      ]
+    },
+    {
+      "slug": "alien-boy-us",
+      "name": "Alien Boy",
+      "country": "US",
+      "genres": "alternative rock / indie pop / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/65vqyT3OjG2zvb3cO1s44j",
+      "instagramUrl": "https://www.instagram.com/alienboypdx/",
+      "sourceUrl": "https://leftofthedial.nl/acts/alien-boy-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "22:00"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "TR FOYER",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "wesley-the-boys-us",
+      "name": "Wesley & The Boys",
+      "country": "US",
+      "genres": "punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7rl5lA9lmSX5JqNw0OdJxr",
+      "instagramUrl": "https://www.instagram.com/wesleyandtheboys/",
+      "sourceUrl": "https://leftofthedial.nl/acts/wesley-the-boys-us/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "TR DOWN",
+          "time": "22:50"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "V11",
+          "time": "18:10"
+        }
+      ]
+    },
+    {
+      "slug": "date-camp-dk",
+      "name": "Date Camp",
+      "country": "DK",
+      "genres": "indie pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/6ejvN9UIXEyfWuxUHDb2in",
+      "instagramUrl": "https://www.instagram.com/datecampband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/date-camp-dk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "REIJNGOUD",
+          "time": "20:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "18:50"
+        }
+      ]
+    },
+    {
+      "slug": "bramwell-uk",
+      "name": "Bramwell",
+      "country": "UK",
+      "genres": "indie pop / powerpop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/2e2X88JrpVXz8cjsZlwuHY",
+      "instagramUrl": "https://www.instagram.com/bramwellband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/bramwell-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "REIJNGOUD",
+          "time": "22:00"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BARRIO",
+          "time": "19:20"
+        }
+      ]
+    },
+    {
+      "slug": "babe-haven-us",
+      "name": "Babe Haven",
+      "country": "US",
+      "genres": "heavy / punk / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0b0NRq58okVkvcHSGOzM4x",
+      "instagramUrl": "https://www.instagram.com/babehavenband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/babe-haven-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "DE DOELEN WBH",
+          "time": "23:30"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "REIJNGOUD",
+          "time": "19:00"
+        }
+      ]
+    },
+    {
+      "slug": "latter-us",
+      "name": "Latter",
+      "country": "US",
+      "genres": "heavy / noise / punk",
+      "spotifyUrl": "https://open.spotify.com/artist/5rPX9qL8KQ5XyWPy252IKD",
+      "instagramUrl": "https://www.instagram.com/latter.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/latter-us/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "19:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS DOWN",
+          "time": "19:00"
+        }
+      ]
+    },
+    {
+      "slug": "atticomatic-uk",
+      "name": "AtticOmatic",
+      "country": "UK",
+      "genres": "art-pop / avant-garde / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/7MBFwAIrTE8EFpJY1NqlBY",
+      "instagramUrl": "https://www.instagram.com/atticomatic/",
+      "sourceUrl": "https://leftofthedial.nl/acts/atticomatic-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "DE DOELEN UP",
+          "time": "22:30"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "REIJNGOUD",
+          "time": "17:30"
+        }
+      ]
+    },
+    {
+      "slug": "gardens-at",
+      "name": "GARDENS",
+      "country": "AT",
+      "genres": "dream pop / indie pop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/70P0jwWyqwb30aiCqicnNZ",
+      "instagramUrl": "https://www.instagram.com/thisisgardens/",
+      "sourceUrl": "https://leftofthedial.nl/acts/gardens-at/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "WORM 1",
+          "time": "21:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ANNABEL UP",
+          "time": "18:50"
+        }
+      ]
+    },
+    {
+      "slug": "pushbike-uk",
+      "name": "pushbike",
+      "country": "UK",
+      "genres": "college rock / powerpop / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/5LqB5fe56MxhmRqoaXTND2",
+      "instagramUrl": "https://www.instagram.com/pushbikeband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/pushbike-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL UP",
+          "time": "18:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "STALLES (FKA CENTRAAL)",
+          "time": "17:20"
+        }
+      ]
+    },
+    {
+      "slug": "burglar-ie",
+      "name": "Burglar",
+      "country": "IE",
+      "genres": "indie rock / rock / slacker rock",
+      "spotifyUrl": "https://open.spotify.com/artist/1crXzUsGgiuxMRoWyjTl4i",
+      "instagramUrl": "https://www.instagram.com/burglar.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/burglar-ie/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "V2_",
+          "time": "18:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "TR FOYER",
+          "time": "20:20"
+        }
+      ]
+    },
+    {
+      "slug": "bathing-suits",
+      "name": "Bathing Suits",
+      "country": "UK",
+      "genres": "alt-rave / noise / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/0wAHOA5JY06O6TbyGLn9zR",
+      "instagramUrl": "https://www.instagram.com/bathingsuitsband/",
+      "sourceUrl": "https://leftofthedial.nl/acts/bathing-suits/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "21:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "REMASTERED",
+          "time": "20:50"
+        }
+      ]
+    },
+    {
+      "slug": "neve-cariad-uk",
+      "name": "Neve Cariad",
+      "country": "UK",
+      "genres": "alt-country / folk / pop",
+      "spotifyUrl": "https://open.spotify.com/artist/3cwNxYtHKORaRdMwIRogtX",
+      "instagramUrl": "https://www.instagram.com/nevecariad/",
+      "sourceUrl": "https://leftofthedial.nl/acts/neve-cariad-uk/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ARMINIUS UP",
+          "time": "16:40"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WAALSE KERK",
+          "time": "17:00"
+        }
+      ]
+    }
+  ]
+}

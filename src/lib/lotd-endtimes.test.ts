@@ -80,13 +80,33 @@ describe("withDerivedEndTimes", () => {
     expect(warnings[0].stageSlug).toBe("mono");
   });
 
-  it("throws on two sets starting at the same instant in one room", () => {
-    expect(() =>
-      withDerivedEndTimes([
-        { stageSlug: "bird", startTime: ams("2026-10-23T19:00:00") },
-        { stageSlug: "bird", startTime: ams("2026-10-23T19:00:00") },
-      ]),
-    ).toThrow(/same time/);
+  // The published schedule really does double-book: Trip Westerns and
+  // TURNSPIT share a room and a start time, twice. Both get their full length
+  // and overlap on the grid, which is an honest rendering of the source —
+  // clipping one against the other would collapse it to nothing.
+  it("shows both sets at full length when two start at the same time in one room", () => {
+    const { sets, warnings } = withDerivedEndTimes([
+      { stageSlug: "annabel-down", startTime: ams("2026-10-22T23:30:00") },
+      { stageSlug: "annabel-down", startTime: ams("2026-10-22T23:30:00") },
+    ]);
+    expect(sets).toHaveLength(2);
+    for (const set of sets) {
+      expect(minutesBetween(set.startTime, set.endTime)).toBe(DEFAULT_SET_MINUTES);
+    }
+    expect(warnings.some((w) => /same time/.test(w.message))).toBe(true);
+  });
+
+  it("clips a tied pair against the next set that actually starts later", () => {
+    const { sets } = withDerivedEndTimes([
+      { stageSlug: "annabel-down", startTime: ams("2026-10-22T23:30:00") },
+      { stageSlug: "annabel-down", startTime: ams("2026-10-22T23:30:00") },
+      { stageSlug: "annabel-down", startTime: ams("2026-10-22T23:50:00") },
+    ]);
+    const tied = sets.filter((s) => s.startTime.getTime() === ams("2026-10-22T23:30:00").getTime());
+    expect(tied).toHaveLength(2);
+    for (const set of tied) {
+      expect(minutesBetween(set.startTime, set.endTime)).toBe(20);
+    }
   });
 
   it("preserves the caller's own fields", () => {

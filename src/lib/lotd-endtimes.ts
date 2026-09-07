@@ -56,8 +56,21 @@ export function withDerivedEndTimes<T extends DatedSet>(sets: T[]): EndTimeResul
     const sorted = [...group].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
     sorted.forEach((set, i) => {
-      const next = sorted[i + 1];
       const capped = new Date(set.startTime.getTime() + DEFAULT_SET_MINUTES * MINUTE_MS);
+
+      // Clip against the next set that starts *later*, not merely the next in
+      // the list. The source really does list two acts in one room at one
+      // time (Trip Westerns and TURNSPIT, twice), and clipping against an
+      // identical start would collapse the block to zero width.
+      const next = sorted.slice(i + 1).find((s) => s.startTime.getTime() > set.startTime.getTime());
+
+      if (sorted[i + 1]?.startTime.getTime() === set.startTime.getTime()) {
+        warnings.push({
+          stageSlug,
+          startTime: set.startTime,
+          message: "two sets start at the same time in this room — both are shown, overlapping",
+        });
+      }
 
       if (!next) {
         out.push({ ...set, endTime: capped });
@@ -65,14 +78,6 @@ export function withDerivedEndTimes<T extends DatedSet>(sets: T[]): EndTimeResul
       }
 
       const gapMinutes = (next.startTime.getTime() - set.startTime.getTime()) / MINUTE_MS;
-      if (gapMinutes <= 0) {
-        // Two sets starting at the same instant in the same room is not a
-        // scheduling choice, it's corrupt input — fail loudly rather than
-        // rendering a zero-width block nobody can tap.
-        throw new Error(
-          `${stageSlug}: two sets start at or before the same time (${set.startTime.toISOString()})`,
-        );
-      }
       if (gapMinutes < 10) {
         warnings.push({
           stageSlug,
