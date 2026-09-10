@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-07T14:25:47.980Z",
+  "fetchedAt": "2026-09-10T15:10:45.345Z",
   "edition": 2026,
   "acts": [
     {
@@ -44,8 +44,8 @@
         },
         {
           "day": "SATURDAY",
-          "venue": "V11",
-          "time": "16:40"
+          "venue": "DE DOELEN WBH",
+          "time": "16:50"
         }
       ]
     },
@@ -243,8 +243,8 @@
         },
         {
           "day": "SATURDAY",
-          "venue": "ARMINIUS UP",
-          "time": "21:10"
+          "venue": "MONO",
+          "time": "23:50"
         }
       ]
     },
@@ -615,8 +615,8 @@
         },
         {
           "day": "SATURDAY",
-          "venue": "MONO",
-          "time": "22:50"
+          "venue": "ARMINIUS UP",
+          "time": "21:10"
         }
       ]
     },
@@ -947,7 +947,7 @@
     },
     {
       "slug": "sunken-uk",
-      "name": "Sunken",
+      "name": "GX Nurse",
       "country": "UK",
       "genres": "indie pop / rock / shoegaze",
       "spotifyUrl": "https://open.spotify.com/artist/7KkGto8VYz1WpvIsaSGsFs",
@@ -1046,7 +1046,7 @@
         {
           "day": "WEDNESDAY",
           "venue": "STALLES (FKA CENTRAAL)",
-          "time": "19:50"
+          "time": "21:10"
         }
       ]
     },
@@ -1179,7 +1179,7 @@
         {
           "day": "WEDNESDAY",
           "venue": "STALLES (FKA CENTRAAL)",
-          "time": "21:10"
+          "time": "19:50"
         }
       ]
     },
@@ -1812,7 +1812,7 @@
       "name": "villagerrr",
       "country": "US",
       "genres": "alt-country / folk",
-      "spotifyUrl": null,
+      "spotifyUrl": "https://open.spotify.com/artist/1vQ5CUq3dcQkRRCGd94UD5",
       "instagramUrl": "https://www.instagram.com/villagerrrrrrrr/",
       "sourceUrl": "https://leftofthedial.nl/acts/villager-us/",
       "shows": [
@@ -2614,14 +2614,9 @@
       "sourceUrl": "https://leftofthedial.nl/acts/black-nylon-ie/",
       "shows": [
         {
-          "day": "THURSDAY",
-          "venue": "BARRIO",
-          "time": "22:00"
-        },
-        {
-          "day": "SATURDAY",
-          "venue": "DE DOELEN WBH",
-          "time": "16:50"
+          "day": "FRIDAY",
+          "venue": "TR FOYER",
+          "time": "23:30"
         },
         {
           "day": "SATURDAY",
@@ -2795,6 +2790,11 @@
           "day": "SATURDAY",
           "venue": "WORM 1",
           "time": "16:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "WORM 2",
+          "time": "17:00"
         },
         {
           "day": "SATURDAY",
@@ -3029,8 +3029,8 @@
         },
         {
           "day": "SATURDAY",
-          "venue": "WORM 2",
-          "time": "17:00"
+          "venue": "V11",
+          "time": "16:40"
         },
         {
           "day": "SATURDAY",

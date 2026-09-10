@@ -31,6 +31,50 @@ export const SHOW_OVERRIDES: Record<string, ParsedShow[]> = {
     { day: "THURSDAY", venue: "ARMINIUS UP", time: "19:40" },
     { day: "FRIDAY", venue: "SALSABILITY", time: "22:00" },
   ],
+
+  // Organizer-issued schedule changes, communicated directly (not yet, or
+  // not necessarily ever, reflected on the acts' own leftofthedial.nl
+  // pages). Received 2026-09-10. Chain of six changes:
+  //  - Doom Fever and thrilled swap their Wednesday Stalles slots.
+  //  - Black Nylon's Thursday Barrio show is cancelled; they move to
+  //    Friday TR Foyer 23:30 instead.
+  //  - Black Nylon's Saturday De Doelen WBH 16:50 slot goes to The Paris
+  //    Match, whose Saturday V11 16:40 slot goes to Serena Clara, whose
+  //    Saturday WORM 2 17:00 slot goes to Ashnymph (a closed chain, not a
+  //    cancellation — each act still plays the same number of Saturday
+  //    sets, just at a different room/time).
+  //  - What Jen Wants and Lucky Iris swap Saturday slots, but not a pure
+  //    time-for-time swap: What Jen Wants moves to Mono 23:50 (not Lucky
+  //    Iris's old 22:50), while Lucky Iris takes Arminius Up 21:10 exactly.
+  "doom-fever-nl": [{ day: "WEDNESDAY", venue: "STALLES (FKA CENTRAAL)", time: "21:10" }],
+  "thrilled-nl-2": [{ day: "WEDNESDAY", venue: "STALLES (FKA CENTRAAL)", time: "19:50" }],
+  "black-nylon-ie": [
+    { day: "FRIDAY", venue: "TR FOYER", time: "23:30" },
+    { day: "SATURDAY", venue: "ANNABEL UP", time: "23:20" },
+  ],
+  "the-paris-match-uk": [
+    { day: "FRIDAY", venue: "SALSABILITY", time: "23:30" },
+    { day: "SATURDAY", venue: "DE DOELEN WBH", time: "16:50" },
+  ],
+  "serena-clara-uk": [
+    { day: "THURSDAY", venue: "WORM 2", time: "21:40" },
+    { day: "SATURDAY", venue: "V11", time: "16:40" },
+    { day: "SATURDAY", venue: "PARADIJSKERK", time: "22:40" },
+  ],
+  "ashnymph-uk": [
+    { day: "THURSDAY", venue: "SAHARA", time: "22:50" },
+    { day: "SATURDAY", venue: "WORM 1", time: "16:10" },
+    { day: "SATURDAY", venue: "WORM 2", time: "17:00" },
+    { day: "SATURDAY", venue: "REMASTERED", time: "22:20" },
+  ],
+  "what-jen-wants-uk": [
+    { day: "SATURDAY", venue: "BIRD", time: "16:00" },
+    { day: "SATURDAY", venue: "MONO", time: "23:50" },
+  ],
+  "lucky-iris-uk": [
+    { day: "FRIDAY", venue: "WORM 2", time: "23:40" },
+    { day: "SATURDAY", venue: "ARMINIUS UP", time: "21:10" },
+  ],
 };
 
 /** Applies SHOW_OVERRIDES over a freshly-parsed act list, replacing `shows` wholesale for any matching slug. */
