@@ -20,7 +20,7 @@ import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
 import { festivalCopy } from "@/lib/festival-copy";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
-import { showOrdinals } from "@/lib/shows";
+import { otherShowsOf, showOrdinals } from "@/lib/shows";
 import { formatClock, todayInFestivalTimezone, type FestivalTime } from "@/lib/time";
 
 export type TimetableLayoutName = "VERTICAL" | "TRANSPOSED";
@@ -299,6 +299,14 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           const sheetPerformance = dayPerformances.find((p) => p.id === sheetPerformanceId);
           const sheetStage = sheetPerformance ? schedule.stages.find((s) => s.id === sheetPerformance.stageId) : null;
           if (!sheetPerformance || !sheetStage) return null;
+          // Scanned over the whole festival, not dayPerformances: an act's
+          // other sets are usually on other days, which is the entire reason
+          // to show them. A stage that somehow has no row is dropped rather
+          // than rendered as "at undefined".
+          const otherShows = otherShowsOf(schedule.performances, sheetPerformance.id).flatMap((p) => {
+            const stage = schedule.stages.find((s) => s.id === p.stageId);
+            return stage ? [{ id: p.id, date: p.date, startTime: p.startTime, stageName: stage.name }] : [];
+          });
           return (
             <MarkSheet
               artistName={sheetPerformance.artistName}
@@ -307,6 +315,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
               stageName={sheetStage.name}
               tier={marks.tierOf(sheetPerformance.id)}
               note={marks.noteOf(sheetPerformance.id)}
+              otherShows={otherShows}
               ft={ft}
               onSetTier={(tier) => marks.setTier(sheetPerformance.id, tier)}
               onSetNote={(text) => marks.setNote(sheetPerformance.id, text)}

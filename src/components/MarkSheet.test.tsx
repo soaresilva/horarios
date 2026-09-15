@@ -20,6 +20,7 @@ function renderSheet(overrides: Partial<React.ComponentProps<typeof MarkSheet>> 
       stageName="Vodafone"
       tier={null}
       note=""
+      otherShows={[]}
       ft={ft}
       onSetTier={onSetTier}
       onSetNote={onSetNote}
@@ -54,6 +55,22 @@ describe("MarkSheet", () => {
     const { onSetNote } = renderSheet();
     await userEvent.type(screen.getByPlaceholderText(/note/i), "x");
     expect(onSetNote).toHaveBeenCalledWith("x");
+  });
+
+  it("lists the act's other sets, with the weekday taken from the festival day", () => {
+    renderSheet({
+      otherShows: [
+        // Festival day 2026-08-13 (a Thursday), starting after midnight: the
+        // weekday must come from `date`, not from startTime's calendar day.
+        { id: "p2", date: "2026-08-13", startTime: lisbon("2026-08-14T00:20:00"), stageName: "Coura Sem Paredes" },
+      ],
+    });
+    expect(screen.getByText(/Also plays/)).toHaveTextContent("QUI, 00:20 at Coura Sem Paredes");
+  });
+
+  it("says nothing about other sets for an act playing once", () => {
+    renderSheet();
+    expect(screen.queryByText(/Also plays/)).toBeNull();
   });
 
   it("dismisses on Escape", async () => {

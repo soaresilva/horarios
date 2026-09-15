@@ -10,6 +10,14 @@ export interface ShowOrdinal {
   total: number;
 }
 
+// Groups a performance with the other sets by the same act. Artist id where
+// there is one (Left of the Dial has Artist rows), falling back to a
+// normalised display name for festivals that don't (Paredes de Coura), so
+// two different acts sharing a display name don't merge into one.
+function artistKey(performance: ShowLike): string {
+  return performance.artistId ?? `name:${performance.artistName.trim().toLowerCase()}`;
+}
+
 /**
  * "Show 2 of 3" for every performance, keyed by performance id.
  *
@@ -27,7 +35,7 @@ export interface ShowOrdinal {
 export function showOrdinals(performances: ShowLike[]): Map<string, ShowOrdinal> {
   const groups = new Map<string, ShowLike[]>();
   for (const performance of performances) {
-    const key = performance.artistId ?? `name:${performance.artistName.trim().toLowerCase()}`;
+    const key = artistKey(performance);
     const group = groups.get(key);
     if (group) group.push(performance);
     else groups.set(key, [performance]);
@@ -41,4 +49,24 @@ export function showOrdinals(performances: ShowLike[]): Map<string, ShowOrdinal>
     });
   }
   return ordinals;
+}
+
+/**
+ * The act's *other* sets, chronologically, for the performance with the given
+ * id — what MarkSheet shows as "Also plays:", so deciding to skip a clashing
+ * set is a decision made with the alternatives in front of you rather than
+ * from the `#2/3` marker alone.
+ *
+ * Takes the whole festival's performances, not one day's: the entire point is
+ * that the other shows are usually on other days. Returns `[]` for an act
+ * playing once, and for an id that isn't in the list at all (a set deleted
+ * server-side while the sheet is open), which is exactly what should render.
+ */
+export function otherShowsOf<T extends ShowLike>(performances: T[], performanceId: string): T[] {
+  const self = performances.find((p) => p.id === performanceId);
+  if (!self) return [];
+  const key = artistKey(self);
+  return performances
+    .filter((p) => p.id !== performanceId && artistKey(p) === key)
+    .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 }

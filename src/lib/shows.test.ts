@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { showOrdinals } from "./shows";
+import { otherShowsOf, showOrdinals } from "./shows";
 
 const at = (iso: string) => new Date(`${iso}+02:00`);
 
@@ -49,5 +49,42 @@ describe("showOrdinals", () => {
 
   it("returns an empty map for an empty schedule", () => {
     expect(showOrdinals([]).size).toBe(0);
+  });
+});
+
+describe("otherShowsOf", () => {
+  const gordi1 = { id: "p1", artistId: "a1", artistName: "Gordi", startTime: at("2026-10-23T20:20:00") };
+  const gordi2 = { id: "p2", artistId: "a1", artistName: "Gordi", startTime: at("2026-10-24T16:50:00") };
+  const gordi3 = { id: "p3", artistId: "a1", artistName: "Gordi", startTime: at("2026-10-24T22:00:00") };
+  const other = { id: "p4", artistId: "a2", artistName: "Hungry", startTime: at("2026-10-23T21:00:00") };
+
+  it("returns the act's other sets chronologically, excluding the one asked about", () => {
+    expect(otherShowsOf([gordi3, gordi1, other, gordi2], "p1").map((p) => p.id)).toEqual(["p2", "p3"]);
+  });
+
+  it("returns nothing for an act playing once", () => {
+    expect(otherShowsOf([gordi1, other], "p4")).toEqual([]);
+  });
+
+  // The sheet can outlive the set it was opened for if the schedule refetches
+  // mid-session; an empty list is the right render, not a crash.
+  it("returns nothing for an id that isn't in the schedule", () => {
+    expect(otherShowsOf([gordi1, gordi2], "gone")).toEqual([]);
+  });
+
+  // Paredes de Coura has no Artist rows, so the fallback key is the only one
+  // that applies there.
+  it("groups by normalised name when there is no artist id", () => {
+    const a = { id: "n1", artistId: null, artistName: "Wet Leg", startTime: at("2026-08-12T23:05:00") };
+    const b = { id: "n2", artistId: null, artistName: " wet leg ", startTime: at("2026-08-13T18:00:00") };
+    expect(otherShowsOf([a, b], "n1").map((p) => p.id)).toEqual(["n2"]);
+  });
+
+  // Two different acts sharing a display name must not merge once they have
+  // their own Artist rows — the same guarantee showOrdinals makes.
+  it("keeps same-named acts apart when they have different artist ids", () => {
+    const a = { id: "s1", artistId: "x", artistName: "Palms", startTime: at("2026-10-23T19:00:00") };
+    const b = { id: "s2", artistId: "y", artistName: "Palms", startTime: at("2026-10-24T19:00:00") };
+    expect(otherShowsOf([a, b], "s1")).toEqual([]);
   });
 });

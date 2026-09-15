@@ -4,7 +4,18 @@ import { useEffect } from "react";
 import { Close } from "@/components/icons";
 import type { MarkTier } from "@/hooks/useMarks";
 import { NOTE_MAX_LENGTH } from "@/lib/marks";
-import { formatClock, type FestivalTime } from "@/lib/time";
+import { formatClock, formatDayTabLabel, type FestivalTime } from "@/lib/time";
+
+/** One other set by the same act, already resolved to its venue name. */
+export interface OtherShow {
+  id: string;
+  /** Festival-day label (YYYY-MM-DD) — the weekday comes from this, not from
+   * startTime, so a 00:20 set reads as the evening it belongs to rather than
+   * the calendar day it technically starts on. */
+  date: string;
+  startTime: Date;
+  stageName: string;
+}
 
 interface MarkSheetProps {
   artistName: string;
@@ -13,6 +24,8 @@ interface MarkSheetProps {
   stageName: string;
   tier: MarkTier | null;
   note: string;
+  /** The act's other sets across the whole festival; empty for a single-show act. */
+  otherShows: OtherShow[];
   ft: FestivalTime;
   onSetTier: (tier: MarkTier | null) => void;
   onSetNote: (text: string) => void;
@@ -30,6 +43,7 @@ export function MarkSheet({
   stageName,
   tier,
   note,
+  otherShows,
   ft,
   onSetTier,
   onSetNote,
@@ -62,6 +76,24 @@ export function MarkSheet({
             <p className="text-xs text-zinc-400">
               {formatClock(startTime, ft)}–{formatClock(endTime, ft)} · {stageName}
             </p>
+            {/* Showcase festivals book most acts more than once (see
+                showOrdinals in src/lib/shows.ts), so the real question when
+                a set clashes is "when else can I catch them" — answered here
+                rather than making the visitor go hunting the other days.
+                Italic and dimmer to read as an aside to the line above, not
+                as a second set of times for this slot. */}
+            {otherShows.length > 0 && (
+              <p className="mt-0.5 text-xs italic text-zinc-500">
+                Also plays:{" "}
+                {otherShows.map((show, i) => (
+                  <span key={show.id}>
+                    {i > 0 && "; "}
+                    {formatDayTabLabel(new Date(`${show.date}T12:00:00Z`), ft).weekday}, {formatClock(show.startTime, ft)} at{" "}
+                    {show.stageName}
+                  </span>
+                ))}
+              </p>
+            )}
           </div>
           <button type="button" onClick={onClose} aria-label="Close">
             <Close className="h-4 w-4 text-zinc-500" />
