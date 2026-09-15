@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { TimeAxisHorizontal } from "@/components/TimeAxisHorizontal";
 import { TransposedPerformanceBlock } from "@/components/TransposedPerformanceBlock";
 import { useNow } from "@/hooks/useNow";
+import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { artistLinksFor } from "@/lib/artist-links";
 import { activeStagesSortedByOrder, stagesByZone } from "@/lib/grouping";
@@ -37,10 +38,9 @@ interface TransposedGridProps {
   artistsById: Map<string, Artist>;
   ordinals: Map<string, ShowOrdinal>;
   originPerformanceId: string | null;
-  isStarred: (id: string) => boolean;
+  marks: MarkControls;
   ft: FestivalTime;
   onSelectOrigin: (id: string) => void;
-  onToggleStar: (id: string) => void;
 }
 
 export function TransposedGrid({
@@ -51,10 +51,9 @@ export function TransposedGrid({
   artistsById,
   ordinals,
   originPerformanceId,
-  isStarred,
+  marks,
   ft,
   onSelectOrigin,
-  onToggleStar,
 }: TransposedGridProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -149,13 +148,12 @@ export function TransposedGrid({
                           artist={performance.artistId ? artistsById.get(performance.artistId) : undefined}
                           layout={blockLayout(window, performance, HORIZONTAL_SCALE)}
                           links={artistLinksFor(performance, artistsById)}
-                          starred={isStarred(performance.id)}
+                          marks={marks}
                           showRecommendation={showRecommendations}
                           ordinal={ordinals.get(performance.id)}
                           isOrigin={performance.id === originPerformanceId}
                           ft={ft}
                           onSelectOrigin={onSelectOrigin}
-                          onToggleStar={onToggleStar}
                         />
                       ))}
                     </div>

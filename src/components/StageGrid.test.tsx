@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { StageGrid } from "./StageGrid";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage } from "@/lib/schedule-client";
+import type { MarkControls, MarkTier } from "@/hooks/useMarks";
 
 const stages: Stage[] = [
   { id: "vodafone", name: "Vodafone", slug: "vodafone", order: 0, zoneId: null, address: null },
@@ -37,12 +38,25 @@ const performances: Performance[] = [
   },
 ];
 
+function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
+  return {
+    tierOf: () => null,
+    noteOf: () => "",
+    cycle: () => {},
+    setTier: () => {},
+    setNote: () => {},
+    openSheet: () => {},
+    ...overrides,
+  };
+}
+
+function tierOfMap(map: Record<string, MarkTier>) {
+  return (id: string): MarkTier | null => map[id] ?? null;
+}
+
 describe("StageGrid", () => {
   it("renders one block per performance, positioned by its own stage column", () => {
-    const { container } = render(
-      <StageGrid stages={stages} performances={performances} ft={ft}
-        isStarred={() => false} onToggleStar={() => {}} />,
-    );
+    const { container } = render(<StageGrid stages={stages} performances={performances} ft={ft} marks={fakeMarks()} />);
 
     expect(screen.getByText("Cass McCombs")).toBeInTheDocument();
     expect(screen.getByText("Perfume Genius")).toBeInTheDocument();
@@ -52,28 +66,21 @@ describe("StageGrid", () => {
   });
 
   it("shows an empty-state message instead of a grid when there are no performances", () => {
-    render(<StageGrid stages={stages} performances={[]} ft={ft}
-        isStarred={() => false} onToggleStar={() => {}} />);
+    render(<StageGrid stages={stages} performances={[]} ft={ft} marks={fakeMarks()} />);
     expect(screen.getByText(/no performances scheduled/i)).toBeInTheDocument();
   });
 
-  it("calls onToggleStar with the performance id when a block is tapped", async () => {
-    const onToggleStar = vi.fn();
+  it("calls marks.cycle with the performance id when a block is tapped", async () => {
+    const cycle = vi.fn();
     const user = userEvent.setup();
-    render(
-      <StageGrid stages={stages} performances={performances} ft={ft}
-        isStarred={() => false} onToggleStar={onToggleStar} />,
-    );
+    render(<StageGrid stages={stages} performances={performances} ft={ft} marks={fakeMarks({ cycle })} />);
 
     await user.click(screen.getByRole("button", { name: /Cass McCombs/ }));
-    expect(onToggleStar).toHaveBeenCalledWith("p1");
+    expect(cycle).toHaveBeenCalledWith("p1");
   });
 
   it("shows the bolachas-recommends marker only on recommended performances", () => {
-    render(
-      <StageGrid stages={stages} performances={performances} ft={ft}
-        isStarred={() => false} onToggleStar={() => {}} />,
-    );
+    render(<StageGrid stages={stages} performances={performances} ft={ft} marks={fakeMarks()} />);
 
     // Perfume Genius is recommended (fixture), Cass McCombs is not. The marker
     // is an aria-hidden SVG, so assert on the DOM within each act's button.
@@ -83,18 +90,10 @@ describe("StageGrid", () => {
     expect(notRecommended.querySelector("svg")).not.toBeInTheDocument();
   });
 
-  it("reflects starred state via aria-pressed", () => {
-    render(
-      <StageGrid
-        stages={stages}
-        performances={performances}
-        ft={ft}
-        isStarred={(id) => id === "p1"}
-        onToggleStar={() => {}}
-      />,
-    );
+  it("reflects tier state via aria-label", () => {
+    render(<StageGrid stages={stages} performances={performances} ft={ft} marks={fakeMarks({ tierOf: tierOfMap({ p1: "must" }) })} />);
 
-    expect(screen.getByRole("button", { name: /Cass McCombs/ })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: /Perfume Genius/ })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: /Cass McCombs/ })).toHaveAttribute("aria-label", "Mark Cass McCombs: must-see, tap to change");
+    expect(screen.getByRole("button", { name: /Perfume Genius/ })).toHaveAttribute("aria-label", "Mark Perfume Genius: unmarked, tap to change");
   });
 });

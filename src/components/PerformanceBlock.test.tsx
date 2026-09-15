@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { PerformanceBlock } from "./PerformanceBlock";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance } from "@/lib/schedule-client";
+import type { MarkControls, MarkTier } from "@/hooks/useMarks";
 
 function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
@@ -20,24 +21,27 @@ function performance(overrides: Partial<Performance> = {}): Performance {
     endTime: lisbon("2026-08-13T00:20:00"),
     notes: null,
     recommended: false,
-    stageId: "vodafone", artistId: null,
+    stageId: "vodafone",
+    artistId: null,
+    ...overrides,
+  };
+}
+
+function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
+  return {
+    tierOf: () => null,
+    noteOf: () => "",
+    cycle: () => {},
+    setTier: () => {},
+    setNote: () => {},
+    openSheet: () => {},
     ...overrides,
   };
 }
 
 describe("PerformanceBlock", () => {
   it("renders Spotify and Instagram links for an artist that has both, opening in a new tab", () => {
-    render(
-      <PerformanceBlock
-        performance={performance()}
-        layout={layout}
-        alternate={false}
-        starred={false}
-        ft={ft}
-        showRecommendation={false}
-        onToggleStar={() => {}}
-      />,
-    );
+    render(<PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks()} ft={ft} showRecommendation={false} />);
 
     const spotify = screen.getByRole("link", { name: "Wet Leg on Spotify" });
     expect(spotify).toHaveAttribute("href", expect.stringMatching(/^https:\/\/open\.spotify\.com\/artist\//));
@@ -56,10 +60,9 @@ describe("PerformanceBlock", () => {
         performance={performance({ artistName: "Rita Cortezão" })}
         layout={layout}
         alternate={false}
-        starred={false}
+        marks={fakeMarks()}
         ft={ft}
         showRecommendation={false}
-        onToggleStar={() => {}}
       />,
     );
 
@@ -73,55 +76,67 @@ describe("PerformanceBlock", () => {
         performance={performance({ artistName: "Some Totally Unknown Act" })}
         layout={layout}
         alternate={false}
-        starred={false}
+        marks={fakeMarks()}
         ft={ft}
         showRecommendation={false}
-        onToggleStar={() => {}}
       />,
     );
 
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });
 
-  it("toggles the star when the block body is clicked", async () => {
-    const onToggleStar = vi.fn();
+  it("cycles the tier when the block body is clicked", async () => {
+    const cycle = vi.fn();
     const user = userEvent.setup();
-    render(
-      <PerformanceBlock
-        performance={performance()}
-        layout={layout}
-        alternate={false}
-        starred={false}
-        ft={ft}
-        showRecommendation={false}
-        onToggleStar={onToggleStar}
-      />,
-    );
+    render(<PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ cycle })} ft={ft} showRecommendation={false} />);
 
     await user.click(screen.getByRole("button", { name: /Wet Leg/ }));
-    expect(onToggleStar).toHaveBeenCalledWith("p1");
+    expect(cycle).toHaveBeenCalledWith("p1");
   });
 
-  // The core interaction requirement: the links are siblings of the star
+  // The core interaction requirement: the links are siblings of the cycle
   // button (not nested inside it, which would be invalid HTML and would let
-  // a link click bubble into the toggle). Clicking a link must never also
-  // toggle the star.
-  it("does not toggle the star when a link is clicked", async () => {
-    const onToggleStar = vi.fn();
+  // a link click bubble into the cycle). Clicking a link must never also
+  // cycle the tier.
+  it("does not cycle the tier when a link is clicked", async () => {
+    const cycle = vi.fn();
     const user = userEvent.setup();
-    render(
-      <PerformanceBlock
-        performance={performance()}
-        layout={layout}
-        alternate={false}
-        starred={false}
-        ft={ft}
-        showRecommendation={false}
-        onToggleStar={onToggleStar}
-      />,
-    );
+    render(<PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ cycle })} ft={ft} showRecommendation={false} />);
 
     await user.click(screen.getByRole("link", { name: "Wet Leg on Spotify" }));
-    expect(onToggleStar).not.toHaveBeenCalled();
+    expect(cycle).not.toHaveBeenCalled();
+  });
+
+  it.each<[MarkTier | null, string]>([
+    ["must", "must-see"],
+    ["interested", "interested"],
+    [null, "unmarked"],
+  ])("describes the %s tier in the block's aria-label", (tier, expectedWord) => {
+    render(<PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ tierOf: () => tier })} ft={ft} showRecommendation={false} />);
+    expect(screen.getByRole("button", { name: new RegExp(expectedWord) })).toBeInTheDocument();
+  });
+
+  it("renders amber interested styling distinct from must-see", () => {
+    const { container: interestedContainer } = render(
+      <PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ tierOf: () => "interested" })} ft={ft} showRecommendation={false} />,
+    );
+    expect(interestedContainer.querySelector('[data-performance-id="p1"]')?.className).toMatch(/bg-interested/);
+
+    const { container: mustContainer } = render(
+      <PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ tierOf: () => "must" })} ft={ft} showRecommendation={false} />,
+    );
+    expect(mustContainer.querySelector('[data-performance-id="p1"]')?.className).toMatch(/bg-accent/);
+  });
+
+  it("shows the note (✎) indicator only when a note exists, with the note text as its tooltip", () => {
+    const { container: withNote } = render(
+      <PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ noteOf: () => "front left" })} ft={ft} showRecommendation={false} />,
+    );
+    expect(withNote.querySelector('[title="front left"]')).toBeInTheDocument();
+
+    const { container: withoutNote } = render(
+      <PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ noteOf: () => "" })} ft={ft} showRecommendation={false} />,
+    );
+    expect(withoutNote.querySelector("[title]")).not.toBeInTheDocument();
   });
 });

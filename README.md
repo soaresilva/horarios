@@ -2,9 +2,15 @@
 
 Mobile-first, offline-capable timetable app for multiple festival editions. `/` lists
 every edition from the `Festival` table; each one gets a public route at `/<slug>` and
-an admin route at `/admin/<slug>`. Live current-time line, tap-to-star favourites
-(localStorage only, no accounts), and a password-protected admin panel scoped to one
-festival at a time.
+an admin route at `/admin/<slug>`. Live current-time line, two-tier marks and per-slot
+notes (localStorage only by default, no accounts), and a password-protected admin panel
+scoped to one festival at a time.
+
+Marking a set is a tri-state tap: unmarked → **must-see** (filled blue ★) → **interested**
+(hollow amber ☆) → unmarked. Holding a set (500ms, or right-click on desktop) opens a
+sheet with explicit tier buttons and a free-text note (280 characters) for that slot —
+"front left, get there early", "skip if the queue is bad". Notes stay on-device unless
+the visitor opts into cross-device sync below, exactly like the tiers themselves.
 
 Two editions, two layouts, chosen per festival by `Festival.layout`:
 

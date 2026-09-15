@@ -9,12 +9,16 @@
   --background: #0b1012;
   --foreground: #f4f4f5;
   --accent: #3eb7fc;
+  /* amber-500 — the second mark tier ("interested"), distinct from --accent
+     at 12px and at night */
+  --interested: #f59e0b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
+  --color-interested: var(--interested);
 }
 
 html {

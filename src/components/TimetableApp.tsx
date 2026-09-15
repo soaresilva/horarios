@@ -5,6 +5,8 @@ import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
 import { FavoritesListView } from "@/components/FavoritesListView";
 import { InstallBanner } from "@/components/InstallBanner";
+import { MarkSheet } from "@/components/MarkSheet";
+import { MarksHint } from "@/components/MarksHint";
 import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
@@ -13,6 +15,8 @@ import { SyncFavoritesButton } from "@/components/SyncFavoritesButton";
 import { TransposedGrid } from "@/components/TransposedGrid";
 import { ViewToggle, type TimetableView } from "@/components/ViewToggle";
 import { useFavoritesSync } from "@/hooks/useFavoritesSync";
+import type { MarkControls } from "@/hooks/useMarks";
+import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
 import { festivalCopy } from "@/lib/festival-copy";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
@@ -33,7 +37,8 @@ interface TimetableAppProps {
 
 export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
-  const { isStarred, toggle, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
+  const { tierOf, noteOf, cycle, setTier, setNote, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
+  const hint = useMarksHintDismissed(festivalSlug);
   // Holds only the user's explicit tab choice; the default (today, falling
   // back to the first festival day) is derived below rather than pushed
   // into state via an effect, since `days` isn't known until the schedule
@@ -42,6 +47,38 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   // Which set walking distances are measured from, in the transposed layout.
   // Tapping the same block again clears it.
   const [originId, setOriginId] = useState<string | null>(null);
+  // The set MarkSheet is currently open for, or null when it's closed. Next
+  // to originId for the same reason: both are "which set is the UI
+  // currently focused on" state, just for two different surfaces.
+  const [sheetPerformanceId, setSheetPerformanceId] = useState<string | null>(null);
+  const dismissHint = hint.dismiss;
+
+  // Single object threaded down instead of the old isStarred/onToggleStar
+  // pair, replacing four props (tier read, note read, cycle, open-sheet)
+  // with one across every block/grid component. Wraps the raw mark
+  // mutators so the "tap a set / hold a set" hint auto-dismisses the first
+  // time a visitor actually uses either gesture, on top of the explicit
+  // dismiss button on MarksHint itself.
+  const marks: MarkControls = useMemo<MarkControls>(
+    () => ({
+      tierOf,
+      noteOf,
+      cycle: (id: string) => {
+        cycle(id);
+        dismissHint();
+      },
+      setTier: (id: string, tier) => {
+        setTier(id, tier);
+        dismissHint();
+      },
+      setNote,
+      openSheet: (id: string) => {
+        setSheetPerformanceId(id);
+        dismissHint();
+      },
+    }),
+    [tierOf, noteOf, cycle, setTier, setNote, dismissHint],
+  );
   // Grid (either layout) vs. the favorites-only list. Orthogonal to
   // `layout`, so it isn't reset when the day changes — a visitor who
   // switched into their favorites list for one day almost certainly wants
@@ -126,6 +163,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
       </header>
 
       <InstallBanner />
+      <MarksHint dismissed={hint.dismissed} onDismiss={hint.dismiss} />
 
       {copy && (
         <p className="px-3 pt-1 pb-1 text-[10px] leading-snug text-zinc-600">
@@ -161,8 +199,11 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
             <RecommendationsToggle />
             <span className="flex items-center gap-1">
               <span aria-hidden className="text-accent">★</span>
-              your favorites
+              must-see
+              <span aria-hidden className="text-interested">☆</span>
+              maybe
             </span>
+            <span className="text-zinc-600">tap to change</span>
           </>
         )}
         <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
@@ -181,9 +222,8 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           zoneWalks={schedule.zoneWalks}
           artistsById={schedule.artistsById}
           ordinals={ordinals}
-          isStarred={isStarred}
+          marks={marks}
           ft={ft}
-          onToggleStar={toggle}
         />
       ) : isTransposed ? (
         <TransposedGrid
@@ -194,10 +234,9 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           artistsById={schedule.artistsById}
           ordinals={ordinals}
           originPerformanceId={originId}
-          isStarred={isStarred}
+          marks={marks}
           ft={ft}
           onSelectOrigin={(id) => setOriginId((current) => (current === id ? null : id))}
-          onToggleStar={toggle}
         />
       ) : (
       <div className="flex-1 overflow-y-auto pb-6">
@@ -206,9 +245,8 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
             key={stage.id}
             stage={stage}
             performances={dayPerformances.filter((p) => p.stageId === stage.id)}
-            isStarred={isStarred}
+            marks={marks}
             ft={ft}
-            onToggleStar={toggle}
           />
         ))}
 
@@ -245,11 +283,37 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
             </div>
           </div>
           <div className="px-3">
-            <StageGrid stages={main} performances={mainPerformances} isStarred={isStarred} ft={ft} onToggleStar={toggle} />
+            <StageGrid stages={main} performances={mainPerformances} marks={marks} ft={ft} />
           </div>
         </div>
       </div>
       )}
+
+      {sheetPerformanceId &&
+        (() => {
+          // Looked up fresh on every render rather than cached in state
+          // alongside the id: the sheet must track the performance's own
+          // stage/time if the schedule refetches while it's open, and a
+          // stale id (set deleted server-side mid-session) just closes the
+          // sheet instead of crashing.
+          const sheetPerformance = dayPerformances.find((p) => p.id === sheetPerformanceId);
+          const sheetStage = sheetPerformance ? schedule.stages.find((s) => s.id === sheetPerformance.stageId) : null;
+          if (!sheetPerformance || !sheetStage) return null;
+          return (
+            <MarkSheet
+              artistName={sheetPerformance.artistName}
+              startTime={sheetPerformance.startTime}
+              endTime={sheetPerformance.endTime}
+              stageName={sheetStage.name}
+              tier={marks.tierOf(sheetPerformance.id)}
+              note={marks.noteOf(sheetPerformance.id)}
+              ft={ft}
+              onSetTier={(tier) => marks.setTier(sheetPerformance.id, tier)}
+              onSetNote={(text) => marks.setNote(sheetPerformance.id, text)}
+              onClose={() => setSheetPerformanceId(null)}
+            />
+          );
+        })()}
     </div>
   );
 }

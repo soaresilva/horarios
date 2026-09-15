@@ -5,6 +5,16 @@ import { RecommendationsToggle } from "./RecommendationsToggle";
 import { StageGrid } from "./StageGrid";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage } from "@/lib/schedule-client";
+import type { MarkControls } from "@/hooks/useMarks";
+
+const marks: MarkControls = {
+  tierOf: () => null,
+  noteOf: () => "",
+  cycle: () => {},
+  setTier: () => {},
+  setNote: () => {},
+  openSheet: () => {},
+};
 
 afterEach(() => {
   window.localStorage.clear();
@@ -49,7 +59,7 @@ describe("RecommendationsToggle", () => {
     render(
       <>
         <RecommendationsToggle />
-        <StageGrid stages={stages} performances={performances} ft={ft} isStarred={() => false} onToggleStar={() => {}} />
+        <StageGrid stages={stages} performances={performances} ft={ft} marks={marks} />
       </>,
     );
 

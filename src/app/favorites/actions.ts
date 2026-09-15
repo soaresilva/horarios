@@ -3,7 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { getOrCreateVisitorId, getVisitorId, setVisitorId } from "@/lib/visitor";
 import { generateCode, isExpired, PAIRING_CODE_TTL_MS } from "@/lib/pairing-code";
-import { mergeFavoriteIds } from "@/lib/favorites-merge";
+import { mergeMarks } from "@/lib/marks-merge";
+import { clampMarksPayload, marksPayloadSchema, type MarksPayload } from "@/lib/marks";
+import type { MarkTier as PrismaMarkTier } from "@/generated/prisma/client";
 
 // Every action here scopes performance ids to one festival via
 // stage.festivalId, the same defensive pattern saveScheduleAction uses in
@@ -24,27 +26,71 @@ async function requireFestival(festivalSlug: string) {
   return festival;
 }
 
-async function favoriteIdsFor(visitorId: string, festivalId: string): Promise<string[]> {
+// Every id this payload references — an id can carry a tier, a note, or
+// both, so the union (not just mustSee ∪ interested) is what needs
+// validating and what a sync's delete-set has to spare.
+function unionOf(payload: MarksPayload): string[] {
+  return Array.from(new Set([...payload.mustSee, ...payload.interested, ...Object.keys(payload.notes)]));
+}
+
+// Drops any id that isn't a real performance in this festival, from every
+// part of the payload at once (tiers and notes alike) — a junk id in a note
+// is exactly as untrusted as one in mustSee.
+async function filterPayloadToValidIds(festivalId: string, payload: MarksPayload): Promise<MarksPayload> {
+  const validIds = new Set(await validPerformanceIdsForFestival(festivalId, unionOf(payload)));
+  const notes: Record<string, string> = {};
+  for (const [id, note] of Object.entries(payload.notes)) {
+    if (validIds.has(id)) notes[id] = note;
+  }
+  return {
+    mustSee: payload.mustSee.filter((id) => validIds.has(id)),
+    interested: payload.interested.filter((id) => validIds.has(id)),
+    notes,
+  };
+}
+
+function tierColumnFor(payload: MarksPayload, performanceId: string): PrismaMarkTier | null {
+  if (payload.mustSee.includes(performanceId)) return "MUST_SEE";
+  if (payload.interested.includes(performanceId)) return "INTERESTED";
+  return null;
+}
+
+async function marksFor(visitorId: string, festivalId: string): Promise<MarksPayload> {
   const rows = await prisma.favorite.findMany({
     where: { visitorId, performance: { stage: { festivalId } } },
-    select: { performanceId: true },
+    select: { performanceId: true, tier: true, note: true },
   });
-  return rows.map((r) => r.performanceId);
+  const mustSee: string[] = [];
+  const interested: string[] = [];
+  const notes: Record<string, string> = {};
+  for (const row of rows) {
+    if (row.tier === "MUST_SEE") mustSee.push(row.performanceId);
+    else if (row.tier === "INTERESTED") interested.push(row.performanceId);
+    if (row.note) notes[row.performanceId] = row.note;
+  }
+  return { mustSee, interested, notes };
 }
 
 // First-time opt-in: mints the visitor cookie (if not already set) and seeds
-// the server with whatever this device already had starred in localStorage.
+// the server with whatever this device already had marked in localStorage.
 // Never called implicitly — only from the visitor tapping "sync" in
 // SyncFavoritesPanel, so a visitor who never opts in gets no cookie and no
 // Favorite rows, ever.
-export async function optIntoSync(festivalSlug: string, localIds: string[]): Promise<{ visitorId: string }> {
+export async function optIntoSync(festivalSlug: string, localMarks: MarksPayload): Promise<{ visitorId: string }> {
+  const parsed = clampMarksPayload(marksPayloadSchema.parse(localMarks));
   const festival = await requireFestival(festivalSlug);
   const visitorId = await getOrCreateVisitorId();
-  const validIds = await validPerformanceIdsForFestival(festival.id, localIds);
+  const valid = await filterPayloadToValidIds(festival.id, parsed);
+  const unionIds = unionOf(valid);
 
-  if (validIds.length > 0) {
+  if (unionIds.length > 0) {
     await prisma.favorite.createMany({
-      data: validIds.map((performanceId) => ({ visitorId, performanceId })),
+      data: unionIds.map((performanceId) => ({
+        visitorId,
+        performanceId,
+        tier: tierColumnFor(valid, performanceId),
+        note: valid.notes[performanceId] ?? null,
+      })),
       skipDuplicates: true,
     });
   }
@@ -52,41 +98,54 @@ export async function optIntoSync(festivalSlug: string, localIds: string[]): Pro
   return { visitorId };
 }
 
-// null = not opted into sync yet (distinct from "opted in, zero favorites"),
-// so useFavoritesSync knows to leave localStorage as the sole source of truth.
-export async function listFavorites(festivalSlug: string): Promise<string[] | null> {
+// null = not opted into sync yet (distinct from "opted in, zero marks"), so
+// useFavoritesSync knows to leave localStorage as the sole source of truth.
+export async function listMarks(festivalSlug: string): Promise<MarksPayload | null> {
   const visitorId = await getVisitorId();
   if (!visitorId) return null;
   const festival = await requireFestival(festivalSlug);
-  return favoriteIdsFor(visitorId, festival.id);
+  return marksFor(visitorId, festival.id);
 }
 
-// Full-array replace, not incremental — the whole point of "last write wins"
-// steady-state sync (see useFavoritesSync.ts) is that unstarring propagates,
-// which a pure union/add-only sync could never represent.
-export async function syncFavorites(festivalSlug: string, localIds: string[]): Promise<{ serverIds: string[] }> {
+// Full-payload replace, not incremental — the whole point of "last write
+// wins" steady-state sync (see useFavoritesSync.ts) is that unmarking (or
+// erasing a note) propagates, which a pure union/add-only sync could never
+// represent. The delete set is `notIn` the union of every id the payload
+// still references (a tier, a note, or both) — so pushing a tier change can
+// never delete a row that's only there to carry a note, and vice versa.
+// Surviving/new rows go through `upsert`: simpler and just as correct as a
+// createMany+updateMany split, since it can't miss updating a row that
+// already existed with a different tier or note.
+export async function syncMarks(festivalSlug: string, localMarks: MarksPayload): Promise<{ server: MarksPayload }> {
+  const parsed = clampMarksPayload(marksPayloadSchema.parse(localMarks));
   const festival = await requireFestival(festivalSlug);
   // Self-healing: the client only calls this once it believes it's synced,
   // but if its cookie was ever cleared, treat this call as a fresh opt-in
   // rather than throwing.
   const visitorId = await getOrCreateVisitorId();
-  const validIds = await validPerformanceIdsForFestival(festival.id, localIds);
+  const valid = await filterPayloadToValidIds(festival.id, parsed);
+  const unionIds = unionOf(valid);
 
   await prisma.$transaction([
     prisma.favorite.deleteMany({
       where: {
         visitorId,
-        performanceId: { notIn: validIds },
+        performanceId: { notIn: unionIds },
         performance: { stage: { festivalId: festival.id } },
       },
     }),
-    prisma.favorite.createMany({
-      data: validIds.map((performanceId) => ({ visitorId, performanceId })),
-      skipDuplicates: true,
+    ...unionIds.map((performanceId) => {
+      const tier = tierColumnFor(valid, performanceId);
+      const note = valid.notes[performanceId] ?? null;
+      return prisma.favorite.upsert({
+        where: { visitorId_performanceId: { visitorId, performanceId } },
+        create: { visitorId, performanceId, tier, note },
+        update: { tier, note },
+      });
     }),
   ]);
 
-  return { serverIds: validIds };
+  return { server: valid };
 }
 
 export async function generatePairingCode(): Promise<{ code: string; expiresAt: string } | { error: string }> {
@@ -114,8 +173,9 @@ export async function generatePairingCode(): Promise<{ code: string; expiresAt: 
 export async function redeemPairingCode(
   code: string,
   festivalSlug: string,
-  localIds: string[],
-): Promise<{ favoriteIds: string[] } | { error: "invalid" | "expired" }> {
+  localMarks: MarksPayload,
+): Promise<MarksPayload | { error: "invalid" | "expired" }> {
+  const parsed = clampMarksPayload(marksPayloadSchema.parse(localMarks));
   const festival = await requireFestival(festivalSlug);
   const record = await prisma.pairingCode.findUnique({ where: { code } });
   if (!record) return { error: "invalid" };
@@ -131,21 +191,29 @@ export async function redeemPairingCode(
   if (claim.count === 0) return { error: "invalid" };
 
   const targetVisitorId = record.visitorId;
-  const [serverIds, validLocalIds] = await Promise.all([
-    favoriteIdsFor(targetVisitorId, festival.id),
-    validPerformanceIdsForFestival(festival.id, localIds),
+  const [serverMarks, validLocalMarks] = await Promise.all([
+    marksFor(targetVisitorId, festival.id),
+    filterPayloadToValidIds(festival.id, parsed),
   ]);
-  const merged = mergeFavoriteIds(serverIds, validLocalIds);
+  const merged = mergeMarks(serverMarks, validLocalMarks);
+  const unionIds = unionOf(merged);
 
-  await prisma.favorite.createMany({
-    data: merged.map((performanceId) => ({ visitorId: targetVisitorId, performanceId })),
-    skipDuplicates: true,
-  });
+  await prisma.$transaction(
+    unionIds.map((performanceId) => {
+      const tier = tierColumnFor(merged, performanceId);
+      const note = merged.notes[performanceId] ?? null;
+      return prisma.favorite.upsert({
+        where: { visitorId_performanceId: { visitorId: targetVisitorId, performanceId } },
+        create: { visitorId: targetVisitorId, performanceId, tier, note },
+        update: { tier, note },
+      });
+    }),
+  );
 
   // The redeeming device adopts the generating device's identity — pairing
   // is symmetric and permanent (no "unpair"), see the plan doc for why this
   // was chosen over a separate Visitor group table.
   await setVisitorId(targetVisitorId);
 
-  return { favoriteIds: merged };
+  return merged;
 }

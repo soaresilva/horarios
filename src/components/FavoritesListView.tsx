@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { ArtistLinksRail } from "@/components/ArtistLinksRail";
 import { ThumbsUp } from "@/components/icons";
+import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { artistLinksFor } from "@/lib/artist-links";
 import type { Artist, Performance, Stage, ZoneWalk } from "@/lib/schedule-client";
@@ -12,15 +13,14 @@ import { stageMapsUrl } from "@/lib/venues";
 import { walkSegmentBetweenStages, type WalkSegment } from "@/lib/zones";
 
 interface FavoritesListViewProps {
-  /** The full day-scoped performance list, across every stage — filtered to starred ones here, same as StageGrid filters to its own stage internally. */
+  /** The full day-scoped performance list, across every stage — filtered to marked ones here, same as StageGrid filters to its own stage internally. */
   performances: Performance[];
   stages: Stage[];
   zoneWalks: ZoneWalk[];
   artistsById: Map<string, Artist>;
   ordinals: Map<string, ShowOrdinal>;
-  isStarred: (id: string) => boolean;
+  marks: MarkControls;
   ft: FestivalTime;
-  onToggleStar: (id: string) => void;
 }
 
 /** How a walk segment reads between two rows, or null when there's nothing honest to show. */
@@ -31,27 +31,20 @@ function walkLabel(segment: WalkSegment): string | null {
   return `${segment.minutes} min walk`;
 }
 
-export function FavoritesListView({
-  performances,
-  stages,
-  zoneWalks,
-  artistsById,
-  ordinals,
-  isStarred,
-  ft,
-  onToggleStar,
-}: FavoritesListViewProps) {
+export function FavoritesListView({ performances, stages, zoneWalks, artistsById, ordinals, marks, ft }: FavoritesListViewProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const stagesById = useMemo(() => new Map(stages.map((s) => [s.id, s])), [stages]);
 
-  const favorites = performances
-    .filter((p) => isStarred(p.id))
+  // Both tiers, not just must-see — you plan a day around whatever you
+  // actually intend to attend, must-see or interested alike.
+  const marked = performances
+    .filter((p) => marks.tierOf(p.id) !== null)
     .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
-  if (favorites.length === 0) {
+  if (marked.length === 0) {
     return (
       <p className="p-4 text-sm text-zinc-500">
-        No favorites yet for this day — tap the ★ on any set to add it here.
+        No marks yet for this day — tap a set to mark it must-see, tap again for interested.
       </p>
     );
   }
@@ -59,12 +52,12 @@ export function FavoritesListView({
   return (
     <div className="flex-1 overflow-y-auto px-3 pb-6">
       <div className="flex flex-col gap-2">
-        {favorites.map((performance, i) => {
+        {marked.map((performance, i) => {
           // Every stage here comes from a performance actually in `stages`,
           // so this is always found — trusting the foreign key rather than
           // guarding against a case the data can't produce.
           const stage = stagesById.get(performance.stageId)!;
-          const previous = i > 0 ? favorites[i - 1] : null;
+          const previous = i > 0 ? marked[i - 1] : null;
           const previousStage = previous ? stagesById.get(previous.stageId)! : null;
           const label = previousStage ? walkLabel(walkSegmentBetweenStages(zoneWalks, previousStage, stage)) : null;
 
@@ -72,6 +65,9 @@ export function FavoritesListView({
           const artist = performance.artistId ? artistsById.get(performance.artistId) : undefined;
           const ordinal = ordinals.get(performance.id);
           const showOrdinal = ordinal && ordinal.total > 1;
+          const tier = marks.tierOf(performance.id);
+          const note = marks.noteOf(performance.id);
+          const tint = tier === "must" ? "bg-accent/20 ring-1 ring-accent" : "bg-interested/15 ring-1 ring-interested/70";
 
           return (
             <div key={performance.id} className="flex flex-col">
@@ -81,7 +77,7 @@ export function FavoritesListView({
                   {label}
                 </div>
               )}
-              <div className="relative rounded-md bg-accent/20 py-2 pr-9 pl-3 ring-1 ring-accent">
+              <div className={`relative rounded-md py-2 pr-9 pl-3 ${tint}`}>
                 <span className="block text-sm leading-tight font-medium text-zinc-100 sm:text-base">
                   {artist?.sourceUrl ? (
                     <a
@@ -112,13 +108,17 @@ export function FavoritesListView({
                     {stage.name}
                   </a>
                 </span>
+                {/* Full text, not just a ✎ glyph — this is the one place in
+                    the app with room to show a note in full rather than
+                    behind a hover tooltip. */}
+                {note && <span className="mt-0.5 block text-[10px] leading-snug text-zinc-500 italic">{note}</span>}
 
                 <ArtistLinksRail
                   artistName={performance.artistName}
                   links={links}
-                  starred
+                  tier={tier}
                   orientation="horizontal"
-                  onToggleStar={() => onToggleStar(performance.id)}
+                  onCycle={() => marks.cycle(performance.id)}
                 />
               </div>
             </div>

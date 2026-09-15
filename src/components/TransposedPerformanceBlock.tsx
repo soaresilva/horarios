@@ -1,7 +1,9 @@
 "use client";
 
 import { ArtistLinksRail } from "@/components/ArtistLinksRail";
-import { ThumbsUp } from "@/components/icons";
+import { Pencil, ThumbsUp } from "@/components/icons";
+import { useLongPress } from "@/hooks/useLongPress";
+import type { MarkControls } from "@/hooks/useMarks";
 import type { ArtistLinks } from "@/lib/artist-links";
 import type { Artist, Performance } from "@/lib/schedule-client";
 import type { ShowOrdinal } from "@/lib/shows";
@@ -12,7 +14,7 @@ interface TransposedPerformanceBlockProps {
   artist: Artist | undefined;
   layout: BlockLayout;
   links: ArtistLinks;
-  starred: boolean;
+  marks: MarkControls;
   showRecommendation: boolean;
   /** "#2/3" — only rendered when the act plays more than once. */
   ordinal: ShowOrdinal | undefined;
@@ -20,28 +22,30 @@ interface TransposedPerformanceBlockProps {
   isOrigin: boolean;
   ft: FestivalTime;
   onSelectOrigin: (id: string) => void;
-  onToggleStar: (id: string) => void;
 }
 
 // One set in the transposed grid: positioned along the X axis, sized by
 // duration. Three separate targets, all siblings so a tap lands on exactly
 // one of them: the artist name opens the act's page on the festival site,
-// the star in the rail stars it, and the rest of the block picks this set as
-// the point walking distances are measured from.
+// the star in the rail cycles the tier (a hold on it opens the note sheet),
+// and the rest of the block picks this set as the point walking distances
+// are measured from.
 export function TransposedPerformanceBlock({
   performance,
   artist,
   layout,
   links,
-  starred,
+  marks,
   showRecommendation,
   ordinal,
   isOrigin,
   ft,
   onSelectOrigin,
-  onToggleStar,
 }: TransposedPerformanceBlockProps) {
   const showOrdinal = ordinal && ordinal.total > 1;
+  const tier = marks.tierOf(performance.id);
+  const note = marks.noteOf(performance.id);
+  const longPress = useLongPress(() => marks.openSheet(performance.id));
 
   return (
     <div
@@ -50,9 +54,11 @@ export function TransposedPerformanceBlock({
       className={`absolute inset-y-1 overflow-hidden rounded-md transition-colors ${
         isOrigin
           ? "bg-zinc-700 ring-1 ring-zinc-400"
-          : starred
+          : tier === "must"
             ? "bg-accent/20 ring-1 ring-accent"
-            : "bg-zinc-800/70"
+            : tier === "interested"
+              ? "bg-interested/15 ring-1 ring-interested/70"
+              : "bg-zinc-800/70"
       }`}
     >
       {/* Star-only rail, not the full Spotify/Instagram one PerformanceBlock
@@ -63,13 +69,22 @@ export function TransposedPerformanceBlock({
           which is exactly the crowding a first pass at this got complaints
           for. The rail sits right-2 from the edge and the star alone needs
           8 + 24 = 32px, hence pr-9. Spotify/Instagram are still one tap away
-          via the artist's own festival page. */}
+          via the artist's own festival page. That same tight budget is why
+          the note indicator (✎, when a note exists) sits inline next to the
+          clock below rather than in this rail — see the pr-9 width
+          reasoning above, a fourth affordance here would break it. */}
       <button
         type="button"
         onClick={() => onSelectOrigin(performance.id)}
         aria-pressed={isOrigin}
         aria-label={`Measure walking times from ${performance.artistName}`}
-        className="absolute inset-0 flex h-full w-full flex-col justify-center rounded-md py-1 pr-9 pl-2 text-left"
+        onPointerDown={longPress.onPointerDown}
+        onPointerMove={longPress.onPointerMove}
+        onPointerUp={longPress.onPointerUp}
+        onPointerCancel={longPress.onPointerCancel}
+        onPointerLeave={longPress.onPointerLeave}
+        onContextMenu={longPress.onContextMenu}
+        className="absolute inset-0 flex h-full w-full select-none flex-col justify-center rounded-md py-1 pr-9 pl-2 text-left [-webkit-touch-callout:none]"
       />
 
       <div className="pointer-events-none relative flex h-full flex-col justify-center py-1 pr-9 pl-2">
@@ -98,16 +113,24 @@ export function TransposedPerformanceBlock({
               · #{ordinal.index}/{ordinal.total}
             </span>
           )}
+          {note && (
+            <span title={note} className="pointer-events-auto ml-1 inline-block align-[-0.1em] text-zinc-400">
+              <Pencil className="inline h-2.5 w-2.5" />
+            </span>
+          )}
         </span>
       </div>
 
       <ArtistLinksRail
         artistName={performance.artistName}
         links={links}
-        starred={starred}
+        tier={tier}
         orientation="horizontal"
         compact
-        onToggleStar={() => onToggleStar(performance.id)}
+        onCycle={() => {
+          if (longPress.consumeSuppressedClick()) return;
+          marks.cycle(performance.id);
+        }}
       />
     </div>
   );

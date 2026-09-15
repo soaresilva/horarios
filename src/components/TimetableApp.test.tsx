@@ -14,8 +14,11 @@ import type { Schedule } from "@/lib/schedule-client";
 vi.mock("@/hooks/useSchedule");
 vi.mock("@/hooks/useFavoritesSync", () => ({
   useFavoritesSync: () => ({
-    isStarred: () => false,
-    toggle: () => {},
+    tierOf: () => null,
+    noteOf: () => "",
+    cycle: () => {},
+    setTier: () => {},
+    setNote: () => {},
     synced: false,
     startSync: async () => {},
     generateCode: async () => ({ error: "not mocked" }),

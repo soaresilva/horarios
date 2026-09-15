@@ -13,8 +13,8 @@ export const VISITOR_COOKIE_NAME = "pdc_visitor_id";
 const VISITOR_COOKIE_MAX_AGE_SECONDS = 400 * 24 * 60 * 60; // ~400 days, the browser-enforced cap on Set-Cookie Max-Age
 
 // Read-only: returns null for a visitor who has never opted into sync, so
-// callers (listFavorites/syncFavorites/generatePairingCode) can tell "not
-// synced" apart from "synced with zero favorites" without a network call.
+// callers (listMarks/syncMarks/generatePairingCode) can tell "not synced"
+// apart from "synced with zero marks" without a network call.
 export async function getVisitorId(): Promise<string | null> {
   const cookieStore = await cookies();
   return cookieStore.get(VISITOR_COOKIE_NAME)?.value ?? null;

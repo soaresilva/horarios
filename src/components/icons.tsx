@@ -84,6 +84,27 @@ export function Instagram({ className }: IconProps) {
   );
 }
 
+// Note indicator (PerformanceBlock, TransposedPerformanceBlock), shown only
+// when a set carries a note. Native `title` tooltip on the element it's
+// attached to does the rest — no custom tooltip component in this app.
+export function Pencil({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+      <path d="M15 5l4 4" />
+    </svg>
+  );
+}
+
 export function Spotify({ className }: IconProps) {
   return (
     <svg

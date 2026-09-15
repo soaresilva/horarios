@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
 // The transposed grid's whole structure rests on CSS sticky holding on both
 // axes at once. These assertions measure the pinned elements' real positions
@@ -65,10 +65,10 @@ test.describe("Left of the Dial transposed grid", () => {
     await expect(page.getByText(/min from (?!ticket desk)/).first()).toBeVisible();
   });
 
-  test("stars a set independently of Paredes de Coura's own favourites", async ({ page }) => {
-    const star = page.locator('[data-performance-id] button[aria-label^="Star"]').first();
+  test("marks a set independently of Paredes de Coura's own marks", async ({ page }) => {
+    const star = page.locator('[data-performance-id] button[aria-label^="Mark"]').first();
     await star.evaluate((el: HTMLElement) => el.click());
-    await expect(star).toHaveAttribute("aria-pressed", "true");
+    await expect(star).toHaveAttribute("aria-label", /must-see/);
 
     const stored = await page.evaluate(() => ({
       lotd: window.localStorage.getItem("lotd26:starred"),
@@ -76,5 +76,60 @@ test.describe("Left of the Dial transposed grid", () => {
     }));
     expect(stored.lotd).toBeTruthy();
     expect(stored.pdc).toBeNull();
+  });
+
+  // Long-press's whole reason to exist: the grid is scrolled by dragging
+  // directly on the blocks, so a touch-drag that starts on a block must
+  // scroll the grid, not open the note sheet mid-drag. See useLongPress.ts's
+  // 10px move-slop comment for why 10px specifically.
+  //
+  // scrollIntoViewIfNeeded() before EVERY press here is load-bearing, not
+  // tidiness. This grid auto-scrolls horizontally to "now" on mount
+  // (TransposedGrid.tsx sets scrollLeft imperatively), so on a 390px-wide
+  // iPhone viewport the first block lands around x=362 with width 200 — its
+  // centre is off-screen, page.mouse targets a coordinate the element
+  // doesn't occupy, and no pointer event reaches it at all. Without the
+  // scroll, the positive test below fails for a reason that has nothing to
+  // do with long-press, and the negative one passes vacuously.
+  async function pressCentre(page: Page, hold: number, drag?: number) {
+    const block = page.locator("[data-performance-id]").first();
+    await block.scrollIntoViewIfNeeded();
+    const box = (await block.boundingBox())!;
+    const cx = box.x + box.width / 2;
+    const cy = box.y + box.height / 2;
+
+    await page.mouse.move(cx, cy);
+    await page.mouse.down();
+    if (drag !== undefined) await page.mouse.move(cx + drag, cy, { steps: 10 });
+    await page.waitForTimeout(hold);
+    await page.mouse.up();
+  }
+
+  test("a long-press opens the mark sheet", async ({ page }) => {
+    await pressCentre(page, 600);
+
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Must-see" })).toBeVisible();
+  });
+
+  // A press that turns into a drag (how this grid is actually scrolled on
+  // touch — see useLongPress.ts's 10px move-slop comment) must cancel the
+  // timer rather than open the sheet mid-drag. Playwright's synthetic mouse
+  // drag doesn't trigger the browser's native touch-scroll, so this asserts
+  // the cancellation, not an actual scroll delta — the scroll behavior
+  // itself is already covered by "keeps the venue column pinned while
+  // scrolling sideways" above.
+  //
+  // The second half is what stops this from passing vacuously: a plain
+  // long-press on the same block, immediately after, MUST open the sheet. If
+  // the press never reached the element (the off-screen-centre failure mode
+  // described above), that assertion fails too, so a green result here means
+  // the drag genuinely cancelled a press that would otherwise have fired.
+  test("a press-then-drag past the slop radius cancels the long press", async ({ page }) => {
+    await pressCentre(page, 600, 120);
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+
+    await pressCentre(page, 600);
+    await expect(page.getByRole("dialog")).toBeVisible();
   });
 });

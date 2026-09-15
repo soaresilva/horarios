@@ -10,6 +10,13 @@ datasource db {
   provider = "postgresql"
 }
 
+// A visitor's two-tier mark on a set: must-see (the original, undifferentiated
+// "starred" bit) or interested (the newer, lower-commitment second tier).
+enum MarkTier {
+  MUST_SEE
+  INTERESTED
+}
+
 // How a festival's timetable is drawn. Paredes de Coura has two stages and
 // reads well as columns with time running down; Left of the Dial has ~26
 // rooms, which only fit as rows with time running across.
@@ -185,19 +192,30 @@ model Performance {
   @@index([artistId])
 }
 
-// A visitor's server-synced star on one performance, written only once a
-// visitor has explicitly opted into cross-device sync (see src/lib/visitor.ts
-// and src/app/favorites/actions.ts) — a visitor who never opts in leaves no
-// row here at all, favorites stay purely in localStorage (src/hooks/useStarred.ts).
+// A visitor's server-synced mark on one performance — a tier (must-see /
+// interested), a free-text note, or both — written only once a visitor has
+// explicitly opted into cross-device sync (see src/lib/visitor.ts and
+// src/app/favorites/actions.ts) — a visitor who never opts in leaves no row
+// here at all, marks stay purely in localStorage (src/hooks/useMarks.ts).
 // `visitorId` is a bare opaque string (an httpOnly cookie value), not an FK to
 // a Visitor table: this app deliberately has no accounts, so there is nothing
 // else to model a visitor as. Cascades on Performance deletion — nothing
-// should stay "starred" once the set itself no longer exists.
+// should stay marked once the set itself no longer exists.
+//
+// Table name stays `Favorite` (from when this only ever meant "starred") —
+// renaming it would churn the e2e cleanup in e2e/favorites-sync.spec.ts and
+// buy nothing.
 model Favorite {
   id            String      @id @default(cuid())
   visitorId     String
   performanceId String
   performance   Performance @relation(fields: [performanceId], references: [id], onDelete: Cascade)
+  /// Null = a row that exists only to carry a `note` on an unmarked set.
+  /// Nullable *with* a default so `ALTER TABLE ADD COLUMN ... DEFAULT`
+  /// backfills every pre-existing row to MUST_SEE, which is what they meant
+  /// before this column existed — the whole point being zero migration code.
+  tier          MarkTier?   @default(MUST_SEE)
+  note          String?     @db.VarChar(280)
   createdAt     DateTime    @default(now())
 
   @@unique([visitorId, performanceId])

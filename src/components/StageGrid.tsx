@@ -3,6 +3,7 @@
 import { CurrentTimeLine } from "@/components/CurrentTimeLine";
 import { PerformanceBlock } from "@/components/PerformanceBlock";
 import { TimeAxis } from "@/components/TimeAxis";
+import type { MarkControls } from "@/hooks/useMarks";
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { blockLayout, computeDayWindow, windowExtent, type FestivalTime } from "@/lib/time";
@@ -10,12 +11,11 @@ import { blockLayout, computeDayWindow, windowExtent, type FestivalTime } from "
 interface StageGridProps {
   stages: Stage[];
   performances: Performance[];
-  isStarred: (id: string) => boolean;
+  marks: MarkControls;
   ft: FestivalTime;
-  onToggleStar: (id: string) => void;
 }
 
-export function StageGrid({ stages, performances, isStarred, ft, onToggleStar }: StageGridProps) {
+export function StageGrid({ stages, performances, marks, ft }: StageGridProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const window = computeDayWindow(performances);
 
@@ -46,10 +46,9 @@ export function StageGrid({ stages, performances, isStarred, ft, onToggleStar }:
                   performance={performance}
                   layout={blockLayout(window, performance)}
                   alternate={i % 2 === 0}
-                  starred={isStarred(performance.id)}
+                  marks={marks}
                   showRecommendation={showRecommendations}
                   ft={ft}
-                  onToggleStar={onToggleStar}
                 />
               ))}
             </div>

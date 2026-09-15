@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { FavoritesListView } from "./FavoritesListView";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage, ZoneWalk } from "@/lib/schedule-client";
+import type { MarkControls, MarkTier } from "@/hooks/useMarks";
 
 function lisbon(iso: string) {
   return new Date(`${iso}+01:00`);
@@ -36,8 +37,24 @@ function performance(overrides: Partial<Performance>): Performance {
   };
 }
 
+function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
+  return {
+    tierOf: () => null,
+    noteOf: () => "",
+    cycle: () => {},
+    setTier: () => {},
+    setNote: () => {},
+    openSheet: () => {},
+    ...overrides,
+  };
+}
+
+function tierOfMap(map: Record<string, MarkTier>) {
+  return (id: string): MarkTier | null => map[id] ?? null;
+}
+
 describe("FavoritesListView", () => {
-  it("shows an empty-state message instead of a list when nothing is starred", () => {
+  it("shows an empty-state message instead of a list when nothing is marked", () => {
     render(
       <FavoritesListView
         performances={[performance({})]}
@@ -45,35 +62,33 @@ describe("FavoritesListView", () => {
         zoneWalks={[]}
         artistsById={new Map()}
         ordinals={new Map()}
-        isStarred={() => false}
+        marks={fakeMarks()}
         ft={ft}
-        onToggleStar={() => {}}
       />,
     );
-    expect(screen.getByText(/no favorites yet/i)).toBeInTheDocument();
+    expect(screen.getByText(/no marks yet/i)).toBeInTheDocument();
     expect(screen.queryByText("Cass McCombs")).not.toBeInTheDocument();
   });
 
-  it("renders only starred performances, chronologically regardless of input order", () => {
+  it("renders only marked performances (either tier), chronologically regardless of input order", () => {
     const later = performance({ id: "p2", artistName: "Perfume Genius", startTime: lisbon("2026-08-13T22:00:00"), endTime: lisbon("2026-08-13T23:00:00"), stageId: "palco2" });
     const earlier = performance({ id: "p1", artistName: "Cass McCombs" });
-    const unstarred = performance({ id: "p3", artistName: "Not Starred", startTime: lisbon("2026-08-13T18:00:00"), endTime: lisbon("2026-08-13T18:30:00") });
+    const unmarked = performance({ id: "p3", artistName: "Not Marked", startTime: lisbon("2026-08-13T18:00:00"), endTime: lisbon("2026-08-13T18:30:00") });
 
     render(
       <FavoritesListView
         // Deliberately out of chronological order in the input array.
-        performances={[later, earlier, unstarred]}
+        performances={[later, earlier, unmarked]}
         stages={stages}
         zoneWalks={[]}
         artistsById={new Map()}
         ordinals={new Map()}
-        isStarred={(id) => id === "p1" || id === "p2"}
+        marks={fakeMarks({ tierOf: tierOfMap({ p1: "must", p2: "interested" }) })}
         ft={ft}
-        onToggleStar={() => {}}
       />,
     );
 
-    expect(screen.queryByText("Not Starred")).not.toBeInTheDocument();
+    expect(screen.queryByText("Not Marked")).not.toBeInTheDocument();
     const names = screen.getAllByText(/Cass McCombs|Perfume Genius/).map((el) => el.textContent);
     expect(names).toEqual(["Cass McCombs", "Perfume Genius"]);
   });
@@ -95,9 +110,8 @@ describe("FavoritesListView", () => {
         zoneWalks={[]}
         artistsById={new Map()}
         ordinals={new Map()}
-        isStarred={() => true}
+        marks={fakeMarks({ tierOf: () => "must" })}
         ft={ft}
-        onToggleStar={() => {}}
       />,
     );
 
@@ -121,9 +135,8 @@ describe("FavoritesListView", () => {
         zoneWalks={zoneWalks}
         artistsById={new Map()}
         ordinals={new Map()}
-        isStarred={() => true}
+        marks={fakeMarks({ tierOf: () => "must" })}
         ft={ft}
-        onToggleStar={() => {}}
       />,
     );
 
@@ -150,9 +163,8 @@ describe("FavoritesListView", () => {
         zoneWalks={[]}
         artistsById={new Map()}
         ordinals={new Map()}
-        isStarred={() => true}
+        marks={fakeMarks({ tierOf: () => "must" })}
         ft={ft}
-        onToggleStar={() => {}}
       />,
     );
 
@@ -160,8 +172,8 @@ describe("FavoritesListView", () => {
     expect(screen.queryByText("same venue")).not.toBeInTheDocument();
   });
 
-  it("calls onToggleStar with the performance id when a row's star is tapped", async () => {
-    const onToggleStar = vi.fn();
+  it("calls marks.cycle with the performance id when a row's star is tapped", async () => {
+    const cycle = vi.fn();
     render(
       <FavoritesListView
         performances={[performance({})]}
@@ -169,13 +181,44 @@ describe("FavoritesListView", () => {
         zoneWalks={[]}
         artistsById={new Map()}
         ordinals={new Map()}
-        isStarred={() => true}
+        marks={fakeMarks({ tierOf: () => "must", cycle })}
         ft={ft}
-        onToggleStar={onToggleStar}
       />,
     );
 
-    await userEvent.click(screen.getByRole("button", { name: /star cass mccombs/i }));
-    expect(onToggleStar).toHaveBeenCalledWith("p1");
+    await userEvent.click(screen.getByRole("button", { name: /mark cass mccombs/i }));
+    expect(cycle).toHaveBeenCalledWith("p1");
+  });
+
+  it("renders the note text under the time/stage line when one exists", () => {
+    render(
+      <FavoritesListView
+        performances={[performance({})]}
+        stages={stages}
+        zoneWalks={[]}
+        artistsById={new Map()}
+        ordinals={new Map()}
+        marks={fakeMarks({ tierOf: () => "must", noteOf: () => "front left, get there early" })}
+        ft={ft}
+      />,
+    );
+
+    expect(screen.getByText("front left, get there early")).toBeInTheDocument();
+  });
+
+  it("tints an interested row differently from a must-see row", () => {
+    const { container } = render(
+      <FavoritesListView
+        performances={[performance({})]}
+        stages={stages}
+        zoneWalks={[]}
+        artistsById={new Map()}
+        ordinals={new Map()}
+        marks={fakeMarks({ tierOf: () => "interested" })}
+        ft={ft}
+      />,
+    );
+
+    expect(container.querySelector(".bg-interested\\/15")).toBeInTheDocument();
   });
 });

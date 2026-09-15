@@ -2,16 +2,101 @@
 
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock, type FestivalTime } from "@/lib/time";
-import { Instagram, Spotify, ThumbsUp } from "@/components/icons";
+import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
+import { useLongPress } from "@/hooks/useLongPress";
+import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { getArtistLinks } from "@/lib/artist-links";
+import { markAriaLabel } from "@/lib/marks";
 
 interface SideStageSectionProps {
   stage: Stage;
   performances: Performance[];
-  isStarred: (id: string) => boolean;
+  marks: MarkControls;
   ft: FestivalTime;
-  onToggleStar: (id: string) => void;
+}
+
+// One row: tap cycles the tier, a 500ms hold opens the note sheet, exactly
+// like PerformanceBlock's full-bleed button.
+function SideStageRow({ performance, marks, ft, showRecommendations }: { performance: Performance; marks: MarkControls; ft: FestivalTime; showRecommendations: boolean }) {
+  const tier = marks.tierOf(performance.id);
+  const note = marks.noteOf(performance.id);
+  const links = getArtistLinks(performance.artistName);
+  const longPress = useLongPress(() => marks.openSheet(performance.id));
+
+  const tint =
+    tier === "must"
+      ? "bg-accent/20 ring-1 ring-accent"
+      : tier === "interested"
+        ? "bg-interested/15 ring-1 ring-interested/70"
+        : "bg-zinc-800/60";
+  const glyph = tier === "interested" ? "☆" : "★";
+  const glyphColor = tier === "must" ? "text-accent" : tier === "interested" ? "text-interested" : "text-zinc-600";
+
+  return (
+    <li data-performance-id={performance.id} className="relative">
+      {/* Fills the row: tap cycles the tier, hold opens the note sheet. */}
+      <button
+        type="button"
+        onClick={() => {
+          if (longPress.consumeSuppressedClick()) return;
+          marks.cycle(performance.id);
+        }}
+        onPointerDown={longPress.onPointerDown}
+        onPointerMove={longPress.onPointerMove}
+        onPointerUp={longPress.onPointerUp}
+        onPointerCancel={longPress.onPointerCancel}
+        onPointerLeave={longPress.onPointerLeave}
+        onContextMenu={longPress.onContextMenu}
+        aria-label={markAriaLabel(performance.artistName, tier)}
+        className={`flex w-full select-none items-center justify-between gap-2 rounded-md py-2 pl-3 pr-16 text-left [-webkit-touch-callout:none] ${tint}`}
+      >
+        <span className="text-sm font-medium text-zinc-100">
+          {performance.artistName}
+          {performance.recommended && showRecommendations && (
+            <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
+          )}
+        </span>
+        <span className="text-xs text-zinc-400">
+          {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
+        </span>
+      </button>
+
+      {/* Icon row, layered above the button so link taps hit the link, not the toggle. */}
+      <div className="pointer-events-none absolute inset-y-0 right-2 z-10 flex items-center gap-1.5">
+        <span aria-hidden className={`text-xs leading-none ${glyphColor}`}>
+          {glyph}
+        </span>
+        {note && (
+          <span title={note} className="text-zinc-400">
+            <Pencil className="h-3 w-3" />
+          </span>
+        )}
+        {links.spotify && (
+          <a
+            href={links.spotify}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${performance.artistName} on Spotify`}
+            className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
+          >
+            <Spotify className="h-3.5 w-3.5" />
+          </a>
+        )}
+        {links.instagram && (
+          <a
+            href={links.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${performance.artistName} on Instagram`}
+            className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
+          >
+            <Instagram className="h-3.5 w-3.5" />
+          </a>
+        )}
+      </div>
+    </li>
+  );
 }
 
 // A free/side stage (Jazz na Relva, Xapas Lounge, ...), shown as its own
@@ -20,7 +105,7 @@ interface SideStageSectionProps {
 // header below it — as you scroll past this section, the main stages'
 // header naturally takes over the sticky slot, so whichever stage is
 // actually on screen is always the one labeled at the top.
-export function SideStageSection({ stage, performances, isStarred, ft, onToggleStar }: SideStageSectionProps) {
+export function SideStageSection({ stage, performances, marks, ft }: SideStageSectionProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const sorted = [...performances].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
   if (sorted.length === 0) return null;
@@ -33,65 +118,9 @@ export function SideStageSection({ stage, performances, isStarred, ft, onToggleS
         <span className="text-sm font-semibold text-zinc-200">{stage.name}</span>
       </div>
       <ul className="flex flex-col gap-1.5 px-3 pb-3">
-        {sorted.map((performance) => {
-          const starred = isStarred(performance.id);
-          const links = getArtistLinks(performance.artistName);
-          return (
-            <li key={performance.id} className="relative">
-              {/* Fills the row: clicking anywhere that isn't a link toggles the star. */}
-              <button
-                type="button"
-                onClick={() => onToggleStar(performance.id)}
-                aria-pressed={starred}
-                className={`flex w-full items-center justify-between gap-2 rounded-md py-2 pl-3 pr-16 text-left ${
-                  starred ? "bg-accent/20 ring-1 ring-accent" : "bg-zinc-800/60"
-                }`}
-              >
-                <span className="text-sm font-medium text-zinc-100">
-                  {performance.artistName}
-                  {performance.recommended && showRecommendations && (
-                    <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
-                  )}
-                </span>
-                <span className="text-xs text-zinc-400">
-                  {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
-                </span>
-              </button>
-
-              {/* Icon row, layered above the button so link taps hit the link, not the toggle. */}
-              <div className="pointer-events-none absolute inset-y-0 right-2 z-10 flex items-center gap-1.5">
-                <span
-                  aria-hidden
-                  className={`text-xs leading-none ${starred ? "text-accent" : "text-zinc-600"}`}
-                >
-                  ★
-                </span>
-                {links.spotify && (
-                  <a
-                    href={links.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${performance.artistName} on Spotify`}
-                    className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
-                  >
-                    <Spotify className="h-3.5 w-3.5" />
-                  </a>
-                )}
-                {links.instagram && (
-                  <a
-                    href={links.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={`${performance.artistName} on Instagram`}
-                    className="pointer-events-auto text-zinc-500 transition-colors hover:text-accent"
-                  >
-                    <Instagram className="h-3.5 w-3.5" />
-                  </a>
-                )}
-              </div>
-            </li>
-          );
-        })}
+        {sorted.map((performance) => (
+          <SideStageRow key={performance.id} performance={performance} marks={marks} ft={ft} showRecommendations={showRecommendations} />
+        ))}
       </ul>
     </div>
   );
