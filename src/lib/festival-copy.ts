@@ -36,7 +36,7 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     // name, body, venue cell), each doing something different — this spells
     // them out rather than leaving a first-time visitor to guess.
     disclaimer:
-      "Tap the star to add it to your favorites. Tap the artist name to navigate to their page on the LOTD website. Tap a show to see rough walking distances to other venues. Tap a venue name to navigate on Google Maps.",
+      "Tapping the star once marks a show as a \"must-see\", tapping it again marks it as \"interested\". Tap the artist name to navigate to their page on the LOTD website. Tap a show to see rough walking distances to other venues. A long tap allows you to add notes to a show (hover over each note to read it). Tap a venue name to navigate on Google Maps.",
     links: [{ label: "leftofthedial.nl", href: "https://leftofthedial.nl" }],
     // No recommends curation planned for this edition, and the disclaimer
     // above already covers starring — the legend row would be redundant on
