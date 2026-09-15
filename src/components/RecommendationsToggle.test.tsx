@@ -14,6 +14,7 @@ const marks: MarkControls = {
   setTier: () => {},
   setNote: () => {},
   openSheet: () => {},
+  showNotes: false,
 };
 
 afterEach(() => {

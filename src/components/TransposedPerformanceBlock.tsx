@@ -2,6 +2,7 @@
 
 import { ArtistLinksRail } from "@/components/ArtistLinksRail";
 import { Pencil, ThumbsUp } from "@/components/icons";
+import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
 import type { ArtistLinks } from "@/lib/artist-links";
@@ -45,6 +46,7 @@ export function TransposedPerformanceBlock({
   const showOrdinal = ordinal && ordinal.total > 1;
   const tier = marks.tierOf(performance.id);
   const note = marks.noteOf(performance.id);
+  const showInlineNote = marks.showNotes && note !== "";
   const longPress = useLongPress(() => marks.openSheet(performance.id));
 
   return (
@@ -113,12 +115,17 @@ export function TransposedPerformanceBlock({
               · #{ordinal.index}/{ordinal.total}
             </span>
           )}
-          {note && (
+          {note && !showInlineNote && (
             <span title={note} className="pointer-events-auto ml-1 inline-block align-[-0.1em] text-zinc-400">
               <Pencil className="inline h-2.5 w-2.5" />
             </span>
           )}
         </span>
+        {/* Third line, only present when the row grew to ROW_HEIGHT_WITH_NOTE
+            (TransposedGrid.tsx) to hold it. pointer-events-auto because the
+            content column above is pointer-events-none and the `title`
+            tooltip needs to be hittable. */}
+        {showInlineNote && <InlineNote note={note} lines={1} className="pointer-events-auto" />}
       </div>
 
       <ArtistLinksRail

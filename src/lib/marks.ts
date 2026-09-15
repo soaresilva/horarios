@@ -43,6 +43,22 @@ export function clampMarksPayload(payload: MarksPayload): MarksPayload {
 
 export const EMPTY_MARKS_PAYLOAD: MarksPayload = { mustSee: [], interested: [], notes: {} };
 
+// How many lines of note a vertical-grid block of this pixel height (its
+// `layout.extent`, the same number PerformanceBlock already positions
+// itself with) can hold before the note would spill past the block's own
+// bottom edge. Derived from the block's content box, not measured from the
+// DOM: artist name (`sm:text-base`, `leading-tight`) is 20px, the times line
+// (`sm:text-xs`) is 15px, the button's `py-1` adds 8px top+bottom — 43px of
+// content that's already there regardless of the toggle — and each note line
+// at `text-[10px] leading-snug` is ~14px. A pure function of one number, so
+// the boundary cases are pinned by a table instead of eyeballed off a
+// screenshot.
+export function inlineNoteLines(extent: number): 0 | 1 | 2 {
+  if (extent >= 74) return 2;
+  if (extent >= 58) return 1;
+  return 0;
+}
+
 // A cycling control (the block body, the rail star) is a tri-state, not a
 // toggle, so `aria-pressed` (which is strictly boolean/mixed) can't
 // faithfully describe it — an `aria-label` naming the current state is what

@@ -7,6 +7,7 @@ import { FavoritesListView } from "@/components/FavoritesListView";
 import { InstallBanner } from "@/components/InstallBanner";
 import { MarkSheet } from "@/components/MarkSheet";
 import { MarksHint } from "@/components/MarksHint";
+import { NotesToggle } from "@/components/NotesToggle";
 import { RecommendationsToggle } from "@/components/RecommendationsToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
@@ -18,6 +19,7 @@ import { useFavoritesSync } from "@/hooks/useFavoritesSync";
 import type { MarkControls } from "@/hooks/useMarks";
 import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
+import { useShowNotes } from "@/hooks/useShowNotes";
 import { festivalCopy } from "@/lib/festival-copy";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { otherShowsOf, showOrdinals } from "@/lib/shows";
@@ -39,6 +41,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
   const { tierOf, noteOf, cycle, setTier, setNote, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
   const hint = useMarksHintDismissed(festivalSlug);
+  const { show: showNotes, toggle: toggleShowNotes } = useShowNotes(festivalSlug);
   // Holds only the user's explicit tab choice; the default (today, falling
   // back to the first festival day) is derived below rather than pushed
   // into state via an effect, since `days` isn't known until the schedule
@@ -76,8 +79,9 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         setSheetPerformanceId(id);
         dismissHint();
       },
+      showNotes,
     }),
-    [tierOf, noteOf, cycle, setTier, setNote, dismissHint],
+    [tierOf, noteOf, cycle, setTier, setNote, dismissHint, showNotes],
   );
   // Grid (either layout) vs. the favorites-only list. Orthogonal to
   // `layout`, so it isn't reset when the day changes — a visitor who
@@ -193,7 +197,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           recommends/favorites explainer row (redundant on some editions,
           see festival-copy.ts), but cross-device sync is useful on every
           festival regardless of whether this row shows. */}
-      <div className="flex items-center gap-4 px-3 pb-1 text-[10px] text-zinc-500">
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-3 pb-1 text-[10px] text-zinc-500">
         {(copy?.legend ?? true) && (
           <>
             <RecommendationsToggle />
@@ -207,6 +211,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           </>
         )}
         <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
+        <NotesToggle show={showNotes} onToggle={toggleShowNotes} />
       </div>
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />

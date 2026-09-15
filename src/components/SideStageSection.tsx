@@ -3,6 +3,7 @@
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock, type FestivalTime } from "@/lib/time";
 import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
+import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
@@ -32,10 +33,15 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
         : "bg-zinc-800/60";
   const glyph = tier === "interested" ? "☆" : "★";
   const glyphColor = tier === "must" ? "text-accent" : tier === "interested" ? "text-interested" : "text-zinc-600";
+  const showInlineNote = marks.showNotes && note !== "";
 
   return (
     <li data-performance-id={performance.id} className="relative">
-      {/* Fills the row: tap cycles the tier, hold opens the note sheet. */}
+      {/* Fills the row: tap cycles the tier, hold opens the note sheet.
+          flex-col with a single full-width child (the name+time span below)
+          lays out identically to a plain flex-row of the same two children,
+          so with the toggle off this is byte-identical to before the note
+          became a possible second row — see SideStageSection.test.tsx. */}
       <button
         type="button"
         onClick={() => {
@@ -49,17 +55,20 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
         onPointerLeave={longPress.onPointerLeave}
         onContextMenu={longPress.onContextMenu}
         aria-label={markAriaLabel(performance.artistName, tier)}
-        className={`flex w-full select-none items-center justify-between gap-2 rounded-md py-2 pl-3 pr-16 text-left [-webkit-touch-callout:none] ${tint}`}
+        className={`flex w-full select-none flex-col gap-0.5 rounded-md py-2 pl-3 pr-16 text-left [-webkit-touch-callout:none] ${tint}`}
       >
-        <span className="text-sm font-medium text-zinc-100">
-          {performance.artistName}
-          {performance.recommended && showRecommendations && (
-            <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
-          )}
+        <span className="flex w-full items-center justify-between gap-2">
+          <span className="text-sm font-medium text-zinc-100">
+            {performance.artistName}
+            {performance.recommended && showRecommendations && (
+              <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
+            )}
+          </span>
+          <span className="text-xs text-zinc-400">
+            {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
+          </span>
         </span>
-        <span className="text-xs text-zinc-400">
-          {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
-        </span>
+        {showInlineNote && <InlineNote note={note} lines={2} />}
       </button>
 
       {/* Icon row, layered above the button so link taps hit the link, not the toggle. */}
@@ -67,7 +76,7 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
         <span aria-hidden className={`text-xs leading-none ${glyphColor}`}>
           {glyph}
         </span>
-        {note && (
+        {note && !showInlineNote && (
           <span title={note} className="text-zinc-400">
             <Pencil className="h-3 w-3" />
           </span>

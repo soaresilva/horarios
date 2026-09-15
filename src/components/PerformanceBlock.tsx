@@ -4,10 +4,11 @@ import type { Performance } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
 import type { BlockLayout, FestivalTime } from "@/lib/time";
 import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
+import { InlineNote } from "@/components/InlineNote";
 import { getArtistLinks } from "@/lib/artist-links";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
-import { markAriaLabel } from "@/lib/marks";
+import { inlineNoteLines, markAriaLabel } from "@/lib/marks";
 
 interface PerformanceBlockProps {
   performance: Performance;
@@ -24,6 +25,13 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
   const note = marks.noteOf(performance.id);
 
   const longPress = useLongPress(() => marks.openSheet(performance.id));
+
+  // Only when "display notes" is on AND the block is tall enough to hold at
+  // least one line (inlineNoteLines(0) for a 40px/20-min block, say). Below
+  // that the note stays behind the ✎ tooltip exactly as it does with the
+  // toggle off.
+  const noteLines = marks.showNotes ? inlineNoteLines(layout.extent) : 0;
+  const showInlineNote = noteLines > 0 && note !== "";
 
   const tint =
     tier === "must"
@@ -43,7 +51,7 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
     <div
       data-performance-id={performance.id}
       style={{ top: layout.offset, height: layout.extent }}
-      className={`absolute left-1 right-1 rounded-md transition-colors ${tint}`}
+      className={`absolute left-1 right-1 rounded-md transition-colors ${showInlineNote ? "overflow-hidden" : ""} ${tint}`}
     >
       {/* Fills the whole box: tap cycles the tier (unmarked → must-see →
           interested → unmarked), a 500ms hold opens the note sheet.
@@ -76,6 +84,7 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
         <span className="text-[10px] leading-tight text-zinc-400 sm:text-xs">
           {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
         </span>
+        {showInlineNote && <InlineNote note={note} lines={noteLines === 2 ? 2 : 1} />}
       </button>
 
       {/* Icon rail, layered above the button so link taps hit the link, not
@@ -86,7 +95,7 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
         <span aria-hidden className={`text-xs leading-none ${glyphColor}`}>
           {glyph}
         </span>
-        {note && (
+        {note && !showInlineNote && (
           <span title={note} className="text-zinc-400">
             <Pencil className="h-3 w-3" />
           </span>

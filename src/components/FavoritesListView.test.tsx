@@ -45,6 +45,7 @@ function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
     setTier: () => {},
     setNote: () => {},
     openSheet: () => {},
+    showNotes: false,
     ...overrides,
   };
 }

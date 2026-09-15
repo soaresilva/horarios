@@ -158,6 +158,8 @@ export interface MarkView {
 // PerformanceBlock, TransposedPerformanceBlock, FavoritesListView.
 export interface MarkControls extends MarkView {
   openSheet: (id: string) => void;
+  /** "display notes" is on: blocks render the note inline instead of behind the ✎ tooltip. */
+  showNotes: boolean;
 }
 
 function tierOfIn(state: MarksState, id: string): MarkTier | null {

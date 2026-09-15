@@ -28,6 +28,12 @@ import {
 const VENUE_COL_PX = 112;
 const VENUE_COL = "w-28";
 const ROW_HEIGHT = 56;
+// Grown height for a row holding at least one noted set, only when "display
+// notes" is on. Applied per-row (below), not grid-wide — most of the ~24
+// rooms on a given day carry no note, and there's no slack in the fixed
+// 56px row the way the vertical grid's already-tall blocks have, so growing
+// every row would waste real space on rooms nobody annotated.
+const ROW_HEIGHT_WITH_NOTE = 72;
 const HEADER_HEIGHT = 28;
 
 interface TransposedGridProps {
@@ -124,9 +130,12 @@ export function TransposedGrid({
                 const stagePerformances = performances
                   .filter((p) => p.stageId === stage.id)
                   .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+                const rowHasNote =
+                  marks.showNotes && stagePerformances.some((p) => marks.noteOf(p.id) !== "");
+                const rowHeight = rowHasNote ? ROW_HEIGHT_WITH_NOTE : ROW_HEIGHT;
 
                 return (
-                  <div key={stage.id} className="flex" style={{ height: ROW_HEIGHT }}>
+                  <div key={stage.id} className="flex" style={{ height: rowHeight }}>
                     <div
                       className={`sticky left-0 z-20 ${VENUE_COL} flex shrink-0 items-center border-r border-zinc-800 bg-background px-2`}
                     >

@@ -132,4 +132,32 @@ test.describe("Left of the Dial transposed grid", () => {
     await pressCentre(page, 600);
     await expect(page.getByRole("dialog")).toBeVisible();
   });
+
+  // The whole point of "display notes": a note is written once and read
+  // many times, on a phone, without a long-press per set. Runs on the same
+  // webkit/iPhone-14 project as the rest of this file, so this is the
+  // exact mobile case the feature exists for.
+  test("the display notes toggle shows/hides an inline note and the state survives reload", async ({ page }) => {
+    const noteText = "sounds like Bikini Kill";
+
+    await pressCentre(page, 600);
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await dialog.getByPlaceholder(/Add note/).fill(noteText);
+    await dialog.getByRole("button", { name: "Done" }).click();
+    await expect(dialog).toHaveCount(0);
+
+    // Off by default: the note lives behind the ✎ tooltip, not in the grid.
+    await expect(page.getByText(noteText)).toHaveCount(0);
+
+    await page.getByRole("switch", { name: /display notes/i }).click();
+    await expect(page.getByText(noteText)).toBeVisible();
+
+    await page.reload();
+    await expect(page.getByRole("tab").first()).toBeVisible();
+    await page.getByRole("tab", { name: /23/ }).click();
+    await expect(page.locator("[data-performance-id]").first()).toBeVisible();
+    await expect(page.getByRole("switch", { name: /display notes/i })).toHaveAttribute("aria-checked", "true");
+    await expect(page.getByText(noteText)).toBeVisible();
+  });
 });

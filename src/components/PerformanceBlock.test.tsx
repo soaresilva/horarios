@@ -35,6 +35,7 @@ function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
     setTier: () => {},
     setNote: () => {},
     openSheet: () => {},
+    showNotes: false,
     ...overrides,
   };
 }
@@ -138,5 +139,57 @@ describe("PerformanceBlock", () => {
       <PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks({ noteOf: () => "" })} ft={ft} showRecommendation={false} />,
     );
     expect(withoutNote.querySelector("[title]")).not.toBeInTheDocument();
+  });
+
+  describe("display notes toggle", () => {
+    it("with showNotes off, shows only the ✎ indicator, never the note text", () => {
+      render(
+        <PerformanceBlock
+          performance={performance()}
+          layout={layout}
+          alternate={false}
+          marks={fakeMarks({ noteOf: () => "front left, get there early", showNotes: false })}
+          ft={ft}
+          showRecommendation={false}
+        />,
+      );
+
+      expect(screen.getByTitle("front left, get there early")).toBeInTheDocument();
+      expect(screen.queryByText("front left, get there early")).not.toBeInTheDocument();
+    });
+
+    it("with showNotes on and a tall block, shows the note text inline and drops the ✎", () => {
+      // No known artist links, so the only possible svg in the rail is the
+      // ✎ Pencil — isolates the assertion to just that icon disappearing.
+      render(
+        <PerformanceBlock
+          performance={performance({ artistName: "Some Totally Unknown Act" })}
+          layout={layout}
+          alternate={false}
+          marks={fakeMarks({ noteOf: () => "front left, get there early", showNotes: true })}
+          ft={ft}
+          showRecommendation={false}
+        />,
+      );
+
+      expect(screen.getByText("front left, get there early")).toBeInTheDocument();
+      expect(document.querySelectorAll("svg").length).toBe(0);
+    });
+
+    it("with showNotes on but a 40px (20-min) block, keeps the ✎ and renders no inline text — too short to hold a line", () => {
+      render(
+        <PerformanceBlock
+          performance={performance()}
+          layout={{ offset: 0, extent: 40 }}
+          alternate={false}
+          marks={fakeMarks({ noteOf: () => "front left, get there early", showNotes: true })}
+          ft={ft}
+          showRecommendation={false}
+        />,
+      );
+
+      expect(screen.getByTitle("front left, get there early")).toBeInTheDocument();
+      expect(screen.queryByText("front left, get there early")).not.toBeInTheDocument();
+    });
   });
 });
