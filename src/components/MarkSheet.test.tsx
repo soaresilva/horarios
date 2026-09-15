@@ -34,14 +34,14 @@ function renderSheet(overrides: Partial<React.ComponentProps<typeof MarkSheet>> 
 describe("MarkSheet", () => {
   it("reflects the current tier via aria-pressed", () => {
     renderSheet({ tier: "must" });
-    expect(screen.getByRole("button", { name: "Must-see" })).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("button", { name: "Interested" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: /Must-see/ })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: /Interested/ })).toHaveAttribute("aria-pressed", "false");
     expect(screen.getByRole("button", { name: "Clear" })).toHaveAttribute("aria-pressed", "false");
   });
 
   it("calls onSetTier with the tapped tier", async () => {
     const { onSetTier } = renderSheet();
-    await userEvent.click(screen.getByRole("button", { name: "Interested" }));
+    await userEvent.click(screen.getByRole("button", { name: /Interested/ }));
     expect(onSetTier).toHaveBeenCalledWith("interested");
   });
 

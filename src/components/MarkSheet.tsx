@@ -105,22 +105,27 @@ export function MarkSheet({
             type="button"
             aria-pressed={tier === "must"}
             onClick={() => onSetTier("must")}
-            className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+            className={`flex-[2] rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
               tier === "must" ? "bg-accent text-zinc-950" : "bg-zinc-800 text-zinc-200"
             }`}
           >
-            Must-see
+            {/* Same ★/text-accent treatment as the block's own glyph (see
+                PerformanceBlock.tsx:37-40) — the button reads as "this is
+                what that star on the grid means" rather than a plain label. */}
+            <span className={tier === "must" ? "text-zinc-950" : "text-accent"}>★</span> Must-see
           </button>
           <button
             type="button"
             aria-pressed={tier === "interested"}
             onClick={() => onSetTier("interested")}
-            className={`flex-1 rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
+            className={`flex-[2] rounded-md px-2 py-1.5 text-xs font-medium transition-colors ${
               tier === "interested" ? "bg-interested text-zinc-950" : "bg-zinc-800 text-zinc-200"
             }`}
           >
-            Interested
+            <span className={tier === "interested" ? "text-zinc-950" : "text-interested"}>☆</span> Interested
           </button>
+          {/* Smaller than the two tier buttons — clearing is the least
+              common action here, so it doesn't need equal visual weight. */}
           <button
             type="button"
             aria-pressed={tier === null}
@@ -136,7 +141,7 @@ export function MarkSheet({
         <textarea
           value={note}
           maxLength={NOTE_MAX_LENGTH}
-          placeholder="Note — front left, get there early…"
+          placeholder={'Add note: "sounds like BCNR", "second choice if someone cancels"...'}
           onChange={(e) => onSetNote(e.target.value)}
           className="mb-3 h-20 w-full resize-none rounded-md border border-zinc-700 bg-zinc-950 p-2 text-sm text-zinc-100 placeholder:text-zinc-600"
         />

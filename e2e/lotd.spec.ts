@@ -109,7 +109,7 @@ test.describe("Left of the Dial transposed grid", () => {
     await pressCentre(page, 600);
 
     await expect(page.getByRole("dialog")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Must-see" })).toBeVisible();
+    await expect(page.getByRole("button", { name: /Must-see/ })).toBeVisible();
   });
 
   // A press that turns into a drag (how this grid is actually scrolled on
