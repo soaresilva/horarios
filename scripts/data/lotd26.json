@@ -1,7 +1,28 @@
 {
-  "fetchedAt": "2026-09-10T15:10:45.345Z",
+  "fetchedAt": "2026-10-09T14:46:06.330Z",
   "edition": 2026,
   "acts": [
+    {
+      "slug": "ruby-gill-sa-au",
+      "name": "Ruby Gill",
+      "country": "SA/AU",
+      "genres": "folk / singer-songwriter",
+      "spotifyUrl": "https://open.spotify.com/artist/51KkytVOUvaM9m0CoY9mBU",
+      "instagramUrl": "https://www.instagram.com/rubymarygill/",
+      "sourceUrl": "https://leftofthedial.nl/acts/ruby-gill-sa-au/",
+      "shows": [
+        {
+          "day": "FRIDAY",
+          "venue": "ANNABEL DOWN",
+          "time": "18:10"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "BAANHOF",
+          "time": "20:50"
+        }
+      ]
+    },
     {
       "slug": "the-north-uk",
       "name": "the north",
@@ -110,6 +131,11 @@
       "instagramUrl": "https://www.instagram.com/fergusonhifi/",
       "sourceUrl": "https://leftofthedial.nl/acts/ferguson-hi-fi-uk/",
       "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "BIRD",
+          "time": "22:20"
+        },
         {
           "day": "FRIDAY",
           "venue": "V11",
@@ -286,7 +312,7 @@
         {
           "day": "SATURDAY",
           "venue": "WORM 2",
-          "time": "17:50"
+          "time": "23:40"
         }
       ]
     },
@@ -405,7 +431,7 @@
       "name": "Newbuild",
       "country": "UK",
       "genres": "dream pop / experimental / post-punk",
-      "spotifyUrl": null,
+      "spotifyUrl": "https://open.spotify.com/artist/3Jjv9gds7QE7QtvyGxxC8O",
       "instagramUrl": "https://www.instagram.com/newbuild___/",
       "sourceUrl": "https://leftofthedial.nl/acts/newbuild-uk/",
       "shows": [
@@ -936,7 +962,7 @@
         {
           "day": "THURSDAY",
           "venue": "DE DOELEN WBH",
-          "time": "19:40"
+          "time": "20:10"
         },
         {
           "day": "FRIDAY",
@@ -951,7 +977,7 @@
       "country": "UK",
       "genres": "indie pop / rock / shoegaze",
       "spotifyUrl": "https://open.spotify.com/artist/7KkGto8VYz1WpvIsaSGsFs",
-      "instagramUrl": "https://www.instagram.com/sunken___/",
+      "instagramUrl": "https://www.instagram.com/gx.nurse/",
       "sourceUrl": "https://leftofthedial.nl/acts/sunken-uk/",
       "shows": [
         {
@@ -1623,6 +1649,11 @@
       "sourceUrl": "https://leftofthedial.nl/acts/paulie-swan-uk/",
       "shows": [
         {
+          "day": "FRIDAY",
+          "venue": "ROTOWN",
+          "time": "20:30"
+        },
+        {
           "day": "SATURDAY",
           "venue": "REMASTERED",
           "time": "17:50"
@@ -1845,7 +1876,7 @@
         {
           "day": "FRIDAY",
           "venue": "DE DOELEN WBH",
-          "time": "18:20"
+          "time": "18:40"
         }
       ]
     },
@@ -2008,24 +2039,13 @@
     },
     {
       "slug": "brooki-ie",
-      "name": "Brooki",
-      "country": "IE",
+      "name": "Brooki (IE) [CANCELLED]",
+      "country": null,
       "genres": "alternative rock / rock",
       "spotifyUrl": null,
       "instagramUrl": "https://www.instagram.com/brooki.band/",
       "sourceUrl": "https://leftofthedial.nl/acts/brooki-ie/",
-      "shows": [
-        {
-          "day": "THURSDAY",
-          "venue": "BIRD",
-          "time": "22:20"
-        },
-        {
-          "day": "FRIDAY",
-          "venue": "TR UP",
-          "time": "16:00"
-        }
-      ]
+      "shows": []
     },
     {
       "slug": "scotstown-dance-band-uk",
@@ -2213,6 +2233,11 @@
           "day": "FRIDAY",
           "venue": "STALLES (FKA CENTRAAL)",
           "time": "21:50"
+        },
+        {
+          "day": "SATURDAY",
+          "venue": "ARMINIUS UP",
+          "time": "19:40"
         }
       ]
     },
@@ -2826,24 +2851,13 @@
     },
     {
       "slug": "melanie-baker-uk",
-      "name": "Melanie Baker",
-      "country": "UK",
+      "name": "Melanie Baker (UK) [CANCELLED]",
+      "country": null,
       "genres": "grunge / pop / rock",
       "spotifyUrl": "https://open.spotify.com/artist/71VckCz8JMieQkjjAXzR5y",
       "instagramUrl": "https://www.instagram.com/melaniebakermusic/",
       "sourceUrl": "https://leftofthedial.nl/acts/melanie-baker-uk/",
-      "shows": [
-        {
-          "day": "FRIDAY",
-          "venue": "ANNABEL DOWN",
-          "time": "18:10"
-        },
-        {
-          "day": "SATURDAY",
-          "venue": "BAANHOF",
-          "time": "20:50"
-        }
-      ]
+      "shows": []
     },
     {
       "slug": "lemonsuckr-uk",

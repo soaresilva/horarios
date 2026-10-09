@@ -75,6 +75,20 @@ export const SHOW_OVERRIDES: Record<string, ParsedShow[]> = {
     { day: "FRIDAY", venue: "WORM 2", time: "23:40" },
     { day: "SATURDAY", venue: "ARMINIUS UP", time: "21:10" },
   ],
+
+  // Two full cancellations, announced by email 2026-10-09. Both acts' own
+  // pages still list their original shows (just with "[CANCELLED]" tacked
+  // onto the name) rather than clearing the `shows` array, so without this
+  // override the importer would create a cancelled act's performances
+  // alongside their replacement's — same room, same time, two artists.
+  //  - Melanie Baker is cancelled outright; Ruby Gill (new act, same two
+  //    exact slots: Fri Annabel Down 18:10, Sat Baanhof 20:50) takes over.
+  //  - Brooki is cancelled outright. The email only called out her Thursday
+  //    Bird 22:20 slot (now Ferguson Hi-Fi's), but her page marks the whole
+  //    act cancelled, so her Friday TR Up 16:00 slot drops with no
+  //    announced replacement.
+  "melanie-baker-uk": [],
+  "brooki-ie": [],
 };
 
 /** Applies SHOW_OVERRIDES over a freshly-parsed act list, replacing `shows` wholesale for any matching slug. */
