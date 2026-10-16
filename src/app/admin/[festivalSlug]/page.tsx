@@ -48,6 +48,8 @@ export default async function AdminFestivalPage({ params }: Props) {
     recommended: p.recommended,
     stageId: p.stageId,
     artistId: p.artistId,
+    series: p.series,
+    host: p.host,
     updatedAt: p.updatedAt,
   }));
 

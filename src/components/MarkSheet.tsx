@@ -15,6 +15,8 @@ export interface OtherShow {
   date: string;
   startTime: Date;
   stageName: string;
+  /** Side programme, if this other set is in one (rendered as a short tag). */
+  series?: string | null;
 }
 
 interface MarkSheetProps {
@@ -22,6 +24,9 @@ interface MarkSheetProps {
   startTime: Date;
   endTime: Date;
   stageName: string;
+  /** Side programme this set belongs to; null/absent for the main programme. */
+  series?: string | null;
+  host?: string | null;
   tier: MarkTier | null;
   note: string;
   /** The act's other sets across the whole festival; empty for a single-show act. */
@@ -41,6 +46,8 @@ export function MarkSheet({
   startTime,
   endTime,
   stageName,
+  series = null,
+  host = null,
   tier,
   note,
   otherShows,
@@ -76,6 +83,12 @@ export function MarkSheet({
             <p className="text-xs text-zinc-400">
               {formatClock(startTime, ft)}–{formatClock(endTime, ft)} · {stageName}
             </p>
+            {series && (
+              <p className="text-xs text-zinc-400">
+                {series}
+                {host && <> · hosted by {host}</>} · free entry
+              </p>
+            )}
             {/* Showcase festivals book most acts more than once (see
                 showOrdinals in src/lib/shows.ts), so the real question when
                 a set clashes is "when else can I catch them" — answered here
@@ -90,6 +103,7 @@ export function MarkSheet({
                     {i > 0 && "; "}
                     {formatDayTabLabel(new Date(`${show.date}T12:00:00Z`), ft).weekday}, {formatClock(show.startTime, ft)} at{" "}
                     {show.stageName}
+                    {show.series && " (free daytime)"}
                   </span>
                 ))}
               </p>

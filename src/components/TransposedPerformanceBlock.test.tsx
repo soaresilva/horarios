@@ -22,7 +22,7 @@ function performance(overrides: Partial<Performance> = {}): Performance {
     notes: null,
     recommended: false,
     stageId: "annabel-up",
-    artistId: null,
+    artistId: null, series: null, host: null,
     ...overrides,
   };
 }
@@ -111,5 +111,53 @@ describe("TransposedPerformanceBlock", () => {
       expect(document.querySelectorAll("svg").length).toBe(0);
       expect(screen.queryByTitle(/./)).not.toBeInTheDocument();
     });
+  });
+});
+
+describe("TransposedPerformanceBlock side programme", () => {
+  function renderWith(p: Performance, marks: Partial<MarkControls> = {}) {
+    return render(
+      <TransposedPerformanceBlock
+        performance={p}
+        artist={undefined}
+        layout={layout}
+        links={{}}
+        marks={fakeMarks(marks)}
+        showRecommendation={false}
+        ordinal={undefined}
+        isOrigin={false}
+        ft={ft}
+        onSelectOrigin={() => {}}
+      />,
+    );
+  }
+
+  it("shows a FREE chip, dashed outline and host tooltip for a side-programme set", () => {
+    const { container } = renderWith(
+      performance({ series: "The Official Unofficial", host: "Sour Grapes" }),
+    );
+    expect(screen.getByText("FREE")).toBeInTheDocument();
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block.className).toContain("border-dashed");
+    expect(block.getAttribute("title")).toBe("The Official Unofficial · hosted by Sour Grapes · free entry");
+  });
+
+  it("shows no chip or outline for a main-programme set", () => {
+    const { container } = renderWith(performance());
+    expect(screen.queryByText("FREE")).not.toBeInTheDocument();
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block.className).not.toContain("border-dashed");
+    expect(block.hasAttribute("title")).toBe(false);
+  });
+
+  it("lets a tier ring win over the dashed outline once the set is marked", () => {
+    const { container } = renderWith(performance({ series: "The Official Unofficial" }), {
+      tierOf: () => "must" as MarkTier,
+    });
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block.className).toContain("ring-accent");
+    expect(block.className).not.toContain("border-dashed");
+    // Still identifiable as free while marked.
+    expect(screen.getByText("FREE")).toBeInTheDocument();
   });
 });

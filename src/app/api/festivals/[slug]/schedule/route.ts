@@ -85,6 +85,8 @@ export async function GET(_request: Request, { params }: Params) {
     recommended: p.recommended,
     stageId: p.stageId,
     artistId: p.artistId,
+    series: p.series,
+    host: p.host,
   }));
 
   const body: ScheduleResponse = {

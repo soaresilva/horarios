@@ -44,6 +44,11 @@ export function parseSchedule(dto: ScheduleResponse): Schedule {
     artistsById: new Map(artists.map((a) => [a.id, a])),
     performances: dto.performances.map((p) => ({
       ...p,
+      // Same one-release shim as above: a response cached before the side
+      // programme existed has no series/host, and `undefined` would read as
+      // "unknown" rather than "main programme" to a strict === null check.
+      series: p.series ?? null,
+      host: p.host ?? null,
       startTime: new Date(p.startTime),
       endTime: new Date(p.endTime),
     })),

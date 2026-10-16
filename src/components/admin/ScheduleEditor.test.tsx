@@ -32,7 +32,7 @@ const performances: (Performance & { updatedAt: Date })[] = [
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
     recommended: true,
-    stageId: "vodafone", artistId: null,
+    stageId: "vodafone", artistId: null, series: null, host: null,
     updatedAt: performanceUpdatedAt,
   },
 ];
@@ -100,5 +100,23 @@ describe("ScheduleEditor", () => {
   it("does not render an updatedAt snapshot field for a blank add-row (nothing stored to conflict with)", () => {
     const { container } = render(<ScheduleEditor festivalSlug="pdc26" ft={ft} stages={stages} performances={performances} />);
     expect(container.querySelector('input[name="perf.new-blank.updatedAt"]')).toBeNull();
+  });
+});
+
+describe("ScheduleEditor side-programme rows", () => {
+  it("tags a side-programme row as TOUO and leaves main-programme rows untagged", () => {
+    const touo = {
+      ...performances[0],
+      id: "touo26-p-x",
+      artistName: "Rockpool Dramas",
+      series: "The Official Unofficial",
+      host: "Cowbell Practice",
+    };
+    render(<ScheduleEditor festivalSlug="pdc26" ft={ft} stages={stages} performances={[...performances, touo]} />);
+    const tags = screen.getAllByText("TOUO");
+    expect(tags).toHaveLength(1);
+    expect(tags[0]).toHaveAttribute("title", "The Official Unofficial");
+    // The tag sits beside the row's own Delete button, not inside the name cell.
+    expect(tags[0].parentElement).toContainElement(screen.getByRole("button", { name: "Delete Rockpool Dramas" }));
   });
 });

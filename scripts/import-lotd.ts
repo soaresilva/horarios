@@ -141,7 +141,17 @@ interface PlannedPerformance {
   endTime: Date;
 }
 
-function planPerformances(acts: ParsedAct[]): PlannedPerformance[] {
+/**
+ * A set from another source (the TOUO side programme) that shares a room
+ * with LOTD. It only bounds LOTD's estimated end times — it's never planned,
+ * written or pruned from here.
+ */
+export interface ClipBoundary {
+  stageSlug: string;
+  startTime: Date;
+}
+
+function planPerformances(acts: ParsedAct[], boundaries: ClipBoundary[] = []): PlannedPerformance[] {
   const flattened = acts.flatMap((act) =>
     act.shows.map((show) => {
       const date = dateForDay(show.day);
@@ -160,11 +170,18 @@ function planPerformances(acts: ParsedAct[]): PlannedPerformance[] {
     }),
   );
 
-  const { sets, warnings } = withDerivedEndTimes(flattened);
+  // Side-programme sets in the same room clip LOTD's estimated ends exactly
+  // like the next LOTD set would (Sticker Night at Rotown 00:00 after a
+  // 23:30 set), and scripts/import-touo.ts applies the same rule from its
+  // side, so re-running either importer leaves the same end times.
+  const { sets, warnings } = withDerivedEndTimes<(typeof flattened)[number] | (ClipBoundary & { boundary: true })>([
+    ...flattened,
+    ...boundaries.map((b) => ({ ...b, boundary: true as const })),
+  ]);
   for (const warning of warnings) {
     console.warn(`  ! ${warning.stageSlug} ${warning.startTime.toISOString()}: ${warning.message}`);
   }
-  return sets;
+  return sets.filter((s): s is PlannedPerformance => !("boundary" in s));
 }
 
 async function runApply({ prune, dryRun }: { prune: boolean; dryRun: boolean }) {
@@ -173,8 +190,16 @@ async function runApply({ prune, dryRun }: { prune: boolean; dryRun: boolean }) 
 
   const stages = await prisma.stage.findMany({ where: { festivalId: FESTIVAL_ID } });
   const stageIdBySlug = new Map(stages.map((s) => [s.slug, s.id]));
+  const stageSlugById = new Map(stages.map((s) => [s.id, s.slug]));
 
-  const planned = planPerformances(snapshot.acts);
+  const sideProgramme = await prisma.performance.findMany({
+    where: { stage: { festivalId: FESTIVAL_ID }, id: { startsWith: "touo26-p-" } },
+    select: { stageId: true, startTime: true },
+  });
+  const planned = planPerformances(
+    snapshot.acts,
+    sideProgramme.map((p) => ({ stageSlug: stageSlugById.get(p.stageId)!, startTime: p.startTime })),
+  );
   const existingArtists = await prisma.artist.findMany({ where: { festivalId: FESTIVAL_ID } });
   const artistBySlug = new Map(existingArtists.map((a) => [a.slug, a]));
 

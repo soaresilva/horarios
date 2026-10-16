@@ -33,6 +33,17 @@ vi.mock("@/components/SideStageSection", () => ({ SideStageSection: () => null }
 vi.mock("@/components/SocialLinks", () => ({ SocialLinks: () => null }));
 vi.mock("@/components/StageGrid", () => ({ StageGrid: () => null }));
 vi.mock("@/components/SyncFavoritesButton", () => ({ SyncFavoritesButton: () => null }));
+// Lists what it was handed, so the side-programme switch's filtering is
+// observable without rendering the real two-axis grid.
+vi.mock("@/components/TransposedGrid", () => ({
+  TransposedGrid: ({ performances }: { performances: { id: string; artistName: string }[] }) => (
+    <ul aria-label="transposed grid">
+      {performances.map((p) => (
+        <li key={p.id}>{p.artistName}</li>
+      ))}
+    </ul>
+  ),
+}));
 // Real enough to drive from a test: a single button that flips grid<->list,
 // rather than the actual two-pill control — TimetableApp's own branching on
 // `view` is what's under test here, not ViewToggle's own rendering (that has
@@ -61,7 +72,7 @@ const schedule: Schedule = {
       endTime: new Date("2026-08-13T19:45:00Z"),
       notes: null,
       recommended: false,
-      stageId: "vodafone", artistId: null,
+      stageId: "vodafone", artistId: null, series: null, host: null,
     },
   ],
 };
@@ -124,7 +135,7 @@ const pairedSchedule: Schedule = {
       endTime: new Date("2026-08-10T23:00:00Z"),
       notes: null,
       recommended: false,
-      stageId: "sobe-a-vila", artistId: null,
+      stageId: "sobe-a-vila", artistId: null, series: null, host: null,
     },
     {
       id: "p2",
@@ -134,7 +145,7 @@ const pairedSchedule: Schedule = {
       endTime: new Date("2026-08-11T03:00:00Z"),
       notes: null,
       recommended: false,
-      stageId: "xapas-lounge", artistId: null,
+      stageId: "xapas-lounge", artistId: null, series: null, host: null,
     },
   ],
 };
@@ -177,5 +188,65 @@ describe("TimetableApp main-stage header", () => {
       expect(el.className).not.toMatch(/backdrop-blur/);
       expect(el.className).not.toMatch(/will-change/);
     }
+  });
+});
+
+describe("TimetableApp side programme switch", () => {
+  const lotdFt = { timezone: "Europe/Amsterdam", locale: "en-GB" };
+  const base = {
+    date: "2026-10-23",
+    notes: null,
+    recommended: false,
+    stageId: "rotown",
+    artistId: null,
+    host: null,
+  };
+  const lotdSchedule: Schedule = {
+    ...schedule,
+    stages: [{ id: "rotown", name: "Rotown", slug: "rotown", order: 0, zoneId: null, address: null }],
+    performances: [
+      {
+        ...base,
+        id: "touo",
+        artistName: "Painkiller (daytime)",
+        startTime: new Date("2026-10-23T10:00:00Z"),
+        endTime: new Date("2026-10-23T10:45:00Z"),
+        series: "The Official Unofficial",
+        host: "Canned Pineapple",
+      },
+      {
+        ...base,
+        id: "main",
+        artistName: "August",
+        startTime: new Date("2026-10-23T14:00:00Z"),
+        endTime: new Date("2026-10-23T14:40:00Z"),
+        series: null,
+      },
+    ],
+  };
+
+  it("shows side-programme sets by default and hides them when switched off", async () => {
+    window.localStorage.clear();
+    mockUseSchedule.mockReturnValue({ schedule: lotdSchedule, loading: false, error: null, reload: () => {} });
+    render(<TimetableApp festivalSlug="lotd26" ft={lotdFt} layout="TRANSPOSED" />);
+
+    const grid = screen.getByRole("list", { name: "transposed grid" });
+    expect(grid).toHaveTextContent("Painkiller (daytime)");
+    expect(grid).toHaveTextContent("August");
+
+    const toggle = screen.getByRole("switch", { name: /daytime shows/ });
+    expect(toggle).toHaveAttribute("aria-checked", "true");
+    await userEvent.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    expect(grid).not.toHaveTextContent("Painkiller (daytime)");
+    expect(grid).toHaveTextContent("August");
+    window.localStorage.clear();
+  });
+
+  it("doesn't offer the switch for a festival without a side programme", () => {
+    mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: () => {} });
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
+    expect(screen.queryByRole("switch", { name: /daytime shows/ })).toBeNull();
   });
 });

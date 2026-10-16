@@ -56,6 +56,10 @@ export interface PerformanceDTO {
   stageId: string;
   /** Link to imported reference data; null for festivals with no Artist rows. */
   artistId: string | null;
+  /** Side programme this set belongs to ("The Official Unofficial"); null for the main programme. */
+  series: string | null;
+  /** Who curates the room for the side programme; null for main-programme sets. */
+  host: string | null;
 }
 
 export interface ScheduleResponse {

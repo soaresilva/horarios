@@ -8,7 +8,7 @@
 // Renamed from "pdc26-*" now that this app hosts more than one festival.
 // v5 also evicts schedule responses cached in the pre-zones/artists shape,
 // which an offline visitor would otherwise be served with missing arrays.
-const CACHE_VERSION = "horarios-v6";
+const CACHE_VERSION = "horarios-v7";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];

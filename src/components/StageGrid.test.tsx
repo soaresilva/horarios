@@ -24,7 +24,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
     recommended: false,
-    stageId: "vodafone", artistId: null,
+    stageId: "vodafone", artistId: null, series: null, host: null,
   },
   {
     id: "p2",
@@ -34,7 +34,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T21:40:00"),
     notes: null,
     recommended: true,
-    stageId: "palco2", artistId: null,
+    stageId: "palco2", artistId: null, series: null, host: null,
   },
 ];
 

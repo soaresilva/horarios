@@ -48,6 +48,11 @@ export function TransposedPerformanceBlock({
   const note = marks.noteOf(performance.id);
   const showInlineNote = marks.showNotes && note !== "";
   const longPress = useLongPress(() => marks.openSheet(performance.id));
+  // Side-programme sets (TOUO) share venue rows with the main programme,
+  // so they're told apart by a dashed outline and a FREE chip rather than
+  // by row. The tier ring still wins once a set is marked: that's the
+  // state a visitor is scanning for.
+  const isSide = performance.series !== null;
 
   return (
     <div
@@ -60,8 +65,11 @@ export function TransposedPerformanceBlock({
             ? "bg-accent/20 ring-1 ring-accent"
             : tier === "interested"
               ? "bg-interested/15 ring-1 ring-interested/70"
-              : "bg-zinc-800/70"
+              : isSide
+                ? "border border-dashed border-zinc-500 bg-zinc-900/80"
+                : "bg-zinc-800/70"
       }`}
+      title={isSide ? [performance.series, performance.host && `hosted by ${performance.host}`, "free entry"].filter(Boolean).join(" · ") : undefined}
     >
       {/* Star-only rail, not the full Spotify/Instagram one PerformanceBlock
           uses: every block here caps at 40 minutes (200px at this scale), and
@@ -108,6 +116,11 @@ export function TransposedPerformanceBlock({
           )}
         </span>
         <span className="truncate text-[10px] leading-tight text-zinc-400">
+          {isSide && (
+            <span className="mr-1 rounded-sm border border-dashed border-zinc-500 px-0.5 text-[8px] font-semibold text-zinc-300">
+              FREE
+            </span>
+          )}
           {formatClock(performance.startTime, ft)}
           {showOrdinal && (
             <span className="text-zinc-500">

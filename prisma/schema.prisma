@@ -184,6 +184,15 @@ model Performance {
   /// what's displayed and what the admin form edits.
   artistId    String?
   artist      Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  /// Which programme a set belongs to when it isn't the festival's own: null
+  /// for the main programme, "The Official Unofficial" for LOTD's free
+  /// daytime side programme (scripts/import-touo.ts). Side-programme sets
+  /// share Stage rows with the main programme when it's the same room, so
+  /// this is what tells them apart on the grid.
+  series      String?
+  /// Who curates the set's room for the side programme ("Hosted by …" on
+  /// the TOUO timetable). Null for main-programme sets.
+  host        String?
   favorites   Favorite[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

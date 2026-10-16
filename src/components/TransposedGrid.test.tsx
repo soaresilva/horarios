@@ -24,7 +24,7 @@ const performances: Performance[] = [
     notes: null,
     recommended: false,
     stageId: "annabel-up",
-    artistId: null,
+    artistId: null, series: null, host: null,
   },
   {
     id: "unnoted",
@@ -35,7 +35,7 @@ const performances: Performance[] = [
     notes: null,
     recommended: false,
     stageId: "v11",
-    artistId: null,
+    artistId: null, series: null, host: null,
   },
 ];
 

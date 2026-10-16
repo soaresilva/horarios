@@ -118,6 +118,48 @@ next set in the same room. To update production, after checking the snapshot dif
 DATABASE_URL="<production connection string>" npm run import:lotd -- --apply
 ```
 
+## Importing The Official Unofficial (LOTD side programme)
+
+The Official Unofficial is LOTD's free daytime side programme (Fri 23 / Sat 24 Oct,
+12:00-16:00, no wristband). It goes into the same `lotd26` grid: the sets share venue
+rows with the main programme where it's the same room. Four rooms are only used by
+the side programme (Plato, Tramhuis, Zondebok & 't Zwarte Schaap, Time Is The New
+Space), and `20261016120000_add_touo_side_programme` adds them to their walking zones.
+Sets carry `Performance.series = "The Official Unofficial"` and `host`. The grid draws
+them with a dashed outline and a FREE chip, and a "daytime shows" switch hides them.
+
+The only source is a one-page PDF, so the data goes through two steps:
+
+```bash
+# 1. PDF -> sets. Reads the PDF's vector layout (block rectangles, tick positions),
+#    not the image. pdfplumber lives in a throwaway venv, not the project.
+python3 -m venv /tmp/touo-venv && /tmp/touo-venv/bin/pip install pdfplumber
+/tmp/touo-venv/bin/python -I scripts/touo/extract-pdf.py A4-TOUO-Timetable.pdf
+#    Merge that output into scripts/data/touo26.json (Sticker Night is a text box on
+#    the PDF, not a grid block, so it's entered by hand), then review the diff.
+
+# 2. Snapshot -> Postgres.
+npm run import:touo -- --check            # validate the snapshot, no DB
+npm run import:touo -- --apply --dry-run  # report what would change
+npm run import:touo -- --apply            # snapshot -> Postgres
+npm run import:touo -- --apply --prune    # also remove sets that left the snapshot
+```
+
+`--check` and the gate tests compare the snapshot against
+`EXPECTED_SETS_PER_ROOM` in `scripts/touo/plan.ts`. Those counts were read off the PDF
+by hand, separately from the extractor. If the PDF changes, update them from the PDF,
+not from the snapshot, or the check checks nothing.
+
+Import rows are `touo26-p-*` and LOTD rows are `lotd26-p-*`, so neither importer's
+`--prune` can delete the other's sets. Acts that are also on the LOTD lineup get linked
+to their `Artist` row, so "Also plays" and the `#n/m` ordinals connect both programmes.
+
+LOTD's end times are estimates, and both importers clip them at the next set in the
+room, whichever programme that set belongs to. The Guest List at Rotown (Fri 23:30)
+ends when Sticker Night starts at 00:00, and re-running either importer keeps it that
+way. A LOTD set that *starts* inside a side-programme set is a real clash and fails the
+import.
+
 ## Deployment (Vercel + Neon)
 
 1. **Database.** In the Vercel dashboard: Storage → Create Database → Postgres (Neon).

@@ -108,14 +108,25 @@ function PerformanceRow({ stages, keyName, ft, performance, defaultDate, onDelet
         />
       </label>
       {performance && onDelete ? (
-        <button
-          type="button"
-          aria-label={`Delete ${performance.artistName}`}
-          onClick={() => onDelete(performance.id, performance.artistName)}
-          className="rounded-md bg-red-900/60 px-2.5 py-1 text-xs text-red-200"
-        >
-          Delete
-        </button>
+        <span className="flex items-center gap-1">
+          {/* Side-programme rows are owned by scripts/import-touo.ts: an edit
+              here sticks only until that set is next re-imported. Kept in
+              this last cell so every input stays a direct grid sibling
+              (e2e/admin.spec.ts walks following-sibling from the name). */}
+          {performance.series && (
+            <span title={performance.series} className="rounded bg-zinc-700 px-1 text-[10px] text-zinc-200">
+              TOUO
+            </span>
+          )}
+          <button
+            type="button"
+            aria-label={`Delete ${performance.artistName}`}
+            onClick={() => onDelete(performance.id, performance.artistName)}
+            className="rounded-md bg-red-900/60 px-2.5 py-1 text-xs text-red-200"
+          >
+            Delete
+          </button>
+        </span>
       ) : (
         <span />
       )}

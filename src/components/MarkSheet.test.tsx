@@ -95,3 +95,29 @@ describe("MarkSheet", () => {
     expect(onClose).toHaveBeenCalled();
   });
 });
+
+describe("MarkSheet side programme", () => {
+  it("names the side programme, its host and free entry for a TOUO set", () => {
+    renderSheet({ series: "The Official Unofficial", host: "Opposite" });
+    expect(screen.getByText(/The Official Unofficial/)).toHaveTextContent(
+      "The Official Unofficial · hosted by Opposite · free entry",
+    );
+  });
+
+  it("says nothing about a side programme for a main-programme set", () => {
+    renderSheet();
+    expect(screen.queryByText(/free entry/)).toBeNull();
+  });
+
+  it("tags another set that is in the side programme", () => {
+    renderSheet({
+      otherShows: [
+        { id: "p2", date: "2026-08-13", startTime: lisbon("2026-08-13T13:15:00"), stageName: "V11", series: "The Official Unofficial" },
+        { id: "p3", date: "2026-08-14", startTime: lisbon("2026-08-14T19:50:00"), stageName: "Vodafone", series: null },
+      ],
+    });
+    expect(screen.getByText(/Also plays/)).toHaveTextContent(
+      "QUI, 13:15 at V11 (free daytime); SEX, 19:50 at Vodafone",
+    );
+  });
+});

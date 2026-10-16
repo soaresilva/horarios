@@ -91,8 +91,8 @@ test.describe("Left of the Dial transposed grid", () => {
   // doesn't occupy, and no pointer event reaches it at all. Without the
   // scroll, the positive test below fails for a reason that has nothing to
   // do with long-press, and the negative one passes vacuously.
-  async function pressCentre(page: Page, hold: number, drag?: number) {
-    const block = page.locator("[data-performance-id]").first();
+  async function pressCentre(page: Page, hold: number, drag?: number, selector = "[data-performance-id]") {
+    const block = page.locator(selector).first();
     await block.scrollIntoViewIfNeeded();
     const box = (await block.boundingBox())!;
     const cx = box.x + box.width / 2;
@@ -159,5 +159,52 @@ test.describe("Left of the Dial transposed grid", () => {
     await expect(page.locator("[data-performance-id]").first()).toBeVisible();
     await expect(page.getByRole("switch", { name: /display notes/i })).toHaveAttribute("aria-checked", "true");
     await expect(page.getByText(noteText)).toBeVisible();
+  });
+
+  // The Official Unofficial: LOTD's free daytime side programme, imported by
+  // scripts/import-touo.ts into the same venue rows (Fri/Sat 12:00-16:00).
+  // Needs `npm run import:touo -- --apply` to have run against the e2e DB.
+  test.describe("The Official Unofficial side programme", () => {
+    const touoBlocks = '[data-performance-id^="touo26-p-"]';
+    const platoRow = (page: Page) =>
+      page.locator('a[href^="https://www.google.com/maps"]').filter({ hasText: /^Plato/ });
+
+    test("shows Friday's free daytime sets, including the rooms only the side programme uses", async ({ page }) => {
+      // 25 band sets plus Sticker Night (Rotown, after midnight).
+      await expect(page.locator(touoBlocks)).toHaveCount(26);
+      await expect(platoRow(page)).toHaveCount(1);
+      await expect(
+        page.locator('[data-performance-id="touo26-p-de-gestalte-friday-plato"]').getByText("FREE"),
+      ).toHaveCount(1);
+    });
+
+    test("the daytime shows switch hides them and their rooms, and survives reload", async ({ page }) => {
+      const toggle = page.getByRole("switch", { name: /daytime shows/i });
+      await expect(toggle).toHaveAttribute("aria-checked", "true");
+      await toggle.click();
+
+      await expect(page.locator(touoBlocks)).toHaveCount(0);
+      await expect(platoRow(page)).toHaveCount(0);
+      // The main programme is untouched.
+      await expect(page.locator("[data-performance-id]").first()).toBeVisible();
+
+      await page.reload();
+      await expect(page.getByRole("tab").first()).toBeVisible();
+      await page.getByRole("tab", { name: /23/ }).click();
+      await expect(page.locator("[data-performance-id]").first()).toBeVisible();
+      await expect(page.getByRole("switch", { name: /daytime shows/i })).toHaveAttribute("aria-checked", "false");
+      await expect(page.locator(touoBlocks)).toHaveCount(0);
+    });
+
+    test("a daytime set's mark sheet names its host and links the band's evening sets", async ({ page }) => {
+      await page.getByRole("tab", { name: /24/ }).click();
+      await pressCentre(page, 600, undefined, '[data-performance-id="touo26-p-holly-head-saturday-v11"]');
+
+      const dialog = page.getByRole("dialog");
+      await expect(dialog).toBeVisible();
+      await expect(dialog).toContainText("The Official Unofficial · hosted by Opposite · free entry");
+      await expect(dialog.getByText(/Also plays/)).toContainText("Mono");
+      await expect(dialog.getByText(/Also plays/)).toContainText("De Doelen WBH");
+    });
   });
 });
