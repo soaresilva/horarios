@@ -73,7 +73,7 @@ test("adding a recommended performance in the one-form admin shows it (with mark
   await publicPage.getByRole("tab", { name: /12/ }).click();
   await expect(publicPage.getByText(uniqueName)).toBeVisible();
   // Recommended, so the thumbs-up marker (an aria-hidden svg) is on the act.
-  await expect(publicPage.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(1);
+  await expect(publicPage.getByText(uniqueName, { exact: true }).locator("svg")).toHaveCount(1);
   await publicPage.close();
 
   // Delete prompts a confirm dialog; accept it, then the row is gone.
@@ -140,17 +140,17 @@ test("the public recommendations toggle hides the marker and persists across a r
   const pub = await context.newPage();
   await pub.goto("/pdc26");
   await pub.getByRole("tab", { name: /12/ }).click();
-  await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(1);
+  await expect(pub.getByText(uniqueName, { exact: true }).locator("svg")).toHaveCount(1);
 
   // Switch recommendations off: the marker disappears.
   await pub.getByRole("switch", { name: /recommend/i }).click();
-  await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(0);
+  await expect(pub.getByText(uniqueName, { exact: true }).locator("svg")).toHaveCount(0);
 
   // The preference survives a reload (localStorage-backed).
   await pub.reload();
   await pub.getByRole("tab", { name: /12/ }).click();
   await expect(pub.getByRole("switch", { name: /recommend/i })).toHaveAttribute("aria-checked", "false");
-  await expect(pub.getByRole("button", { name: new RegExp(uniqueName) }).locator("svg")).toHaveCount(0);
+  await expect(pub.getByText(uniqueName, { exact: true }).locator("svg")).toHaveCount(0);
   await pub.close();
 
   // Clean up the act.

@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { StageGrid } from "./StageGrid";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
-import type { Performance, Stage } from "@/lib/schedule-client";
+import type { Artist, Performance, Stage } from "@/lib/schedule-client";
 import type { MarkControls, MarkTier } from "@/hooks/useMarks";
 
 const stages: Stage[] = [
@@ -84,9 +84,10 @@ describe("StageGrid", () => {
     render(<StageGrid stages={stages} performances={performances} ft={ft} marks={fakeMarks()} />);
 
     // Perfume Genius is recommended (fixture), Cass McCombs is not. The marker
-    // is an aria-hidden SVG, so assert on the DOM within each act's button.
-    const recommended = screen.getByRole("button", { name: /Perfume Genius/ });
-    const notRecommended = screen.getByRole("button", { name: /Cass McCombs/ });
+    // is an aria-hidden SVG right after the name, so assert within each
+    // act's name line (the block's rail has Spotify/Instagram SVGs too).
+    const recommended = screen.getByText("Perfume Genius");
+    const notRecommended = screen.getByText("Cass McCombs");
     expect(recommended.querySelector("svg")).toBeInTheDocument();
     expect(notRecommended.querySelector("svg")).not.toBeInTheDocument();
   });
@@ -96,5 +97,71 @@ describe("StageGrid", () => {
 
     expect(screen.getByRole("button", { name: /Cass McCombs/ })).toHaveAttribute("aria-label", "Mark Cass McCombs: must-see, tap to change");
     expect(screen.getByRole("button", { name: /Perfume Genius/ })).toHaveAttribute("aria-label", "Mark Perfume Genius: unmarked, tap to change");
+  });
+
+  describe("three columns (London Calling)", () => {
+    const amsterdam = (iso: string) => new Date(`${iso}+01:00`);
+    const lcStages: Stage[] = [
+      { id: "small", name: "Small Hall Paradiso", slug: "small-hall", order: 0, zoneId: null, address: null },
+      { id: "main", name: "Main Hall Paradiso", slug: "main-hall", order: 1, zoneId: null, address: null },
+      { id: "kring", name: "De Kring", slug: "de-kring", order: 2, zoneId: null, address: null },
+    ];
+    const set = (id: string, artistName: string, stageId: string, start: string, end: string, artistId: string | null = null): Performance => ({
+      id,
+      artistName,
+      date: "2026-10-30",
+      startTime: amsterdam(`2026-10-30T${start}:00`),
+      endTime: amsterdam(`2026-10-30T${end}:00`),
+      notes: null,
+      recommended: false,
+      stageId,
+      artistId,
+      series: null,
+      host: null,
+    });
+    const lcPerformances = [
+      set("s1", "Greg Mendez", "small", "19:45", "20:15"),
+      set("m1", "Cola", "main", "20:15", "20:50", "lc26oct-a-cola"),
+      set("k1", "KatzPascale", "kring", "20:00", "20:30"),
+    ];
+    const artistsById = new Map<string, Artist>([
+      [
+        "lc26oct-a-cola",
+        {
+          id: "lc26oct-a-cola",
+          name: "Cola",
+          country: null,
+          genres: null,
+          spotifyUrl: "https://open.spotify.com/artist/1KCSUZBJy1bAsIz7wUYkd8",
+          instagramUrl: null,
+          sourceUrl: "https://www.londoncalling.nl/artists/cola/",
+        },
+      ],
+    ]);
+
+    it("draws a divider after every column but the last", () => {
+      const { container } = render(
+        <StageGrid stages={lcStages} performances={lcPerformances} ft={ft} marks={fakeMarks()} artistsById={artistsById} />,
+      );
+      const columns = ["s1", "m1", "k1"].map((id) => container.querySelector(`[data-performance-id="${id}"]`)!.parentElement!);
+      expect(columns[0]).toHaveClass("border-r");
+      expect(columns[1]).toHaveClass("border-r");
+      expect(columns[2]).not.toHaveClass("border-r");
+    });
+
+    it("switches blocks to the compact, hyphenating name style only at three columns", () => {
+      const { rerender } = render(
+        <StageGrid stages={lcStages} performances={lcPerformances} ft={ft} marks={fakeMarks()} artistsById={artistsById} />,
+      );
+      expect(screen.getByText("KatzPascale")).toHaveClass("hyphens-auto");
+      rerender(<StageGrid stages={stages} performances={performances} ft={ft} marks={fakeMarks()} />);
+      expect(screen.getByText("Cass McCombs")).not.toHaveClass("hyphens-auto");
+    });
+
+    it("resolves each block's imported artist, so its name links to the festival page", () => {
+      render(<StageGrid stages={lcStages} performances={lcPerformances} ft={ft} marks={fakeMarks()} artistsById={artistsById} />);
+      expect(screen.getByRole("link", { name: "Cola" })).toHaveAttribute("href", "https://www.londoncalling.nl/artists/cola/");
+      expect(screen.queryByRole("link", { name: "Greg Mendez" })).not.toBeInTheDocument();
+    });
   });
 });

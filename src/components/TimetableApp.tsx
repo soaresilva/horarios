@@ -142,11 +142,12 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const gridPerformances = showSideProgramme
     ? dayPerformances
     : dayPerformances.filter((p) => p.series === null);
-  const main = mainStages(schedule.stages, gridPerformances);
-  const other = otherStages(schedule.stages, gridPerformances);
+  const copy = festivalCopy(festivalSlug);
+  const gridColumns = copy?.gridColumns ?? 2;
+  const main = mainStages(schedule.stages, gridPerformances, gridColumns);
+  const other = otherStages(schedule.stages, gridPerformances, gridColumns);
   const mainPerformances = gridPerformances.filter((p) => main.some((s) => s.id === p.stageId));
   const isTransposed = layout === "TRANSPOSED";
-  const copy = festivalCopy(festivalSlug);
 
   return (
     <div className="flex h-dvh flex-col bg-background text-zinc-100">
@@ -293,14 +294,23 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
             <div className="w-11 shrink-0" />
             <div className="flex flex-1">
               {main.map((stage, i) => (
-                <div key={stage.id} className={`flex-1 pb-1 ${i === 0 ? "pr-2" : "pl-2"}`}>
+                <div
+                  key={stage.id}
+                  className={`min-w-0 flex-1 pb-1 ${i > 0 ? "pl-2" : ""} ${i < main.length - 1 ? "pr-2" : ""}`}
+                >
                   {stage.name}
                 </div>
               ))}
             </div>
           </div>
           <div className="px-3">
-            <StageGrid stages={main} performances={mainPerformances} marks={marks} ft={ft} />
+            <StageGrid
+              stages={main}
+              performances={mainPerformances}
+              marks={marks}
+              ft={ft}
+              artistsById={schedule.artistsById}
+            />
           </div>
         </div>
       </div>

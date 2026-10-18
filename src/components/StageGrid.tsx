@@ -4,7 +4,7 @@ import { CurrentTimeLine } from "@/components/CurrentTimeLine";
 import { PerformanceBlock } from "@/components/PerformanceBlock";
 import { TimeAxis } from "@/components/TimeAxis";
 import type { MarkControls } from "@/hooks/useMarks";
-import type { Performance, Stage } from "@/lib/schedule-client";
+import type { Artist, Performance, Stage } from "@/lib/schedule-client";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { blockLayout, computeDayWindow, windowExtent, type FestivalTime } from "@/lib/time";
 
@@ -13,9 +13,11 @@ interface StageGridProps {
   performances: Performance[];
   marks: MarkControls;
   ft: FestivalTime;
+  /** Imported artists by id; PdC has none and falls back to hand-written links. */
+  artistsById?: Map<string, Artist>;
 }
 
-export function StageGrid({ stages, performances, marks, ft }: StageGridProps) {
+export function StageGrid({ stages, performances, marks, ft, artistsById }: StageGridProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const window = computeDayWindow(performances);
 
@@ -37,7 +39,7 @@ export function StageGrid({ stages, performances, marks, ft }: StageGridProps) {
           return (
             <div
               key={stage.id}
-              className={`relative flex-1 ${stageIndex === 0 ? "border-r border-zinc-800" : ""}`}
+              className={`relative min-w-0 flex-1 ${stageIndex < stages.length - 1 ? "border-r border-zinc-800" : ""}`}
               style={{ height }}
             >
               {stagePerformances.map((performance, i) => (
@@ -49,6 +51,8 @@ export function StageGrid({ stages, performances, marks, ft }: StageGridProps) {
                   marks={marks}
                   showRecommendation={showRecommendations}
                   ft={ft}
+                  artist={performance.artistId ? artistsById?.get(performance.artistId) : undefined}
+                  compact={stages.length >= 3}
                 />
               ))}
             </div>

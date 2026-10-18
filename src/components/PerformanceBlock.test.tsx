@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { PerformanceBlock } from "./PerformanceBlock";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
-import type { Performance } from "@/lib/schedule-client";
+import type { Artist, Performance } from "@/lib/schedule-client";
 import type { MarkControls, MarkTier } from "@/hooks/useMarks";
 
 function lisbon(iso: string) {
@@ -190,6 +190,72 @@ describe("PerformanceBlock", () => {
 
       expect(screen.getByTitle("front left, get there early")).toBeInTheDocument();
       expect(screen.queryByText("front left, get there early")).not.toBeInTheDocument();
+    });
+  });
+
+  describe("with an imported artist (London Calling)", () => {
+    const artist: Artist = {
+      id: "lc26oct-a-lip-critic",
+      name: "Lip Critic",
+      country: null,
+      genres: null,
+      spotifyUrl: "https://open.spotify.com/artist/4ABuKdLlVyzLztIFR8ETX9",
+      instagramUrl: null,
+      sourceUrl: "https://www.londoncalling.nl/artists/lip-critic/",
+    };
+
+    it("links the name to the act's festival page and takes Spotify from the artist row", () => {
+      render(
+        <PerformanceBlock
+          performance={performance({ artistName: "Lip Critic", artistId: artist.id })}
+          artist={artist}
+          layout={layout}
+          alternate={false}
+          marks={fakeMarks()}
+          ft={ft}
+          showRecommendation={false}
+        />,
+      );
+      const name = screen.getByRole("link", { name: "Lip Critic" });
+      expect(name).toHaveAttribute("href", "https://www.londoncalling.nl/artists/lip-critic/");
+      expect(name).toHaveAttribute("target", "_blank");
+      expect(screen.getByRole("link", { name: "Lip Critic on Spotify" })).toHaveAttribute("href", artist.spotifyUrl);
+      expect(screen.queryByRole("link", { name: "Lip Critic on Instagram" })).not.toBeInTheDocument();
+    });
+
+    it("never mixes in the hand-written PdC links, even for a name that has some", () => {
+      render(
+        <PerformanceBlock
+          performance={performance({ artistName: "Wet Leg" })}
+          artist={{ ...artist, name: "Wet Leg", spotifyUrl: null, sourceUrl: null }}
+          layout={layout}
+          alternate={false}
+          marks={fakeMarks()}
+          ft={ft}
+          showRecommendation={false}
+        />,
+      );
+      expect(screen.queryByRole("link", { name: "Wet Leg on Spotify" })).not.toBeInTheDocument();
+      expect(screen.queryByRole("link", { name: "Wet Leg on Instagram" })).not.toBeInTheDocument();
+    });
+
+    it("a tap on the name link doesn't cycle the mark; a tap on the block still does", async () => {
+      const cycle = vi.fn();
+      render(
+        <PerformanceBlock
+          performance={performance({ artistName: "Lip Critic", artistId: artist.id })}
+          artist={artist}
+          layout={layout}
+          alternate={false}
+          marks={fakeMarks({ cycle })}
+          ft={ft}
+          showRecommendation={false}
+        />,
+      );
+      await userEvent.click(screen.getByRole("link", { name: "Lip Critic" }));
+      expect(cycle).not.toHaveBeenCalled();
+      await userEvent.click(screen.getByRole("button", { name: /Lip Critic/ }));
+      expect(cycle).toHaveBeenCalledWith("p1");
     });
   });
 });

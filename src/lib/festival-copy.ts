@@ -20,6 +20,13 @@ export interface FestivalCopy {
    * with nothing to toggle.
    */
   legend?: boolean;
+  /**
+   * How many stages the vertical layout draws side by side. Defaults to 2
+   * (Paredes de Coura: Vodafone + Coura, side stages stacked above). Any
+   * further active stage stacks as a collapsible section. Ignored by the
+   * transposed layout, which already shows every room.
+   */
+  gridColumns?: number;
 }
 
 export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
@@ -44,6 +51,20 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     // No recommends curation planned for this edition, and the disclaimer
     // above already covers starring — the legend row would be redundant on
     // an already-dense grid.
+    legend: false,
+  },
+  lc26oct: {
+    // Three rooms a night, and the third (De Kring / Barlaeus) overlaps the
+    // Paradiso halls, so all three sit side by side rather than stacking
+    // the third above the grid the way PdC's side stages do.
+    gridColumns: 3,
+    disclaimer:
+      "Times from the official poster. We Love 00's and Indiesleaze are club nights with no announced end: they're drawn as long as the poster draws them and run later. Indiesleaze is DJ sets by Cutouts, Lazarus Kane and Charlie Avalon. Tap a show once for \"must-see\", twice for \"interested\"; long-press to add a note. Tap an artist name for their London Calling page.",
+    links: [
+      { label: "londoncalling.nl", href: "https://www.londoncalling.nl/timetable/" },
+      { label: "Playlist", href: "https://open.spotify.com/playlist/7jpA1XEIYaNTBT9ET7Fytf" },
+    ],
+    // No recommends curation for this edition.
     legend: false,
   },
 };

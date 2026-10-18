@@ -24,13 +24,13 @@ export default defineConfig({
   // ed2f728) was Safari-only. Chromium alone cannot catch that class of bug.
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    // Scoped to the transposed grid, on a phone. The admin panel is a desktop
+    // Scoped to the transposed grid and the three-column grid, on a phone. The admin panel is a desktop
     // tool whose specs assume a wide viewport, and Playwright's offline
     // emulation isn't supported on WebKit (reload throws an internal error),
     // so running those here would only produce noise.
     {
       name: "webkit",
-      testMatch: /lotd\.spec\.ts/,
+      testMatch: /(lotd|lc)\.spec\.ts/,
       use: { ...devices["iPhone 14"] },
     },
   ],

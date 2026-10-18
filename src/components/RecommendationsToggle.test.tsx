@@ -41,7 +41,8 @@ const performances: Performance[] = [
 ];
 
 function marker() {
-  return screen.getByRole("button", { name: /Perfume Genius/ }).querySelector("svg");
+  // The marker sits on the name line, beside (not inside) the mark button.
+  return screen.getByText("Perfume Genius").querySelector("svg");
 }
 
 describe("RecommendationsToggle", () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import type { Performance } from "@/lib/schedule-client";
+import type { Artist, Performance } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
 import type { BlockLayout, FestivalTime } from "@/lib/time";
 import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
@@ -17,10 +17,27 @@ interface PerformanceBlockProps {
   marks: MarkControls;
   showRecommendation: boolean;
   ft: FestivalTime;
+  /**
+   * Imported reference data (London Calling's artist pages). When present it
+   * owns the links: the name opens the act's festival page and the rail
+   * shows its Spotify/Instagram. Without one, the block falls back to the
+   * hand-written PdC map in src/lib/artist-links.ts.
+   */
+  artist?: Artist;
+  /**
+   * Narrow column (three or more side by side, ~100px on a phone): 12px,
+   * which fits London Calling's longest single words ("KatzPascale",
+   * "Victoryland") beside the icon rail. Hyphenation/word-breaking is only a
+   * last resort for anything longer; Chromium on macOS doesn't hyphenate,
+   * so it can't be relied on. Off for PdC's two columns, unchanged.
+   */
+  compact?: boolean;
 }
 
-export function PerformanceBlock({ performance, layout, alternate, marks, showRecommendation, ft }: PerformanceBlockProps) {
-  const links = getArtistLinks(performance.artistName);
+export function PerformanceBlock({ performance, layout, alternate, marks, showRecommendation, ft, artist, compact = false }: PerformanceBlockProps) {
+  const links = artist
+    ? { spotify: artist.spotifyUrl ?? undefined, instagram: artist.instagramUrl ?? undefined }
+    : getArtistLinks(performance.artistName);
   const tier = marks.tierOf(performance.id);
   const note = marks.noteOf(performance.id);
 
@@ -59,7 +76,12 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
           text-selection callout mid-hold — the app already locks zoom
           (layout.tsx, maximumScale: 1), so there's no pinch interaction to
           protect here either. aria-label (not aria-pressed) describes the
-          current state: a tri-state cycle isn't a toggle button. */}
+          current state: a tri-state cycle isn't a toggle button.
+
+          The button is empty and the text sits in a pointer-events-none
+          layer above it (same as TransposedPerformanceBlock), so the artist
+          name can be a real link without nesting an <a> in a <button>:
+          taps anywhere but the link fall through to the button. */}
       <button
         type="button"
         onClick={() => {
@@ -73,10 +95,27 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
         onPointerLeave={longPress.onPointerLeave}
         onContextMenu={longPress.onContextMenu}
         aria-label={markAriaLabel(performance.artistName, tier)}
-        className="absolute inset-0 flex h-full w-full select-none flex-col justify-center rounded-md py-1 pl-2 pr-7 text-left [-webkit-touch-callout:none]"
-      >
-        <span className="text-sm leading-tight font-medium text-zinc-100 sm:text-base">
-          {performance.artistName}
+        className="absolute inset-0 h-full w-full select-none rounded-md [-webkit-touch-callout:none]"
+      />
+
+      <div className="pointer-events-none relative flex h-full select-none flex-col justify-center py-1 pl-2 pr-7 text-left">
+        <span
+          className={`leading-tight font-medium text-zinc-100 sm:text-base ${
+            compact ? "text-xs hyphens-auto break-words" : "text-sm"
+          }`}
+        >
+          {artist?.sourceUrl ? (
+            <a
+              href={artist.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pointer-events-auto underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
+            >
+              {performance.artistName}
+            </a>
+          ) : (
+            performance.artistName
+          )}
           {performance.recommended && showRecommendation && (
             <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
           )}
@@ -85,7 +124,7 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
           {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
         </span>
         {showInlineNote && <InlineNote note={note} lines={noteLines === 2 ? 2 : 1} />}
-      </button>
+      </div>
 
       {/* Icon rail, layered above the button so link taps hit the link, not
           the toggle. The rail is tall (top-1/bottom-1), so the note

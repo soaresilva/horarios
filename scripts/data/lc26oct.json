@@ -1,0 +1,616 @@
+{
+  "source": "https://www.londoncalling.nl/timetable/",
+  "posters": {
+    "FRIDAY": "https://www.londoncalling.nl/wp-content/uploads/2026/10/London-Calling-timetable-APR2026-T3_page-0001-scaled.jpg",
+    "SATURDAY": "https://www.londoncalling.nl/wp-content/uploads/2026/10/London-Calling-timetable-APR2026-T3_page-0002-scaled.jpg"
+  },
+  "transcribedAt": "2026-10-18",
+  "notes": "Band times transcribed from the posters' printed HH.MM labels. Club nights (kind=club, measured=true) have no printed times: their start/end come from scripts/lc/measure-poster.py, which reads each box's pixel extent against an axis fitted to the printed band times.",
+  "sets": [
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "Sunday Mourners",
+      "start": "18:35",
+      "end": "19:05",
+      "kind": "band",
+      "artistSlug": "sunday-mourners"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "Greg Mendez",
+      "start": "19:45",
+      "end": "20:15",
+      "kind": "band",
+      "artistSlug": "greg-mendez"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "Hether",
+      "start": "20:50",
+      "end": "21:20",
+      "kind": "band",
+      "artistSlug": "hether"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "Robber Robber",
+      "start": "22:00",
+      "end": "22:30",
+      "kind": "band",
+      "artistSlug": "robber-robber"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "Swapmeet",
+      "start": "23:10",
+      "end": "23:45",
+      "kind": "band",
+      "artistSlug": "swapmeet"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "La Sécurité",
+      "start": "00:20",
+      "end": "00:50",
+      "kind": "band",
+      "artistSlug": "la-securite"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "small-hall",
+      "name": "Really Good Time",
+      "start": "01:05",
+      "end": "01:35",
+      "kind": "band",
+      "artistSlug": "really-good-time"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "Zzzahara",
+      "start": "18:00",
+      "end": "18:35",
+      "kind": "band",
+      "artistSlug": "zzzahara"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "Ulrika Spacek",
+      "start": "19:05",
+      "end": "19:45",
+      "kind": "band",
+      "artistSlug": "ulrika-spacek"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "Cola",
+      "start": "20:15",
+      "end": "20:50",
+      "kind": "band",
+      "artistSlug": "cola"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "Cardinals",
+      "start": "21:20",
+      "end": "22:00",
+      "kind": "band",
+      "artistSlug": "cardinals-2"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "Victoryland",
+      "start": "22:30",
+      "end": "23:10",
+      "kind": "band",
+      "artistSlug": "victoryland"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "Lip Critic",
+      "start": "23:45",
+      "end": "00:20",
+      "kind": "band",
+      "artistSlug": "lip-critic"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "main-hall",
+      "name": "We Love 00's (Halloween club night)",
+      "start": "00:30",
+      "end": "01:50",
+      "kind": "club",
+      "measured": true
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "de-kring",
+      "name": "KatzPascale",
+      "start": "20:00",
+      "end": "20:30",
+      "kind": "band",
+      "artistSlug": "katzpascale"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "de-kring",
+      "name": "Tracey Nelson",
+      "start": "21:00",
+      "end": "21:30",
+      "kind": "band",
+      "artistSlug": "tracey-nelson"
+    },
+    {
+      "day": "FRIDAY",
+      "stage": "de-kring",
+      "name": "Raynor",
+      "start": "22:00",
+      "end": "22:30",
+      "kind": "band",
+      "artistSlug": "raynor"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Fiona-Lee",
+      "start": "14:05",
+      "end": "14:35",
+      "kind": "band",
+      "artistSlug": "fiona-lee"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Sandhouse",
+      "start": "15:10",
+      "end": "15:40",
+      "kind": "band",
+      "artistSlug": "swapmeet-2"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Knats",
+      "start": "16:20",
+      "end": "16:50",
+      "kind": "band",
+      "artistSlug": "knats"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "No Cigar",
+      "start": "18:30",
+      "end": "19:00",
+      "kind": "band",
+      "artistSlug": "no-cigar"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Zoh Amba",
+      "start": "19:35",
+      "end": "20:05",
+      "kind": "band",
+      "artistSlug": "zoh-amba"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Bloodsports",
+      "start": "20:35",
+      "end": "21:05",
+      "kind": "band",
+      "artistSlug": "bloodsports"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "MX Lonely",
+      "start": "21:40",
+      "end": "22:10",
+      "kind": "band",
+      "artistSlug": "mx-lonely"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "lots of hands",
+      "start": "23:00",
+      "end": "23:30",
+      "kind": "band",
+      "artistSlug": "lots-of-hands"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Tanzana",
+      "start": "00:05",
+      "end": "00:35",
+      "kind": "band",
+      "artistSlug": "tanzana"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "small-hall",
+      "name": "Mouth Ulcers",
+      "start": "01:10",
+      "end": "01:40",
+      "kind": "band",
+      "artistSlug": "mouth-ulcers"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Tokyo Tea Room",
+      "start": "13:30",
+      "end": "14:05",
+      "kind": "band",
+      "artistSlug": "tokyo-tea-room"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "keiyaA",
+      "start": "14:35",
+      "end": "15:10",
+      "kind": "band",
+      "artistSlug": "keiyaa"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Momo Boyd",
+      "start": "15:40",
+      "end": "16:20",
+      "kind": "band",
+      "artistSlug": "momo-boyd"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Sports",
+      "start": "19:00",
+      "end": "19:35",
+      "kind": "band",
+      "artistSlug": "sports"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "My First Time",
+      "start": "20:00",
+      "end": "20:35",
+      "kind": "band",
+      "artistSlug": "my-first-time"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "The Gnomes",
+      "start": "20:50",
+      "end": "21:25",
+      "kind": "band",
+      "artistSlug": "the-gnomes"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Angine De Poitrine",
+      "start": "22:10",
+      "end": "23:00",
+      "kind": "band",
+      "artistSlug": "angine-de-poitrine"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Sex Mask",
+      "start": "23:30",
+      "end": "00:05",
+      "kind": "band",
+      "artistSlug": "sex-mask"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Cutouts",
+      "start": "00:35",
+      "end": "01:10",
+      "kind": "band",
+      "artistSlug": "cutouts"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "main-hall",
+      "name": "Indiesleaze (DJs)",
+      "start": "01:50",
+      "end": "02:30",
+      "kind": "club",
+      "measured": true
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "barlaeus",
+      "name": "Tommy WÁ",
+      "start": "17:30",
+      "end": "18:00",
+      "kind": "band",
+      "artistSlug": "tommy-wa"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "barlaeus",
+      "name": "Dermot Henry",
+      "start": "18:30",
+      "end": "19:00",
+      "kind": "band",
+      "artistSlug": "dermot-henry"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "barlaeus",
+      "name": "Arima Ederra",
+      "start": "19:30",
+      "end": "20:00",
+      "kind": "band",
+      "artistSlug": "arima-ederra"
+    },
+    {
+      "day": "SATURDAY",
+      "stage": "barlaeus",
+      "name": "Avery Friedman",
+      "start": "20:30",
+      "end": "21:00",
+      "kind": "band",
+      "artistSlug": "avery-friedman"
+    }
+  ],
+  "artists": [
+    {
+      "slug": "sunday-mourners",
+      "name": "Sunday Mourners",
+      "sourceUrl": "https://www.londoncalling.nl/artists/sunday-mourners/",
+      "spotifyUrl": "https://open.spotify.com/artist/7zlE048Rl8GTsbWAP1MZeQ"
+    },
+    {
+      "slug": "greg-mendez",
+      "name": "Greg Mendez",
+      "sourceUrl": "https://www.londoncalling.nl/artists/greg-mendez/",
+      "spotifyUrl": "https://open.spotify.com/artist/3pGNoAJX3UVctU6X8eG55h"
+    },
+    {
+      "slug": "hether",
+      "name": "Hether",
+      "sourceUrl": "https://www.londoncalling.nl/artists/hether/",
+      "spotifyUrl": "https://open.spotify.com/artist/5O35zGUolf87RATk2NgSD3"
+    },
+    {
+      "slug": "robber-robber",
+      "name": "Robber Robber",
+      "sourceUrl": "https://www.londoncalling.nl/artists/robber-robber/",
+      "spotifyUrl": "https://open.spotify.com/artist/7kXZ3iTr0blml9QgUdfwGM"
+    },
+    {
+      "slug": "swapmeet",
+      "name": "Swapmeet",
+      "sourceUrl": "https://www.londoncalling.nl/artists/swapmeet/",
+      "spotifyUrl": "https://open.spotify.com/artist/02ngaZWfkvv0Fzmh7FhJqj"
+    },
+    {
+      "slug": "la-securite",
+      "name": "La Sécurité",
+      "sourceUrl": "https://www.londoncalling.nl/artists/la-securite/",
+      "spotifyUrl": "https://open.spotify.com/artist/5ijO3JnnKpoAOTU4QaDgdW"
+    },
+    {
+      "slug": "really-good-time",
+      "name": "Really Good Time",
+      "sourceUrl": "https://www.londoncalling.nl/artists/really-good-time/",
+      "spotifyUrl": null
+    },
+    {
+      "slug": "zzzahara",
+      "name": "Zzzahara",
+      "sourceUrl": "https://www.londoncalling.nl/artists/zzzahara/",
+      "spotifyUrl": "https://open.spotify.com/artist/26j38hvhD7PjC0a4EqdaSn"
+    },
+    {
+      "slug": "ulrika-spacek",
+      "name": "Ulrika Spacek",
+      "sourceUrl": "https://www.londoncalling.nl/artists/ulrika-spacek/",
+      "spotifyUrl": "https://open.spotify.com/artist/07vC6cutbett8UknXnqxsu"
+    },
+    {
+      "slug": "cola",
+      "name": "Cola",
+      "sourceUrl": "https://www.londoncalling.nl/artists/cola/",
+      "spotifyUrl": "https://open.spotify.com/artist/1KCSUZBJy1bAsIz7wUYkd8"
+    },
+    {
+      "slug": "cardinals-2",
+      "name": "Cardinals",
+      "sourceUrl": "https://www.londoncalling.nl/artists/cardinals-2/",
+      "spotifyUrl": "https://open.spotify.com/artist/0qmHQLCyJrgGFtqLDSRHJ4"
+    },
+    {
+      "slug": "victoryland",
+      "name": "Victoryland",
+      "sourceUrl": "https://www.londoncalling.nl/artists/victoryland/",
+      "spotifyUrl": "https://open.spotify.com/artist/63tTs259cHmrkQ7lGTmDdp"
+    },
+    {
+      "slug": "lip-critic",
+      "name": "Lip Critic",
+      "sourceUrl": "https://www.londoncalling.nl/artists/lip-critic/",
+      "spotifyUrl": "https://open.spotify.com/artist/4ABuKdLlVyzLztIFR8ETX9"
+    },
+    {
+      "slug": "katzpascale",
+      "name": "KatzPascale",
+      "sourceUrl": "https://www.londoncalling.nl/artists/katzpascale/",
+      "spotifyUrl": "https://open.spotify.com/artist/23vJAg53gio3DsY5jJof5H"
+    },
+    {
+      "slug": "tracey-nelson",
+      "name": "Tracey Nelson",
+      "sourceUrl": "https://www.londoncalling.nl/artists/tracey-nelson/",
+      "spotifyUrl": "https://open.spotify.com/artist/7Ak3CpBzopE7eewhyodH7J"
+    },
+    {
+      "slug": "raynor",
+      "name": "Raynor",
+      "sourceUrl": "https://www.londoncalling.nl/artists/raynor/",
+      "spotifyUrl": "https://open.spotify.com/artist/6tPWER6b155VUhE7eIJdtb"
+    },
+    {
+      "slug": "fiona-lee",
+      "name": "Fiona-Lee",
+      "sourceUrl": "https://www.londoncalling.nl/artists/fiona-lee/",
+      "spotifyUrl": "https://open.spotify.com/artist/50vlHl1iuV051WG7kRaCmQ"
+    },
+    {
+      "slug": "swapmeet-2",
+      "name": "Sandhouse",
+      "sourceUrl": "https://www.londoncalling.nl/artists/swapmeet-2/",
+      "spotifyUrl": "https://open.spotify.com/artist/52MaMxgeAkCxISb1tZuDyq"
+    },
+    {
+      "slug": "knats",
+      "name": "Knats",
+      "sourceUrl": "https://www.londoncalling.nl/artists/knats/",
+      "spotifyUrl": "https://open.spotify.com/artist/0l2OFUKz7eXLlPfO1LrGt7"
+    },
+    {
+      "slug": "no-cigar",
+      "name": "No Cigar",
+      "sourceUrl": "https://www.londoncalling.nl/artists/no-cigar/",
+      "spotifyUrl": "https://open.spotify.com/artist/3XQd5pdqTHayJ1nUL3yqjT"
+    },
+    {
+      "slug": "zoh-amba",
+      "name": "Zoh Amba",
+      "sourceUrl": "https://www.londoncalling.nl/artists/zoh-amba/",
+      "spotifyUrl": null
+    },
+    {
+      "slug": "bloodsports",
+      "name": "Bloodsports",
+      "sourceUrl": "https://www.londoncalling.nl/artists/bloodsports/",
+      "spotifyUrl": "https://open.spotify.com/artist/6HqDHzNgjf9fIXCVlQzEGS"
+    },
+    {
+      "slug": "mx-lonely",
+      "name": "MX Lonely",
+      "sourceUrl": "https://www.londoncalling.nl/artists/mx-lonely/",
+      "spotifyUrl": "https://open.spotify.com/artist/7JrQ7OeohqbGyqXwuLLEpW"
+    },
+    {
+      "slug": "lots-of-hands",
+      "name": "lots of hands",
+      "sourceUrl": "https://www.londoncalling.nl/artists/lots-of-hands/",
+      "spotifyUrl": "https://open.spotify.com/artist/6sNcyjEVdNlZ0dpgr7EcT9"
+    },
+    {
+      "slug": "tanzana",
+      "name": "Tanzana",
+      "sourceUrl": "https://www.londoncalling.nl/artists/tanzana/",
+      "spotifyUrl": "https://open.spotify.com/artist/2mwOkIqXhMvuo4NIOf2vqQ"
+    },
+    {
+      "slug": "mouth-ulcers",
+      "name": "Mouth Ulcers",
+      "sourceUrl": "https://www.londoncalling.nl/artists/mouth-ulcers/",
+      "spotifyUrl": null
+    },
+    {
+      "slug": "tokyo-tea-room",
+      "name": "Tokyo Tea Room",
+      "sourceUrl": "https://www.londoncalling.nl/artists/tokyo-tea-room/",
+      "spotifyUrl": "https://open.spotify.com/artist/3lzTKwFsOqxtp5cLJ2qbSD"
+    },
+    {
+      "slug": "keiyaa",
+      "name": "keiyaA",
+      "sourceUrl": "https://www.londoncalling.nl/artists/keiyaa/",
+      "spotifyUrl": null
+    },
+    {
+      "slug": "momo-boyd",
+      "name": "Momo Boyd",
+      "sourceUrl": "https://www.londoncalling.nl/artists/momo-boyd/",
+      "spotifyUrl": "https://open.spotify.com/artist/5gqxLVfjWfNZ6dsKL05NKd"
+    },
+    {
+      "slug": "sports",
+      "name": "Sports",
+      "sourceUrl": "https://www.londoncalling.nl/artists/sports/",
+      "spotifyUrl": "https://open.spotify.com/artist/4AGNJdJiVltImYk1UTLE0K"
+    },
+    {
+      "slug": "my-first-time",
+      "name": "My First Time",
+      "sourceUrl": "https://www.londoncalling.nl/artists/my-first-time/",
+      "spotifyUrl": "https://open.spotify.com/artist/2YCAJa2kGotOZAe5lWC4D0"
+    },
+    {
+      "slug": "the-gnomes",
+      "name": "The Gnomes",
+      "sourceUrl": "https://www.londoncalling.nl/artists/the-gnomes/",
+      "spotifyUrl": "https://open.spotify.com/artist/1Ax3BC6GoOGjSw2ipoi6P6"
+    },
+    {
+      "slug": "angine-de-poitrine",
+      "name": "Angine De Poitrine",
+      "sourceUrl": "https://www.londoncalling.nl/artists/angine-de-poitrine/",
+      "spotifyUrl": "https://open.spotify.com/artist/13NmOYYfvONNZ9mn2qn8P2"
+    },
+    {
+      "slug": "sex-mask",
+      "name": "Sex Mask",
+      "sourceUrl": "https://www.londoncalling.nl/artists/sex-mask/",
+      "spotifyUrl": "https://open.spotify.com/artist/58TcB8X9Cr1VpR9PrXJeTQ"
+    },
+    {
+      "slug": "cutouts",
+      "name": "Cutouts",
+      "sourceUrl": "https://www.londoncalling.nl/artists/cutouts/",
+      "spotifyUrl": "https://open.spotify.com/artist/6ZYpTpvAwv0T78s6Ueh5g1"
+    },
+    {
+      "slug": "tommy-wa",
+      "name": "Tommy WÁ",
+      "sourceUrl": "https://www.londoncalling.nl/artists/tommy-wa/",
+      "spotifyUrl": "https://open.spotify.com/artist/17e35Wp915ZK8I2wCBT1Kd"
+    },
+    {
+      "slug": "dermot-henry",
+      "name": "Dermot Henry",
+      "sourceUrl": "https://www.londoncalling.nl/artists/dermot-henry/",
+      "spotifyUrl": "https://open.spotify.com/artist/0RhsllRA8vVKWSiBxuF77H"
+    },
+    {
+      "slug": "arima-ederra",
+      "name": "Arima Ederra",
+      "sourceUrl": "https://www.londoncalling.nl/artists/arima-ederra/",
+      "spotifyUrl": "https://open.spotify.com/artist/0wJIP9Wlhn3aSLLaB31IK3"
+    },
+    {
+      "slug": "avery-friedman",
+      "name": "Avery Friedman",
+      "sourceUrl": "https://www.londoncalling.nl/artists/avery-friedman/",
+      "spotifyUrl": "https://open.spotify.com/artist/7HP0tah3dIBAtu2PKxRYYG"
+    }
+  ]
+}

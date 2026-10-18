@@ -12,7 +12,7 @@ sheet with explicit tier buttons and a free-text note (280 characters) for that 
 "front left, get there early", "skip if the queue is bad". Notes stay on-device unless
 the visitor opts into cross-device sync below, exactly like the tiers themselves.
 
-Two editions, two layouts, chosen per festival by `Festival.layout`:
+Three editions, two layouts, chosen per festival by `Festival.layout`:
 
 - **`/pdc26`** — Vodafone Paredes de Coura 2026 (Aug 9–16, including the bonus
   afterparty day). `VERTICAL`: time runs down, two stages side by side as columns.
@@ -20,6 +20,10 @@ Two editions, two layouts, chosen per festival by `Festival.layout`:
   across, one row per room, because 26 rooms cannot be read as columns. Rows are
   grouped by walking zone, and tapping a set re-labels every zone with the walking time
   from that venue.
+- **`/lc26oct`** — London Calling October 2026, Amsterdam (Oct 30–31). `VERTICAL`, but
+  with three columns (`gridColumns: 3` in `src/lib/festival-copy.ts`): both Paradiso
+  halls every night, plus De Kring (Fri) or Barlaeus (Sat). The slug carries the month
+  because London Calling runs every April and October.
 
 A festival needs no flag to become "archived" — `/` and each festival's own page mark
 it as such automatically once its `endDate` has passed (see `isFestivalOver` in
@@ -159,6 +163,40 @@ room, whichever programme that set belongs to. The Guest List at Rotown (Fri 23:
 ends when Sticker Night starts at 00:00, and re-running either importer keeps it that
 way. A LOTD set that *starts* inside a side-programme set is a real clash and fails the
 import.
+
+## Importing London Calling October 2026
+
+London Calling publishes its timetable only as two JPG posters
+(https://www.londoncalling.nl/timetable/), so `scripts/data/lc26oct.json` is
+hand-transcribed from the printed `HH.MM-HH.MM` labels, then checked by code:
+
+```bash
+# 1. Poster pixels vs. snapshot. Finds every box per room column, fits the time axis
+#    to the transcribed times, and fails on a missing/extra box or any set >10 min
+#    from its box. Also the only source for the two club nights, which have no
+#    printed times. Pillow lives in a throwaway venv, not the project.
+python3 -m venv /tmp/lc-venv && /tmp/lc-venv/bin/pip install pillow
+/tmp/lc-venv/bin/python -I scripts/lc/measure-poster.py scripts/data/lc26oct.json \
+  page-0001-scaled.jpg page-0002-scaled.jpg
+
+# 2. Artist pages -> snapshot. Name, festival page and Spotify (from the page's
+#    embedded player). Each Spotify link is checked against Spotify's own artist name
+#    and dropped on a mismatch: Really Good Time's page embeds Robber Robber.
+npm run import:lc -- --fetch-artists
+
+# 3. Snapshot -> Postgres.
+npm run import:lc -- --check            # validate the snapshot, no network, no DB
+npm run import:lc -- --apply --dry-run  # report what would change
+npm run import:lc -- --apply            # snapshot -> Postgres
+npm run import:lc -- --apply --prune    # also remove sets that left the snapshot
+```
+
+The posters' boxes are hand-placed and drift up to ~8 min from their own labels
+(Momo Boyd's box starts at 15:48 for a printed 15.40). Labels are authoritative, and
+the club nights' measured times inherit that drift. Each `artistSlug` is explicit,
+because the site's slugs don't follow names (Sandhouse is `/artists/swapmeet-2/`) and
+older editions reuse names (`/artists/cardinals/` is not this year's Cardinals).
+Rows are `lc26oct-p-*` / `lc26oct-a-*`.
 
 ## Deployment (Vercel + Neon)
 

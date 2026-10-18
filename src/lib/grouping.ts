@@ -44,16 +44,22 @@ export function activeStagesSortedByOrder<S extends StageLike>(stages: S[], perf
   return stages.filter((s) => activeStageIds.has(s.id)).sort((a, b) => a.order - b.order);
 }
 
-/** The (up to two) lowest-`order` grid-eligible stages active on a day render as the side-by-side grid. */
-export function mainStages<S extends StageLike>(stages: S[], performancesForDay: PerformanceLike[]): S[] {
+/**
+ * The (up to `columns`) lowest-`order` grid-eligible stages active on a day
+ * render as the side-by-side grid. Two by default (Paredes de Coura's main
+ * stages); London Calling sets three via `gridColumns` in festival-copy.ts,
+ * because its third room overlaps the Paradiso halls and a clash only reads
+ * as a clash side by side.
+ */
+export function mainStages<S extends StageLike>(stages: S[], performancesForDay: PerformanceLike[], columns = 2): S[] {
   return activeStagesSortedByOrder(stages, performancesForDay)
     .filter((s) => !ALWAYS_STACKED_SLUGS.has(s.slug))
-    .slice(0, 2);
+    .slice(0, columns);
 }
 
 /** Every other active stage (always-stacked daytime stages, plus any grid-eligible ones past the first two) stacks as its own section, ordered by `order`. */
-export function otherStages<S extends StageLike>(stages: S[], performancesForDay: PerformanceLike[]): S[] {
-  const mainIds = new Set(mainStages(stages, performancesForDay).map((s) => s.id));
+export function otherStages<S extends StageLike>(stages: S[], performancesForDay: PerformanceLike[], columns = 2): S[] {
+  const mainIds = new Set(mainStages(stages, performancesForDay, columns).map((s) => s.id));
   return activeStagesSortedByOrder(stages, performancesForDay).filter((s) => !mainIds.has(s.id));
 }
 

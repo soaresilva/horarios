@@ -8,7 +8,8 @@
 // Renamed from "pdc26-*" now that this app hosts more than one festival.
 // v5 also evicts schedule responses cached in the pre-zones/artists shape,
 // which an offline visitor would otherwise be served with missing arrays.
-const CACHE_VERSION = "horarios-v7";
+// v8 adds the London Calling October 2026 route to the precache below.
+const CACHE_VERSION = "horarios-v8";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
@@ -33,8 +34,12 @@ const OFFLINE_FALLBACK_URL = "/offline.html";
 // static file at build time, so precaching it here needs a matching edit —
 // the rest of the app still works offline without it, just without this
 // as-you-install head start.
-const SHELL_URLS = ["/", "/pdc26", "/lotd26", "/manifest.webmanifest", OFFLINE_FALLBACK_URL];
-const SCHEDULE_URLS = ["/api/festivals/pdc26/schedule", "/api/festivals/lotd26/schedule"];
+const SHELL_URLS = ["/", "/pdc26", "/lotd26", "/lc26oct", "/manifest.webmanifest", OFFLINE_FALLBACK_URL];
+const SCHEDULE_URLS = [
+  "/api/festivals/pdc26/schedule",
+  "/api/festivals/lotd26/schedule",
+  "/api/festivals/lc26oct/schedule",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

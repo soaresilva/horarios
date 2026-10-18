@@ -101,6 +101,39 @@ describe("mainStages / otherStages", () => {
   });
 });
 
+describe("mainStages / otherStages with a three-column grid (London Calling)", () => {
+  const lc = [
+    { id: "small-hall", slug: "small-hall", order: 0 },
+    { id: "main-hall", slug: "main-hall", order: 1 },
+    { id: "de-kring", slug: "de-kring", order: 2 },
+    { id: "barlaeus", slug: "barlaeus", order: 2 },
+  ];
+  const friday = [
+    { id: "a", date: "2026-10-30", stageId: "small-hall" },
+    { id: "b", date: "2026-10-30", stageId: "main-hall" },
+    { id: "c", date: "2026-10-30", stageId: "de-kring" },
+  ];
+
+  it("puts all three active rooms in the grid and stacks nothing", () => {
+    expect(mainStages(lc, friday, 3).map((s) => s.id)).toEqual(["small-hall", "main-hall", "de-kring"]);
+    expect(otherStages(lc, friday, 3)).toEqual([]);
+  });
+
+  it("swaps the third column per night: Barlaeus on Saturday, De Kring dark", () => {
+    const saturday = [
+      { id: "d", date: "2026-10-31", stageId: "small-hall" },
+      { id: "e", date: "2026-10-31", stageId: "main-hall" },
+      { id: "f", date: "2026-10-31", stageId: "barlaeus" },
+    ];
+    expect(mainStages(lc, saturday, 3).map((s) => s.id)).toEqual(["small-hall", "main-hall", "barlaeus"]);
+  });
+
+  it("still defaults to two columns, stacking the third (Paredes de Coura's behaviour)", () => {
+    expect(mainStages(lc, friday).map((s) => s.id)).toEqual(["small-hall", "main-hall"]);
+    expect(otherStages(lc, friday).map((s) => s.id)).toEqual(["de-kring"]);
+  });
+});
+
 describe("activeStagesSortedByOrder", () => {
   it("returns only stages with a set that day, in display order", () => {
     const stages = [
