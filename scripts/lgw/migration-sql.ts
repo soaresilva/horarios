@@ -15,7 +15,7 @@ export function buildStructureSql(venues: Record<string, VenueFacts | null>): st
   const fromHub = walkFromHub(venues);
   const zoneRows = ZONES.map((z, i) => {
     const minutes = fromHub.get(z.slug);
-    return `  (${q(`lgw26-z-${z.slug}`)}, 'lgw26', ${q(z.name)}, ${q(z.slug)}, ${i}, ${minutes ?? "NULL"})`;
+    return `  (${q(`lgw26-z-${z.slug}`)}, 'lgw26', ${q(z.createdAs ?? z.name)}, ${q(z.slug)}, ${i}, ${minutes ?? "NULL"})`;
   });
 
   const stageRows = ROOMS.map((r, i) => {

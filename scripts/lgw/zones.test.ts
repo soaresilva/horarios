@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { buildStructureSql, SQL_BEGIN, SQL_END } from "./migration-sql";
@@ -82,6 +82,22 @@ describe("migration drift", () => {
     const end = migration.indexOf(SQL_END) + SQL_END.length;
     expect(begin).toBeGreaterThan(0);
     expect(migration.slice(begin, end)).toBe(buildStructureSql(committed.venues));
+  });
+});
+
+describe("zone renames", () => {
+  it("has a later migration setting every renamed zone's current name", () => {
+    const migrationsDir = path.join(root, "prisma", "migrations");
+    const later = readdirSync(migrationsDir)
+      .filter((d) => d > "20261018190000_add_lgw26_festival" && !d.endsWith(".toml"))
+      .map((d) => readFileSync(path.join(migrationsDir, d, "migration.sql"), "utf8"))
+      .join("\n");
+    const renamed = ZONES.filter((z) => z.createdAs);
+    expect(renamed.length).toBeGreaterThan(0);
+    for (const z of renamed) {
+      const sets = new RegExp(`SET "name" = '${z.name.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}'\\s+WHERE "id" = 'lgw26-z-${z.slug}'`);
+      expect(later, z.slug).toMatch(sets);
+    }
   });
 });
 

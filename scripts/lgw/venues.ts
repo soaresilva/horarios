@@ -9,13 +9,24 @@
 // the zone headers measure from before a visitor taps a set.
 
 export interface ZoneDef {
+  /** Stable: it's in the Zone, Stage and ZoneWalk ids, so a rename never changes it. */
   slug: string;
+  /** What the zone header shows. */
   name: string;
+  /**
+   * The name the lgw26 create migration inserted, when it has since been
+   * renamed by a later migration. `--sql` reproduces the create migration
+   * (migration-sql.ts), so it emits this; zones.test.ts checks that a rename
+   * migration sets `name`.
+   */
+  createdAs?: string;
 }
 
 export const ZONES: ZoneDef[] = [
   { slug: "tivolivredenburg", name: "TivoliVredenburg" },
-  { slug: "neude", name: "Neude" },
+  // Renamed 2026-10-18 at Diogo's request (migration
+  // 20261018200000_rename_lgw26_neude_zone).
+  { slug: "neude", name: "Wijk C/Pijlsweerd", createdAs: "Neude" },
   { slug: "domplein", name: "Domplein" },
   { slug: "theater-utrecht", name: "Theater Utrecht" },
   { slug: "lucasbolwerk", name: "Lucasbolwerk" },
