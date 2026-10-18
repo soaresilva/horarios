@@ -1,12 +1,27 @@
-import { generateTimeTicks, HORIZONTAL_SCALE, windowExtent, type FestivalTime, type GridWindow } from "@/lib/time";
+import {
+  DEFAULT_HORIZONTAL_SCALE,
+  generateTimeTicks,
+  windowExtent,
+  type FestivalTime,
+  type GridWindow,
+  type HorizontalScale,
+} from "@/lib/time";
 
-// The transposed twin of TimeAxis. Ticks every 10 minutes (every published
-// Left of the Dial start time falls on a :10 boundary) but a label only every
-// 30, because horizontal labels sit side by side and would otherwise collide
-// — that's what TimeTick.minutes is for.
-export function TimeAxisHorizontal({ window, ft }: { window: GridWindow; ft: FestivalTime }) {
-  const ticks = generateTimeTicks(window, ft, 10, HORIZONTAL_SCALE);
-  const width = windowExtent(window, HORIZONTAL_SCALE);
+// The transposed twin of TimeAxis. Ticks every `scale.tickMinutes` (10 for
+// Left of the Dial, whose starts all fall on :10 boundaries; 15 for Le Guess
+// Who?) but a label only every 30, because horizontal labels sit side by
+// side and would otherwise collide — that's what TimeTick.minutes is for.
+export function TimeAxisHorizontal({
+  window,
+  ft,
+  scale = DEFAULT_HORIZONTAL_SCALE,
+}: {
+  window: GridWindow;
+  ft: FestivalTime;
+  scale?: HorizontalScale;
+}) {
+  const ticks = generateTimeTicks(window, ft, scale.tickMinutes, scale);
+  const width = windowExtent(window, scale);
   const lastOffset = ticks.at(-1)?.offset ?? 0;
 
   return (

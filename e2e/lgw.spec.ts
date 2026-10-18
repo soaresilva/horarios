@@ -79,18 +79,20 @@ test.describe("Le Guess Who? grid", () => {
     await page.evaluate(() => window.localStorage.setItem("lgw26:showNonConcerts", "true"));
     await openDay(page, /THU/);
     // MUSCLE, 11:00-17:00: the first set of Thursday's window. Scroll three
-    // hours (5px/min) in, so the block's own left edge is far off-screen.
+    // hours in (540px at LGW's 3px/min): the block's own left edge is far
+    // off-screen, and enough of it is left for the name to sit pinned rather
+    // than pressed against the block's end (sticky never leaves its block).
     const block = page.locator('[data-performance-id="lgw26-p-2446"]');
     await block.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
     const scroller = page.locator("div.overflow-auto").first();
     await scroller.evaluate((el) => {
-      el.scrollLeft = 900;
+      el.scrollLeft = 540;
     });
     await page.waitForTimeout(300);
 
     const blockBox = (await block.boundingBox())!;
     const nameBox = (await block.getByText("MUSCLE by Karimah Ashadu").boundingBox())!;
-    expect(blockBox.x).toBeLessThan(-500);
+    expect(blockBox.x).toBeLessThan(-300);
     // Pinned just right of the 112px venue column, not off with the block's start.
     expect(nameBox.x).toBeGreaterThanOrEqual(112);
     expect(nameBox.x).toBeLessThan(140);

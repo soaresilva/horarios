@@ -3,6 +3,8 @@
 // admin never edits it, and putting it in the database would mean a column,
 // a migration and a form field for something that is really just content.
 
+import type { HorizontalScale } from "@/lib/time";
+
 export interface FestivalLink {
   label: string;
   href: string;
@@ -80,6 +82,12 @@ export interface FestivalCopy {
    * transposed layout, which already shows every room.
    */
   gridColumns?: number;
+  /**
+   * Pixels per minute, minimum block width and tick spacing for the
+   * transposed layout. Defaults to DEFAULT_HORIZONTAL_SCALE (5px/min, which
+   * suits LOTD's 40-minute sets). Ignored by the vertical layout.
+   */
+  horizontalScale?: HorizontalScale;
   /** Side programme, host and non-concert wording; anything unset falls back to DEFAULT_PROGRAMME_COPY. */
   programme?: Partial<Omit<ProgrammeCopy, "side">> & { side?: SideProgrammeCopy };
 }
@@ -145,6 +153,13 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     ],
     // No recommends curation for this edition.
     legend: false,
+    // Sets here are mostly 45-60 minutes. At LOTD's 5px/min an hour filled
+    // an iPhone 13 Pro's whole grid (Diogo, 2026-10-18); at 3px/min about
+    // 1.5 hours fit. 90px is the narrowest block that still shows a short
+    // name plus its star, and it spills into no following set (checked
+    // against the snapshot). Most starts are on quarter hours, so ticks
+    // come every 15 minutes.
+    horizontalScale: { pxPerMinute: 3, minExtent: 90, tickMinutes: 15 },
     programme: {
       side: {
         chip: "U?",

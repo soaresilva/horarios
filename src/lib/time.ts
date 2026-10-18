@@ -57,6 +57,15 @@ export const VERTICAL_SCALE: GridScale = { pxPerMinute: 2, minExtent: 40 };
 // screen-widths on a 390px phone.
 export const HORIZONTAL_SCALE: GridScale = { pxPerMinute: 5, minExtent: 140 };
 
+/** A transposed grid's scale plus how often its time axis draws a tick. */
+export interface HorizontalScale extends GridScale {
+  /** Minutes between ticks; labels go on every 30 minutes regardless. */
+  tickMinutes: number;
+}
+
+// Left of the Dial publishes starts on :10 boundaries, hence 10-minute ticks.
+export const DEFAULT_HORIZONTAL_SCALE: HorizontalScale = { ...HORIZONTAL_SCALE, tickMinutes: 10 };
+
 // Kept as named exports: the vertical layout and its tests read these
 // directly, and they are what every existing import expects.
 export const PX_PER_MINUTE = VERTICAL_SCALE.pxPerMinute;
@@ -268,11 +277,20 @@ export function blockLayout(
   window: GridWindow,
   range: TimeRange,
   scale: GridScale = VERTICAL_SCALE,
+  /**
+   * Start of the next set in the same room, if any. The readability floor
+   * (`minExtent`) never stretches a block past it: a 10-minute set followed
+   * straight away by another would otherwise be drawn on top of it.
+   */
+  nextStart?: Date,
 ): BlockLayout {
   const offset = minutesFromWindowStart(window, range.startTime) * scale.pxPerMinute;
   const rawExtent =
     ((range.endTime.getTime() - range.startTime.getTime()) / 60000) * scale.pxPerMinute;
-  return { offset, extent: Math.max(rawExtent, scale.minExtent) };
+  const floored = Math.max(rawExtent, scale.minExtent);
+  if (!nextStart) return { offset, extent: floored };
+  const room = ((nextStart.getTime() - range.startTime.getTime()) / 60000) * scale.pxPerMinute;
+  return { offset, extent: Math.max(rawExtent, Math.min(floored, room)) };
 }
 
 /** Offset in px of the "now" marker within the window, or null if now falls outside it. */

@@ -278,6 +278,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           originPerformanceId={originId}
           marks={marks}
           programme={programme}
+          scale={copy?.horizontalScale}
           ft={ft}
           onSelectOrigin={(id) => setOriginId((current) => (current === id ? null : id))}
         />

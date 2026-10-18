@@ -146,6 +146,26 @@ describe("blockLayout", () => {
     const { extent } = blockLayout(window, range, HORIZONTAL_SCALE);
     expect(extent).toBe(HORIZONTAL_SCALE.minExtent);
   });
+
+  // Tamboreiras de Rotterdam at LGW: 18:35-18:45 with the next set right
+  // after. Floored to 140px it was drawn over that next set.
+  it("never floors a block past the next set's start in its room", () => {
+    const range = { startTime: lisbon("2026-08-13T18:35:00"), endTime: lisbon("2026-08-13T18:45:00") };
+    const { extent } = blockLayout(window, range, HORIZONTAL_SCALE, lisbon("2026-08-13T18:50:00"));
+    expect(extent).toBe(15 * HORIZONTAL_SCALE.pxPerMinute);
+  });
+
+  it("still floors when the next set is far enough away", () => {
+    const range = { startTime: lisbon("2026-08-13T18:35:00"), endTime: lisbon("2026-08-13T18:45:00") };
+    const { extent } = blockLayout(window, range, HORIZONTAL_SCALE, lisbon("2026-08-13T20:00:00"));
+    expect(extent).toBe(HORIZONTAL_SCALE.minExtent);
+  });
+
+  it("keeps a set's real length even if the next one starts before it ends", () => {
+    const range = { startTime: lisbon("2026-08-13T18:00:00"), endTime: lisbon("2026-08-13T19:00:00") };
+    const { extent } = blockLayout(window, range, HORIZONTAL_SCALE, lisbon("2026-08-13T18:30:00"));
+    expect(extent).toBe(60 * HORIZONTAL_SCALE.pxPerMinute);
+  });
 });
 
 describe("windowExtent", () => {

@@ -102,3 +102,51 @@ describe("TransposedGrid — row height grows only for annotated rows", () => {
     expect(rowHeightFor(container, "unnoted")).toBe("56px");
   });
 });
+
+describe("TransposedGrid scale", () => {
+  const room: Stage[] = [{ id: "helling", name: "De Helling", slug: "de-helling", order: 0, zoneId: null, address: null }];
+  const set = (id: string, from: string, to: string): Performance => ({
+    id,
+    artistName: id,
+    date: "2026-11-07",
+    startTime: lisbon(`2026-11-07T${from}:00`),
+    endTime: lisbon(`2026-11-07T${to}:00`),
+    notes: null,
+    recommended: false,
+    stageId: "helling",
+    artistId: null, series: null, host: null, kind: "CONCERT",
+  });
+  const sets = [set("acacia", "17:50", "18:35"), set("tamboreiras", "18:35", "18:45"), set("next", "18:45", "19:45")];
+
+  function widths(scale?: { pxPerMinute: number; minExtent: number; tickMinutes: number }) {
+    const { container } = render(
+      <TransposedGrid
+        stages={room}
+        zones={[]}
+        zoneWalks={[]}
+        performances={sets}
+        artistsById={new Map()}
+        ordinals={new Map()}
+        originPerformanceId={null}
+        marks={fakeMarks()}
+        programme={programmeCopy("lgw26")}
+        scale={scale}
+        ft={ft}
+        onSelectOrigin={() => {}}
+      />,
+    );
+    const block = (id: string) => container.querySelector<HTMLElement>(`[data-performance-id="${id}"]`)!;
+    return Object.fromEntries(sets.map((s) => [s.id, { left: parseFloat(block(s.id).style.left), width: parseFloat(block(s.id).style.width) }]));
+  }
+
+  it("draws at the festival's own px/min", () => {
+    expect(widths({ pxPerMinute: 3, minExtent: 90, tickMinutes: 15 }).next.width).toBe(180);
+    expect(widths().next.width).toBe(300);
+  });
+
+  it("never draws a short set over the one after it", () => {
+    for (const w of [widths({ pxPerMinute: 3, minExtent: 90, tickMinutes: 15 }), widths()]) {
+      expect(w.tamboreiras.left + w.tamboreiras.width).toBeLessThanOrEqual(w.next.left);
+    }
+  });
+});

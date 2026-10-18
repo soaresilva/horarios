@@ -18,9 +18,10 @@ import {
   computeDayWindow,
   currentTimeOffset,
   formatClock,
-  HORIZONTAL_SCALE,
+  DEFAULT_HORIZONTAL_SCALE,
   windowExtent,
   type FestivalTime,
+  type HorizontalScale,
 } from "@/lib/time";
 
 // Width of the pinned venue column. One constant, used by the corner cell,
@@ -47,6 +48,8 @@ interface TransposedGridProps {
   originPerformanceId: string | null;
   marks: MarkControls;
   programme: ProgrammeCopy;
+  /** Per-festival px/min and tick spacing (FestivalCopy.horizontalScale). */
+  scale?: HorizontalScale;
   ft: FestivalTime;
   onSelectOrigin: (id: string) => void;
 }
@@ -61,6 +64,7 @@ export function TransposedGrid({
   originPerformanceId,
   marks,
   programme,
+  scale = DEFAULT_HORIZONTAL_SCALE,
   ft,
   onSelectOrigin,
 }: TransposedGridProps) {
@@ -72,8 +76,8 @@ export function TransposedGrid({
   const window = computeDayWindow(performances);
   const active = activeStagesSortedByOrder(stages, performances);
   const groups = stagesByZone(active, zones);
-  const totalWidth = window ? windowExtent(window, HORIZONTAL_SCALE) : 0;
-  const nowOffset = window && now ? currentTimeOffset(window, now, HORIZONTAL_SCALE) : null;
+  const totalWidth = window ? windowExtent(window, scale) : 0;
+  const nowOffset = window && now ? currentTimeOffset(window, now, scale) : null;
 
   // Which venue the walking distances are measured from. The origin is a
   // *set*, so it carries an end time too — that's what a future "dim the
@@ -108,7 +112,7 @@ export function TransposedGrid({
             inside a scroller makes Safari recompute it every frame. */}
         <div className="sticky top-0 z-30 flex bg-background">
           <div className={`sticky left-0 z-40 ${VENUE_COL} shrink-0 bg-background`} />
-          <TimeAxisHorizontal window={window} ft={ft} />
+          <TimeAxisHorizontal window={window} ft={ft} scale={scale} />
         </div>
 
         {groups.map(({ zone, stages: zoneStages }) => {
@@ -153,12 +157,14 @@ export function TransposedGrid({
                     </div>
 
                     <div className="relative border-b border-zinc-900" style={{ width: totalWidth }}>
-                      {stagePerformances.map((performance) => (
+                      {stagePerformances.map((performance, i) => (
                         <TransposedPerformanceBlock
                           key={performance.id}
                           performance={performance}
                           artist={performance.artistId ? artistsById.get(performance.artistId) : undefined}
-                          layout={blockLayout(window, performance, HORIZONTAL_SCALE)}
+                          // stagePerformances is sorted by start, so the next
+                          // entry is the set this one must not be drawn over.
+                          layout={blockLayout(window, performance, scale, stagePerformances[i + 1]?.startTime)}
                           links={artistLinksFor(performance, artistsById)}
                           marks={marks}
                           showRecommendation={showRecommendations}
