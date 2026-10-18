@@ -1,7 +1,13 @@
-// The Zone / Stage / ZoneWalk rows of the lgw26 migration, generated from
-// ZONES + ROOMS (venues.ts) and the venue pins in the committed snapshot.
-// `npm run import:lgw -- --sql` prints it; the migration carries it
-// verbatim, and scripts/lgw/migration-sql.test.ts fails if the two drift.
+// The Zone / Stage / ZoneWalk rows for lgw26, generated from ZONES + ROOMS
+// (venues.ts) and the venue pins in the committed snapshot, as an
+// idempotent sync: every row is inserted or brought up to date. Any change
+// to zones or rooms (a rename, a room moving zone, new pins shifting the
+// walking times) ships as a new migration carrying a fresh `--sql` block,
+// and zones.test.ts fails if the latest such block differs from what the
+// code generates now.
+//
+// It only inserts and updates. Removing a room or a zone would also need a
+// DELETE, written by hand in that migration.
 import type { VenueFacts } from "./venue-page";
 import { ROOMS, ZONES } from "./venues";
 import { walkFromHub, zoneWalkRows } from "./zones";
@@ -15,7 +21,7 @@ export function buildStructureSql(venues: Record<string, VenueFacts | null>): st
   const fromHub = walkFromHub(venues);
   const zoneRows = ZONES.map((z, i) => {
     const minutes = fromHub.get(z.slug);
-    return `  (${q(`lgw26-z-${z.slug}`)}, 'lgw26', ${q(z.createdAs ?? z.name)}, ${q(z.slug)}, ${i}, ${minutes ?? "NULL"})`;
+    return `  (${q(`lgw26-z-${z.slug}`)}, 'lgw26', ${q(z.name)}, ${q(z.slug)}, ${i}, ${minutes ?? "NULL"})`;
   });
 
   const stageRows = ROOMS.map((r, i) => {
@@ -36,17 +42,17 @@ export function buildStructureSql(venues: Record<string, VenueFacts | null>): st
     'INSERT INTO "Zone" ("id", "festivalId", "name", "slug", "order", "walkMinutesFromHub")',
     "VALUES",
     zoneRows.join(",\n"),
-    'ON CONFLICT ("id") DO NOTHING;',
+    'ON CONFLICT ("id") DO UPDATE SET "name" = EXCLUDED."name", "order" = EXCLUDED."order", "walkMinutesFromHub" = EXCLUDED."walkMinutesFromHub";',
     "",
     'INSERT INTO "Stage" ("id", "festivalId", "zoneId", "name", "slug", "address", "order", "updatedAt")',
     "VALUES",
     stageRows.join(",\n"),
-    'ON CONFLICT ("id") DO NOTHING;',
+    'ON CONFLICT ("id") DO UPDATE SET "zoneId" = EXCLUDED."zoneId", "name" = EXCLUDED."name", "address" = EXCLUDED."address", "order" = EXCLUDED."order", "updatedAt" = CURRENT_TIMESTAMP;',
     "",
     'INSERT INTO "ZoneWalk" ("id", "fromZoneId", "toZoneId", "minutes")',
     "VALUES",
     walkRows.join(",\n"),
-    'ON CONFLICT ("id") DO NOTHING;',
+    'ON CONFLICT ("id") DO UPDATE SET "minutes" = EXCLUDED."minutes";',
     SQL_END,
   ].join("\n");
 }

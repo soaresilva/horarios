@@ -13,23 +13,17 @@ export interface ZoneDef {
   slug: string;
   /** What the zone header shows. */
   name: string;
-  /**
-   * The name the lgw26 create migration inserted, when it has since been
-   * renamed by a later migration. `--sql` reproduces the create migration
-   * (migration-sql.ts), so it emits this; zones.test.ts checks that a rename
-   * migration sets `name`.
-   */
-  createdAs?: string;
 }
 
 export const ZONES: ZoneDef[] = [
   { slug: "tivolivredenburg", name: "TivoliVredenburg" },
-  // Renamed 2026-10-18 at Diogo's request (migration
-  // 20261018200000_rename_lgw26_neude_zone).
-  { slug: "neude", name: "Wijk C/Pijlsweerd", createdAs: "Neude" },
-  { slug: "domplein", name: "Domplein" },
+  // Slugs are ids and never change; names are Diogo's (2026-10-18: Neude ->
+  // Wijk C/Pijlsweerd, Domplein -> Binnenstad, and Lucasbolwerk is now
+  // Stadsschouwburg alone after ACU and Moira joined Binnenstad).
+  { slug: "neude", name: "Wijk C/Pijlsweerd" },
+  { slug: "domplein", name: "Binnenstad" },
   { slug: "theater-utrecht", name: "Theater Utrecht" },
-  { slug: "lucasbolwerk", name: "Lucasbolwerk" },
+  { slug: "lucasbolwerk", name: "Stadsschouwburg" },
   { slug: "lombok", name: "Lombok" },
   { slug: "museumkwartier", name: "Museumkwartier" },
   { slug: "rotsoord", name: "Rotsoord" },
@@ -74,6 +68,8 @@ export const ROOMS: RoomDef[] = [
   { venue: "Slachtstraat Filmtheater", room: "Zaal 2", slug: "slachtstraat-2", name: "Slachtstraat Zaal 2", zone: "domplein" },
   { venue: "Museum Speelklok", room: null, slug: "museum-speelklok", name: "Museum Speelklok", zone: "domplein" },
   { venue: "BASIS", room: null, slug: "basis", name: "BASIS", zone: "domplein" },
+  { venue: "ACU", room: null, slug: "acu", name: "ACU", zone: "domplein" },
+  { venue: "Moira", room: null, slug: "moira", name: "Moira", zone: "domplein" },
 
   { venue: "Theater Utrecht", room: "Theater Zaal", slug: "tu-theater-zaal", name: "Theater Utrecht Theater Zaal", zone: "theater-utrecht" },
   { venue: "Theater Utrecht", room: "Koepel Zaal", slug: "tu-koepel-zaal", name: "Theater Utrecht Koepel Zaal", zone: "theater-utrecht" },
@@ -82,8 +78,6 @@ export const ROOMS: RoomDef[] = [
   { venue: "Theater Utrecht", room: "Foyer", slug: "tu-foyer", name: "Theater Utrecht Foyer", zone: "theater-utrecht" },
 
   { venue: "Stadsschouwburg", room: "Main Room", slug: "stadsschouwburg", name: "Stadsschouwburg", zone: "lucasbolwerk" },
-  { venue: "ACU", room: null, slug: "acu", name: "ACU", zone: "lucasbolwerk" },
-  { venue: "Moira", room: null, slug: "moira", name: "Moira", zone: "lucasbolwerk" },
 
   { venue: "De Voorkamer", room: null, slug: "de-voorkamer", name: "De Voorkamer", zone: "lombok" },
 

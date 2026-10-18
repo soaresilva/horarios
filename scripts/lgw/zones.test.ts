@@ -73,31 +73,17 @@ describe("ROOMS", () => {
 });
 
 describe("migration drift", () => {
-  it("carries exactly the SQL that --sql generates from the committed snapshot", () => {
-    const migration = readFileSync(
-      path.join(root, "prisma", "migrations", "20261018190000_add_lgw26_festival", "migration.sql"),
-      "utf8",
-    );
-    const begin = migration.indexOf(SQL_BEGIN);
-    const end = migration.indexOf(SQL_END) + SQL_END.length;
-    expect(begin).toBeGreaterThan(0);
-    expect(migration.slice(begin, end)).toBe(buildStructureSql(committed.venues));
-  });
-});
-
-describe("zone renames", () => {
-  it("has a later migration setting every renamed zone's current name", () => {
+  it("the latest lgw26 structure migration carries exactly the SQL --sql generates now", () => {
     const migrationsDir = path.join(root, "prisma", "migrations");
-    const later = readdirSync(migrationsDir)
-      .filter((d) => d > "20261018190000_add_lgw26_festival" && !d.endsWith(".toml"))
+    const latest = readdirSync(migrationsDir)
+      .filter((d) => !d.endsWith(".toml"))
+      .sort()
       .map((d) => readFileSync(path.join(migrationsDir, d, "migration.sql"), "utf8"))
-      .join("\n");
-    const renamed = ZONES.filter((z) => z.createdAs);
-    expect(renamed.length).toBeGreaterThan(0);
-    for (const z of renamed) {
-      const sets = new RegExp(`SET "name" = '${z.name.replace(/[.*+?^${}()|[\]\\/]/g, "\\$&")}'\\s+WHERE "id" = 'lgw26-z-${z.slug}'`);
-      expect(later, z.slug).toMatch(sets);
-    }
+      .filter((sql) => sql.includes(SQL_BEGIN))
+      .at(-1)!;
+    const begin = latest.indexOf(SQL_BEGIN);
+    const end = latest.indexOf(SQL_END) + SQL_END.length;
+    expect(latest.slice(begin, end)).toBe(buildStructureSql(committed.venues));
   });
 });
 

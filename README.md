@@ -260,8 +260,11 @@ The finer points:
   show links to.
 - **Zones and walking times** come from each venue's own leguesswho.com page, which has
   its street address and map pin. `scripts/lgw/zones.ts` computes them as zone centroids
-  × haversine × 1.3 detour at 80 m/min, rounded up. `--sql` generates the migration's
-  Zone/Stage/ZoneWalk rows, and a test fails if the migration drifts from it. Zone
+  × haversine × 1.3 detour at 80 m/min, rounded up. `--sql` generates every
+  Zone/Stage/ZoneWalk row as an idempotent upsert. A zone or room change (rename, a room
+  changing zone) ships as a new migration carrying a fresh `--sql` block, and a test
+  fails if the latest such block drifts from the code. Removing a room or a zone also
+  needs a hand-written DELETE. Zone
   headers measure from TivoliVredenburg until a set is tapped.
 
 Rows are `lgw26-p-<show_id>` / `lgw26-a-<name slug>`, so a rename or time change
