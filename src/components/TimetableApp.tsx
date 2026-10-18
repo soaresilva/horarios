@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { DayTabs } from "@/components/DayTabs";
 import { FavoritesListView } from "@/components/FavoritesListView";
+import { HelpToggle } from "@/components/HelpToggle";
 import { InstallBanner } from "@/components/InstallBanner";
 import { MarkSheet } from "@/components/MarkSheet";
 import { MarksHint } from "@/components/MarksHint";
@@ -20,6 +21,7 @@ import { useFavoritesSync } from "@/hooks/useFavoritesSync";
 import type { MarkControls } from "@/hooks/useMarks";
 import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
+import { useShowHelp } from "@/hooks/useShowHelp";
 import { useShowNotes } from "@/hooks/useShowNotes";
 import { useShowNonConcerts, useShowSideProgramme } from "@/hooks/useShowSideProgramme";
 import { festivalCopy, programmeCopy } from "@/lib/festival-copy";
@@ -45,6 +47,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { tierOf, noteOf, cycle, setTier, setNote, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
   const hint = useMarksHintDismissed(festivalSlug);
   const { show: showNotes, toggle: toggleShowNotes } = useShowNotes(festivalSlug);
+  const { show: showHelp, toggle: toggleShowHelp } = useShowHelp(festivalSlug);
   const programme = programmeCopy(festivalSlug);
   const { show: showSideProgramme, toggle: toggleSideProgramme } = useShowSideProgramme(
     festivalSlug,
@@ -155,6 +158,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
     (p) => (showSideProgramme || p.series === null) && (showNonConcerts || p.kind === "CONCERT"),
   );
   const copy = festivalCopy(festivalSlug);
+  const notes = [copy?.disclaimer, showHelp ? copy?.help : undefined].filter(Boolean).join(" ");
   const gridColumns = copy?.gridColumns ?? 2;
   const main = mainStages(schedule.stages, gridPerformances, gridColumns);
   const other = otherStages(schedule.stages, gridPerformances, gridColumns);
@@ -191,14 +195,14 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
       </header>
 
       <InstallBanner />
-      <MarksHint dismissed={hint.dismissed} onDismiss={hint.dismiss} />
+      {showHelp && <MarksHint dismissed={hint.dismissed} onDismiss={hint.dismiss} />}
 
       {copy && (
         <p className="px-3 pt-1 pb-1 text-[10px] leading-snug text-zinc-600">
-          {copy.disclaimer}
+          {notes}
           {copy.links && copy.links.length > 0 && (
             <>
-              {" "}
+              {notes && " "}
               {copy.links.map((link, i) => (
                 <span key={link.href}>
                   {i > 0 && " · "}
@@ -225,13 +229,17 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         {(copy?.legend ?? true) && (
           <>
             <RecommendationsToggle />
-            <span className="flex items-center gap-1">
-              <span aria-hidden className="text-accent">★</span>
-              must-see
-              <span aria-hidden className="text-interested">☆</span>
-              maybe
-            </span>
-            <span className="text-zinc-600">tap to change</span>
+            {showHelp && (
+              <>
+                <span className="flex items-center gap-1">
+                  <span aria-hidden className="text-accent">★</span>
+                  must-see
+                  <span aria-hidden className="text-interested">☆</span>
+                  maybe
+                </span>
+                <span className="text-zinc-600">tap to change</span>
+              </>
+            )}
           </>
         )}
         <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
@@ -240,6 +248,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           <SideProgrammeToggle show={showSideProgramme} onToggle={toggleSideProgramme} copy={programme.side} />
         )}
         {hasNonConcerts && <NonConcertsToggle show={showNonConcerts} onToggle={toggleNonConcerts} />}
+        <HelpToggle show={showHelp} onToggle={toggleShowHelp} />
       </div>
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />

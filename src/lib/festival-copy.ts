@@ -57,8 +57,13 @@ export const DEFAULT_PROGRAMME_COPY: ProgrammeCopy = {
 };
 
 export interface FestivalCopy {
-  /** One line explaining how to read the times on this festival's grid. */
-  disclaimer: string;
+  /** Facts about the times (sources, estimates, club nights with no end). Always shown. */
+  disclaimer?: string;
+  /**
+   * How-to sentences for the grid's gestures and switches. Shown after the
+   * disclaimer until the visitor switches the help text off (useShowHelp).
+   */
+  help?: string;
   links?: FestivalLink[];
   /**
    * Whether to show the "bolachas recommends" toggle + starred-favourites
@@ -92,7 +97,7 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     // The transposed grid has four separate tap targets on one block (star,
     // name, body, venue cell), each doing something different — this spells
     // them out rather than leaving a first-time visitor to guess.
-    disclaimer:
+    help:
       "Tapping the star once marks a show as a \"must-see\", tapping it again marks it as \"interested\". Tap the artist name to navigate to their page on the LOTD website. Tap a show to see rough walking distances to other venues. A long tap allows you to add notes to a show (hover over each note to read it). Tap a venue name to navigate on Google Maps. Dashed FREE blocks on Friday and Saturday afternoon are The Official Unofficial, the free daytime side programme (no wristband needed).",
     links: [
       { label: "leftofthedial.nl", href: "https://leftofthedial.nl" },
@@ -122,7 +127,8 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     // the third above the grid the way PdC's side stages do.
     gridColumns: 3,
     disclaimer:
-      "Times from the official poster. We Love 00's and Indiesleaze are club nights with no announced end: they're drawn as long as the poster draws them and run later. Indiesleaze is DJ sets by Cutouts, Lazarus Kane and Charlie Avalon. Tap a show once for \"must-see\", twice for \"interested\"; long-press to add a note. Tap an artist name for their London Calling page.",
+      "Times from the official poster. We Love 00's and Indiesleaze are club nights with no announced end: they're drawn as long as the poster draws them and run later. Indiesleaze is DJ sets by Cutouts, Lazarus Kane and Charlie Avalon.",
+    help: "Tap a show once for \"must-see\", twice for \"interested\"; long-press to add a note. Tap an artist name for their London Calling page.",
     links: [
       { label: "londoncalling.nl", href: "https://www.londoncalling.nl/timetable/" },
       { label: "Playlist", href: "https://open.spotify.com/playlist/7jpA1XEIYaNTBT9ET7Fytf" },
@@ -131,8 +137,8 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     legend: false,
   },
   lgw26: {
-    disclaimer:
-      "Times from leguesswho.com. Tap the star once for \"must-see\", twice for \"interested\"; long-press to add a note. Tap a show for walking times to every zone: Nijverheidskade and the Werkspoorkwartier are 35-40 minutes on foot from TivoliVredenburg, so bring a bike. U? (dashed) and non-concerts are hidden until you switch them on.",
+    disclaimer: "Times from leguesswho.com.",
+    help: "Tap the star once for \"must-see\", twice for \"interested\"; long-press to add a note. Tap a show for walking times to every zone: Nijverheidskade and the Werkspoorkwartier are 35-40 minutes on foot from TivoliVredenburg, so bring a bike. U? (dashed) and non-concerts are hidden until you switch them on.",
     links: [
       { label: "leguesswho.com", href: "https://leguesswho.com/timetable" },
       { label: "U? timetable", href: "https://leguesswho.com/u/timetable" },

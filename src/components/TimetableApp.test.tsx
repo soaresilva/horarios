@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TimetableApp } from "./TimetableApp";
@@ -326,5 +326,47 @@ describe("TimetableApp Le Guess Who? switches", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: () => {} });
     render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
     expect(screen.queryByRole("switch", { name: /films, talks/ })).toBeNull();
+  });
+});
+
+describe("TimetableApp help text switch", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+    mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
+  });
+
+  it("shows the mark hint and the legend by default, and hides them when switched off", async () => {
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
+
+    expect(screen.getByText(/tap a set to mark it/i)).toBeInTheDocument();
+    expect(screen.getByText("tap to change")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("switch", { name: /help text/ }));
+
+    expect(screen.queryByText(/tap a set to mark it/i)).not.toBeInTheDocument();
+    expect(screen.queryByText("tap to change")).not.toBeInTheDocument();
+    // The switch itself and the recommends control are not help text.
+    expect(screen.getByRole("switch", { name: /help text/ })).toHaveAttribute("aria-checked", "false");
+    expect(window.localStorage.getItem("pdc26:showHelp")).toBe("false");
+  });
+
+  it("hides the how-to sentences of a festival's disclaimer but keeps its facts", async () => {
+    render(<TimetableApp festivalSlug="lgw26" ft={ft} layout="VERTICAL" />);
+
+    expect(screen.getByText(/Tap the star once/)).toBeInTheDocument();
+    expect(screen.getByText(/Times from leguesswho.com/)).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole("switch", { name: /help text/ }));
+
+    expect(screen.queryByText(/Tap the star once/)).not.toBeInTheDocument();
+    expect(screen.getByText(/Times from leguesswho.com/)).toBeInTheDocument();
+  });
+
+  it("keeps a festival's disclaimer visible when help is off and the festival has no help copy", async () => {
+    window.localStorage.setItem("pdc26:showHelp", "false");
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
+
+    expect(screen.getByRole("switch", { name: /help text/ })).toHaveAttribute("aria-checked", "false");
+    expect(screen.queryByText(/tap a set to mark it/i)).not.toBeInTheDocument();
   });
 });
