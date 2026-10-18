@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TransposedPerformanceBlock } from "./TransposedPerformanceBlock";
+import { programmeCopy } from "@/lib/festival-copy";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Artist, Performance } from "@/lib/schedule-client";
 import type { MarkControls, MarkTier } from "@/hooks/useMarks";
@@ -22,7 +23,7 @@ function performance(overrides: Partial<Performance> = {}): Performance {
     notes: null,
     recommended: false,
     stageId: "annabel-up",
-    artistId: null, series: null, host: null,
+    artistId: null, series: null, host: null, kind: "CONCERT",
     ...overrides,
   };
 }
@@ -51,6 +52,7 @@ function renderBlock(overrides: Partial<MarkControls> = {}, artist: Artist | und
       showRecommendation={false}
       ordinal={undefined}
       isOrigin={false}
+      programme={programmeCopy("lotd26")}
       ft={ft}
       onSelectOrigin={() => {}}
     />,
@@ -71,6 +73,7 @@ describe("TransposedPerformanceBlock", () => {
         showRecommendation={false}
         ordinal={undefined}
         isOrigin={false}
+        programme={programmeCopy("lotd26")}
         ft={ft}
         onSelectOrigin={onSelectOrigin}
       />,
@@ -126,6 +129,7 @@ describe("TransposedPerformanceBlock side programme", () => {
         showRecommendation={false}
         ordinal={undefined}
         isOrigin={false}
+        programme={programmeCopy("lotd26")}
         ft={ft}
         onSelectOrigin={() => {}}
       />,
@@ -159,5 +163,49 @@ describe("TransposedPerformanceBlock side programme", () => {
     expect(block.className).not.toContain("border-dashed");
     // Still identifiable as free while marked.
     expect(screen.getByText("FREE")).toBeInTheDocument();
+  });
+});
+
+describe("TransposedPerformanceBlock on Le Guess Who?", () => {
+  function renderLgw(p: Performance) {
+    return render(
+      <TransposedPerformanceBlock
+        performance={p}
+        artist={undefined}
+        layout={layout}
+        links={{}}
+        marks={fakeMarks()}
+        showRecommendation={false}
+        ordinal={undefined}
+        isOrigin={false}
+        programme={programmeCopy("lgw26")}
+        ft={ft}
+        onSelectOrigin={() => {}}
+      />,
+    );
+  }
+
+  it("marks a U? set with a dashed U? chip and no free-entry claim", () => {
+    const { container } = renderLgw(performance({ series: "U?", host: "Curated by Perry Gits" }));
+    expect(screen.getByText("U?")).toBeInTheDocument();
+    expect(screen.queryByText("FREE")).toBeNull();
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block.className).toContain("border-dashed");
+    expect(block.getAttribute("title")).toBe("U? · Curated by Perry Gits");
+  });
+
+  it("names a non-concert with a solid kind chip", () => {
+    const { container } = renderLgw(performance({ kind: "EXHIBITION" }));
+    expect(screen.getByText("EXPO")).toBeInTheDocument();
+    expect(container.querySelector("[data-performance-id]")!.getAttribute("title")).toBe("Exhibition");
+  });
+
+  it("shows a curated project as the tooltip on a main-programme concert, with no chip", () => {
+    const { container } = renderLgw(performance({ host: "Curated by aja monet" }));
+    expect(screen.queryByText("U?")).toBeNull();
+    expect(screen.queryByText("EXPO")).toBeNull();
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block.className).not.toContain("border-dashed");
+    expect(block.getAttribute("title")).toBe("Curated by aja monet");
   });
 });

@@ -6,6 +6,8 @@ import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
 import type { ArtistLinks } from "@/lib/artist-links";
+import type { ProgrammeCopy } from "@/lib/festival-copy";
+import { contextLine, kindLabel } from "@/lib/programme";
 import type { Artist, Performance } from "@/lib/schedule-client";
 import type { ShowOrdinal } from "@/lib/shows";
 import { formatClock, type BlockLayout, type FestivalTime } from "@/lib/time";
@@ -21,6 +23,8 @@ interface TransposedPerformanceBlockProps {
   ordinal: ShowOrdinal | undefined;
   /** True when this set is the chosen origin for walking distances. */
   isOrigin: boolean;
+  /** The festival's side-programme chip and credit wording (src/lib/festival-copy.ts). */
+  programme: ProgrammeCopy;
   ft: FestivalTime;
   onSelectOrigin: (id: string) => void;
 }
@@ -40,6 +44,7 @@ export function TransposedPerformanceBlock({
   showRecommendation,
   ordinal,
   isOrigin,
+  programme,
   ft,
   onSelectOrigin,
 }: TransposedPerformanceBlockProps) {
@@ -48,17 +53,24 @@ export function TransposedPerformanceBlock({
   const note = marks.noteOf(performance.id);
   const showInlineNote = marks.showNotes && note !== "";
   const longPress = useLongPress(() => marks.openSheet(performance.id));
-  // Side-programme sets (TOUO) share venue rows with the main programme,
-  // so they're told apart by a dashed outline and a FREE chip rather than
-  // by row. The tier ring still wins once a set is marked: that's the
-  // state a visitor is scanning for.
+  // Side-programme sets (TOUO, U?) share venue rows with the main
+  // programme, so they're told apart by a dashed outline and the festival's
+  // chip ("FREE", "U?") rather than by row. The tier ring still wins once a
+  // set is marked: that's the state a visitor is scanning for.
   const isSide = performance.series !== null;
+  // Films, talks, exhibitions and the rest carry a solid chip naming what
+  // they are, so a six-hour exhibition block can't be read as a concert.
+  const kind = kindLabel(performance.kind);
+  const title = contextLine(performance, programme) ?? undefined;
 
   return (
     <div
       data-performance-id={performance.id}
       style={{ left: layout.offset, width: layout.extent }}
-      className={`absolute inset-y-1 overflow-hidden rounded-md transition-colors ${
+      // overflow-clip, not overflow-hidden: `hidden` makes the block its own
+      // scroll container, which would pin the sticky name below to the
+      // block instead of to the grid's scroller.
+      className={`absolute inset-y-1 overflow-clip rounded-md transition-colors ${
         isOrigin
           ? "bg-zinc-700 ring-1 ring-zinc-400"
           : tier === "must"
@@ -69,7 +81,7 @@ export function TransposedPerformanceBlock({
                 ? "border border-dashed border-zinc-500 bg-zinc-900/80"
                 : "bg-zinc-800/70"
       }`}
-      title={isSide ? [performance.series, performance.host && `hosted by ${performance.host}`, "free entry"].filter(Boolean).join(" · ") : undefined}
+      title={title}
     >
       {/* Star-only rail, not the full Spotify/Instagram one PerformanceBlock
           uses: every block here caps at 40 minutes (200px at this scale), and
@@ -97,7 +109,13 @@ export function TransposedPerformanceBlock({
         className="absolute inset-0 flex h-full w-full select-none flex-col justify-center rounded-md py-1 pr-9 pl-2 text-left [-webkit-touch-callout:none]"
       />
 
-      <div className="pointer-events-none relative flex h-full flex-col justify-center py-1 pr-9 pl-2">
+      {/* Sticky just right of the pinned venue column (w-28, 112px; see
+          VENUE_COL in TransposedGrid.tsx), so a block that starts off-screen
+          still says what it is: a six-hour exhibition scrolled to its
+          middle would otherwise be an empty box. w-fit is what gives it
+          room to slide; max-w-full keeps a short block's name wrapping
+          exactly as before. */}
+      <div className="pointer-events-none sticky left-28 flex h-full w-fit max-w-full flex-col justify-center py-1 pr-9 pl-2">
         <span className="line-clamp-2 text-xs leading-tight font-semibold text-zinc-100">
           {artist?.sourceUrl ? (
             <a
@@ -118,8 +136,11 @@ export function TransposedPerformanceBlock({
         <span className="truncate text-[10px] leading-tight text-zinc-400">
           {isSide && (
             <span className="mr-1 rounded-sm border border-dashed border-zinc-500 px-0.5 text-[8px] font-semibold text-zinc-300">
-              FREE
+              {programme.side.chip}
             </span>
+          )}
+          {kind && (
+            <span className="mr-1 rounded-sm bg-zinc-600 px-0.5 text-[8px] font-semibold text-zinc-100">{kind.chip}</span>
           )}
           {formatClock(performance.startTime, ft)}
           {showOrdinal && (

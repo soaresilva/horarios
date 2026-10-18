@@ -8,6 +8,7 @@ import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { artistLinksFor } from "@/lib/artist-links";
 import { activeStagesSortedByOrder, stagesByZone } from "@/lib/grouping";
+import type { ProgrammeCopy } from "@/lib/festival-copy";
 import type { Artist, Performance, Stage, Zone, ZoneWalk } from "@/lib/schedule-client";
 import type { ShowOrdinal } from "@/lib/shows";
 import { stageMapsUrl } from "@/lib/venues";
@@ -45,6 +46,7 @@ interface TransposedGridProps {
   ordinals: Map<string, ShowOrdinal>;
   originPerformanceId: string | null;
   marks: MarkControls;
+  programme: ProgrammeCopy;
   ft: FestivalTime;
   onSelectOrigin: (id: string) => void;
 }
@@ -58,6 +60,7 @@ export function TransposedGrid({
   ordinals,
   originPerformanceId,
   marks,
+  programme,
   ft,
   onSelectOrigin,
 }: TransposedGridProps) {
@@ -110,7 +113,7 @@ export function TransposedGrid({
 
         {groups.map(({ zone, stages: zoneStages }) => {
           const label = zone
-            ? zoneWalkLabel(zone, zoneWalks, originZone?.id ?? null, originZone?.name ?? null)
+            ? zoneWalkLabel(zone, zoneWalks, originZone?.id ?? null, originZone?.name ?? null, programme.hubName)
             : null;
 
           return (
@@ -161,6 +164,7 @@ export function TransposedGrid({
                           showRecommendation={showRecommendations}
                           ordinal={ordinals.get(performance.id)}
                           isOrigin={performance.id === originPerformanceId}
+                          programme={programme}
                           ft={ft}
                           onSelectOrigin={onSelectOrigin}
                         />

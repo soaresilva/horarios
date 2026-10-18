@@ -66,9 +66,10 @@ export function zoneWalkLabel(
   walks: ZoneWalkLike[],
   originZoneId: string | null,
   originZoneName: string | null,
+  hubName = "ticket desk",
 ): string | null {
   if (!originZoneId) {
-    return zone.walkMinutesFromHub === null ? null : `${zone.walkMinutesFromHub} min from ticket desk`;
+    return zone.walkMinutesFromHub === null ? null : `${zone.walkMinutesFromHub} min from ${hubName}`;
   }
   const minutes = walkMinutesBetween(walks, originZoneId, zone.id);
   if (minutes === null) return null;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
 import { TransposedGrid } from "./TransposedGrid";
+import { programmeCopy } from "@/lib/festival-copy";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 import type { Performance, Stage } from "@/lib/schedule-client";
 import type { MarkControls } from "@/hooks/useMarks";
@@ -24,7 +25,7 @@ const performances: Performance[] = [
     notes: null,
     recommended: false,
     stageId: "annabel-up",
-    artistId: null, series: null, host: null,
+    artistId: null, series: null, host: null, kind: "CONCERT",
   },
   {
     id: "unnoted",
@@ -35,7 +36,7 @@ const performances: Performance[] = [
     notes: null,
     recommended: false,
     stageId: "v11",
-    artistId: null, series: null, host: null,
+    artistId: null, series: null, host: null, kind: "CONCERT",
   },
 ];
 
@@ -63,6 +64,7 @@ function renderGrid(marks: MarkControls) {
       ordinals={new Map()}
       originPerformanceId={null}
       marks={marks}
+      programme={programmeCopy("lotd26")}
       ft={ft}
       onSelectOrigin={() => {}}
     />,

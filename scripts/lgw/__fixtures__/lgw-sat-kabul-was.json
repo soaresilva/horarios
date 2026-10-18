@@ -1,0 +1,476 @@
+{
+ "day": [
+  {
+   "stages": [
+    {
+     "62": [
+      {
+       "stage": "<span>KABUL à GoGo</span>",
+       "stage_id": 185,
+       "acts": [
+        [],
+        {
+         "s": "arr"
+        }
+       ],
+       "shows": [
+        {
+         "16": [
+          {
+           "show_id": 2126,
+           "name": "Nakibembe Embaire Group live mixed by Mad Professor",
+           "time": "16:00 - 17:00",
+           "endTime": 17,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/nakibembe-embaire-group-live-mixed-by-mad-professor?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "17": [
+          {
+           "show_id": 2127,
+           "name": "Dubplate Pearl",
+           "time": "17:00 - 18:00",
+           "endTime": 18,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/dubplate-pearl?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "18": [
+          {
+           "show_id": 2131,
+           "name": "Mad Professor & Sista Aisha",
+           "time": "18:00 - 19:30",
+           "endTime": 19.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/mad-professor-sista-aisha?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "19.5": [
+          {
+           "show_id": 2134,
+           "name": "Habesha x Empress Black Omolo",
+           "time": "19:30 - 20:30",
+           "endTime": 20.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/habesha-x-empress-black-omolo?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "20.5": [
+          {
+           "show_id": 2132,
+           "name": "Scientist performing 'Scientist Rids the World of the Evil Curse of The Vampires’",
+           "time": "20:30 - 21:30",
+           "endTime": 21.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/scientist-performing-scientist-rids-the-world-of-the-evil-curse-of-the-vampires?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "21.5": [
+          {
+           "show_id": 2140,
+           "name": "Greentea Selecta",
+           "time": "21:30 - 23:00",
+           "endTime": 23,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/greentea-selecta?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "23": [
+          {
+           "show_id": 2130,
+           "name": "The Bug vs Ghost Dubs",
+           "time": "23:00 - 00:00",
+           "endTime": 24,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/the-bug-vs-ghost-dubs?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "24": [
+          {
+           "show_id": 2128,
+           "name": "Aba Shanti-I",
+           "time": "00:00 - 02:00",
+           "endTime": 26,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/aba-shanti-i?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "26": [
+          {
+           "show_id": 2144,
+           "name": "The Bug feat. Warrior Queen",
+           "time": "02:00 - 03:00",
+           "endTime": 27,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/the-bug-feat-warrior-queen?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "27": [
+          {
+           "show_id": 2139,
+           "name": "Tash LC",
+           "time": "03:00 - 04:00",
+           "endTime": 28,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/tash-lc?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "28": [
+          {
+           "show_id": 2136,
+           "name": "Introspekt",
+           "time": "04:00 - 05:30",
+           "endTime": 29.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/introspekt?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "29.5": [
+          {
+           "show_id": 2143,
+           "name": "Chinnamasta",
+           "time": "05:30 - 06:30",
+           "endTime": 30.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/chinnamasta?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "30.5": [
+          {
+           "show_id": 2138,
+           "name": "CARISTA",
+           "time": "06:30 - 07:30",
+           "endTime": 31.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/carista?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "31.5": [
+          {
+           "show_id": 2137,
+           "name": "Azu Tiwaline",
+           "time": "07:30 - 08:30",
+           "endTime": 32.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/azu-tiwaline?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ]
+        },
+        {
+         "s": "arr"
+        }
+       ]
+      },
+      {
+       "s": "arr"
+      }
+     ],
+     "160": [
+      {
+       "stage": "<span>WAS.</span>",
+       "stage_id": 144,
+       "acts": [
+        [],
+        {
+         "s": "arr"
+        }
+       ],
+       "shows": [
+        {
+         "23": [
+          {
+           "show_id": 2383,
+           "name": "jannah",
+           "time": "23:00 - 01:00",
+           "endTime": 25,
+           "color": "#FFA8F3",
+           "project": " WAS.",
+           "project_id": 153,
+           "url": "https://leguesswho.com/lineup/jannah?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "25": [
+          {
+           "show_id": 2248,
+           "name": "Eris Drew & Octo Octa",
+           "time": "01:00 - 05:00",
+           "endTime": 29,
+           "color": "#FFA8F3",
+           "project": " WAS.",
+           "project_id": 153,
+           "url": "https://leguesswho.com/lineup/eris-drew-octo-octa?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "29": [
+          {
+           "show_id": 2249,
+           "name": "Hervé",
+           "time": "05:00 - 07:00",
+           "endTime": 31,
+           "color": "#FFA8F3",
+           "project": " WAS.",
+           "project_id": 153,
+           "url": "https://leguesswho.com/lineup/herve?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ]
+        },
+        {
+         "s": "arr"
+        }
+       ]
+      },
+      {
+       "s": "arr"
+      }
+     ]
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   "start": 11,
+   "end": 32.5,
+   "day": "<span class=\"long\">Sat 7 Nov</span><span class=\"short\">Sat</span>",
+   "id": "2026-11-07"
+  },
+  {
+   "s": "arr"
+  }
+ ],
+ "days": [
+  [
+   [
+    {
+     "id": "2026-11-05",
+     "day": "<span class=\"long\">Thu 5 Nov</span><span class=\"short\">Thu</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-06",
+     "day": "<span class=\"long\">Fri 6 Nov</span><span class=\"short\">Fri</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-07",
+     "day": "<span class=\"long\">Sat 7 Nov</span><span class=\"short\">Sat</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-08",
+     "day": "<span class=\"long\">Sun 8 Nov</span><span class=\"short\">Sun</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ]
+  ],
+  {
+   "s": "arr"
+  }
+ ],
+ "projects": [
+  [
+   [
+    {
+     "id": 147,
+     "name": "24 HOUR DUB",
+     "color": "#e6b01e"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 148,
+     "name": "Curated by Tropical Fuck Storm",
+     "color": "#FF7FD9"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 149,
+     "name": "Curated by Los Thuthanaka",
+     "color": "#869aaf"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 150,
+     "name": "KMRU presents WAI8",
+     "color": "#c77dda"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 151,
+     "name": "Curated by aja monet",
+     "color": "#86cfff"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 152,
+     "name": "Sounds of Cabo Verde",
+     "color": "#ec4620"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 153,
+     "name": "Curated by WAS.",
+     "color": "#FFA8F3"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 155,
+     "name": "totally wired",
+     "color": "#611515"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 156,
+     "name": "Sound & Culture Summit",
+     "color": "9E77B1"
+    },
+    {
+     "s": "arr"
+    }
+   ]
+  ],
+  {
+   "s": "arr"
+  }
+ ]
+}

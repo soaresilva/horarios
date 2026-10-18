@@ -12,7 +12,7 @@ sheet with explicit tier buttons and a free-text note (280 characters) for that 
 "front left, get there early", "skip if the queue is bad". Notes stay on-device unless
 the visitor opts into cross-device sync below, exactly like the tiers themselves.
 
-Three editions, two layouts, chosen per festival by `Festival.layout`:
+Four editions, two layouts, chosen per festival by `Festival.layout`:
 
 - **`/pdc26`** — Vodafone Paredes de Coura 2026 (Aug 9–16, including the bonus
   afterparty day). `VERTICAL`: time runs down, two stages side by side as columns.
@@ -24,6 +24,11 @@ Three editions, two layouts, chosen per festival by `Festival.layout`:
   with three columns (`gridColumns: 3` in `src/lib/festival-copy.ts`): both Paradiso
   halls every night, plus De Kring (Fri) or Barlaeus (Sat). The slug carries the month
   because London Calling runs every April and October.
+- **`/lgw26`** — Le Guess Who? 2026, Utrecht (Nov 5–8). `TRANSPOSED`, like LOTD: 45
+  rooms in ten walking zones. Two switches start off: the **U?** side programme
+  (dashed blocks) and **non-concerts** (films, talks, workshops, exhibitions, each with
+  a chip saying which). With both off the grid is the main concert programme, and the
+  day's time axis tightens to it.
 
 A festival needs no flag to become "archived" — `/` and each festival's own page mark
 it as such automatically once its `endDate` has passed (see `isFestivalOver` in
@@ -81,7 +86,9 @@ npm test          # Vitest — time/grid math, grouping, importer parsers, RTL c
 npm run test:e2e  # Playwright — admin CRUD, offline-after-first-visit, transposed grid
 ```
 
-`test:e2e` runs Chromium for everything, plus **WebKit for `e2e/lotd.spec.ts` only**.
+`test:e2e` runs Chromium for everything, plus **WebKit (iPhone 14) for `e2e/lotd.spec.ts`,
+`e2e/lc.spec.ts` and `e2e/lgw.spec.ts` only**. `lgw.spec.ts` needs `npm run import:lgw -- --apply`
+against the e2e database first.
 The transposed grid's frozen venue column and time header are pure CSS sticky, and every
 sticky bug this project has actually hit (stuttering scroll, unpainted headers — commits
 `0f12f0e`, `ed2f728`) was Safari-only, so those assertions have to run on WebKit. The
@@ -197,6 +204,68 @@ the club nights' measured times inherit that drift. Each `artistSlug` is explici
 because the site's slugs don't follow names (Sandhouse is `/artists/swapmeet-2/`) and
 older editions reuse names (`/artists/cardinals/` is not this year's Cardinals).
 Rows are `lc26oct-p-*` / `lc26oct-a-*`.
+
+## Importing Le Guess Who? 2026
+
+leguesswho.com's timetable (`/timetable`, and `/u/timetable` for U?) is a Livewire
+component, so there is structured data to read: each show has a stable `show_id`, its
+room, its project and its times. robots.txt allows everything with `Crawl-delay: 5`,
+and every request waits 5 seconds.
+
+```bash
+npm run import:lgw -- --fetch            # site -> scripts/data/lgw26.json (~3 min)
+npm run import:lgw -- --check            # plan the snapshot, print counts, no DB
+npm run import:lgw -- --sql              # zones/rooms/walks SQL the migration carries
+npm run import:lgw -- --apply --dry-run  # report what would change
+npm run import:lgw -- --apply            # snapshot -> Postgres
+npm run import:lgw -- --apply --prune    # also remove sets that left the snapshot
+```
+
+Run `--fetch` then `--check` before the festival to pick up timetable edits. The
+committed snapshot makes each change reviewable as a diff before it reaches a database.
+The finer points:
+
+- **Other days are a replayed click.** Only the first day is in the page. The others
+  load when a visitor taps a day tab, which makes a Livewire `setDay` call, and `?day=`
+  is ignored. `scripts/lgw/livewire.ts` replays that call once per day with the page's
+  own snapshot, CSRF token and session cookie.
+- **Instants come from the source's decimal hours, not clock strings.** The site keys
+  each show in hours after its day tab's midnight: 25 is 01:00, and 30.5 is 06:30 the
+  next morning. 24 HOUR DUB (KABUL à GoGo, Sat 16:00 to Sun 16:00) is filed under
+  Saturday up to 08:30 and under Sunday from 08:30. The app's 06:00 roll heuristic
+  (`fromFestivalDayTime`) would put the 05:30-08:30 sets on the wrong day, so the
+  importer never uses it. `date` is the site's tab, so those sets draw on Saturday's
+  grid. One side effect: editing those rows' times in `/admin` hits the "end before
+  start" check, the same as Dupplo at PdC.
+- **Dedupe and umbrellas.** Three Sunday items appear in both timetables under different
+  show ids. They are kept once, in the main programme, so they show with U? off.
+  Two blocks only summarise other entries and are dropped (`UMBRELLAS` in `plan.ts`):
+  - the main timetable's "U?" block
+  - U?'s "totally wired", which repeats the dB's sets
+- **Kinds.** The site has no category field. `scripts/lgw/kinds.ts` applies a hand list
+  (read off each item's lineup page) first, then these rules:
+  - project `Film` is FILM
+  - a `Workshop:` title is WORKSHOP
+  - the rest of the Sound & Culture Summit is TALK
+  - anything else is CONCERT
+
+  Two guards keep this honest:
+  - Any item of 3h or more that still comes out as CONCERT must be listed in
+    `LONG_CONCERTS`, or `--check` fails. A new exhibition can't then land on the
+    concert grid unnoticed.
+  - A hand-list name the timetable no longer has also fails `--check`, which catches
+    renames.
+- **Acts are names, not lineup pages.** Pages are shared: "Not Fit For TV" links to
+  "Let the New Take Root". So acts are keyed by name and link to whatever page their
+  show links to.
+- **Zones and walking times** come from each venue's own leguesswho.com page, which has
+  its street address and map pin. `scripts/lgw/zones.ts` computes them as zone centroids
+  × haversine × 1.3 detour at 80 m/min, rounded up. `--sql` generates the migration's
+  Zone/Stage/ZoneWalk rows, and a test fails if the migration drifts from it. Zone
+  headers measure from TivoliVredenburg until a set is tapped.
+
+Rows are `lgw26-p-<show_id>` / `lgw26-a-<name slug>`, so a rename or time change
+updates the row and keeps visitors' marks on it.
 
 ## Deployment (Vercel + Neon)
 

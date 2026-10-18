@@ -32,7 +32,7 @@ function performance(overrides: Partial<Performance>): Performance {
     notes: null,
     recommended: false,
     stageId: "vodafone",
-    artistId: null, series: null, host: null,
+    artistId: null, series: null, host: null, kind: "CONCERT",
     ...overrides,
   };
 }

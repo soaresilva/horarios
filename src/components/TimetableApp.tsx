@@ -9,7 +9,7 @@ import { MarkSheet } from "@/components/MarkSheet";
 import { MarksHint } from "@/components/MarksHint";
 import { NotesToggle } from "@/components/NotesToggle";
 import { RecommendationsToggle } from "@/components/RecommendationsToggle";
-import { SideProgrammeToggle } from "@/components/SideProgrammeToggle";
+import { NonConcertsToggle, SideProgrammeToggle } from "@/components/SideProgrammeToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
@@ -21,8 +21,9 @@ import type { MarkControls } from "@/hooks/useMarks";
 import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useShowNotes } from "@/hooks/useShowNotes";
-import { useShowSideProgramme } from "@/hooks/useShowSideProgramme";
-import { festivalCopy } from "@/lib/festival-copy";
+import { useShowNonConcerts, useShowSideProgramme } from "@/hooks/useShowSideProgramme";
+import { festivalCopy, programmeCopy } from "@/lib/festival-copy";
+import { contextLine } from "@/lib/programme";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { otherShowsOf, showOrdinals } from "@/lib/shows";
 import { formatClock, todayInFestivalTimezone, type FestivalTime } from "@/lib/time";
@@ -44,7 +45,15 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { tierOf, noteOf, cycle, setTier, setNote, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
   const hint = useMarksHintDismissed(festivalSlug);
   const { show: showNotes, toggle: toggleShowNotes } = useShowNotes(festivalSlug);
-  const { show: showSideProgramme, toggle: toggleSideProgramme } = useShowSideProgramme(festivalSlug);
+  const programme = programmeCopy(festivalSlug);
+  const { show: showSideProgramme, toggle: toggleSideProgramme } = useShowSideProgramme(
+    festivalSlug,
+    programme.side.defaultShown,
+  );
+  const { show: showNonConcerts, toggle: toggleNonConcerts } = useShowNonConcerts(
+    festivalSlug,
+    programme.nonConcertsDefaultShown,
+  );
   // Holds only the user's explicit tab choice; the default (today, falling
   // back to the first festival day) is derived below rather than pushed
   // into state via an effect, since `days` isn't known until the schedule
@@ -134,14 +143,17 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   }
 
   const dayPerformances = performancesForDate(schedule.performances, selectedDay);
-  // The side-programme switch only thins the grids. The favourites list
-  // keeps every marked set whatever the switch says (a set you marked
-  // shouldn't silently vanish), and ordinals / "Also plays" stay
-  // festival-wide so "#2/3" means the same thing either way.
+  // The side-programme and non-concerts switches only thin the grids. The
+  // favourites list keeps every marked set whatever they say (a set you
+  // marked shouldn't silently vanish), and ordinals / "Also plays" stay
+  // festival-wide so "#2/3" means the same thing either way. Rooms and the
+  // day's time window are derived from gridPerformances, so a room with
+  // nothing left drops out and a 10:00 talk stops stretching the axis.
   const hasSideProgramme = schedule.performances.some((p) => p.series !== null);
-  const gridPerformances = showSideProgramme
-    ? dayPerformances
-    : dayPerformances.filter((p) => p.series === null);
+  const hasNonConcerts = schedule.performances.some((p) => p.kind !== "CONCERT");
+  const gridPerformances = dayPerformances.filter(
+    (p) => (showSideProgramme || p.series === null) && (showNonConcerts || p.kind === "CONCERT"),
+  );
   const copy = festivalCopy(festivalSlug);
   const gridColumns = copy?.gridColumns ?? 2;
   const main = mainStages(schedule.stages, gridPerformances, gridColumns);
@@ -224,7 +236,10 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         )}
         <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
         <NotesToggle show={showNotes} onToggle={toggleShowNotes} />
-        {hasSideProgramme && <SideProgrammeToggle show={showSideProgramme} onToggle={toggleSideProgramme} />}
+        {hasSideProgramme && (
+          <SideProgrammeToggle show={showSideProgramme} onToggle={toggleSideProgramme} copy={programme.side} />
+        )}
+        {hasNonConcerts && <NonConcertsToggle show={showNonConcerts} onToggle={toggleNonConcerts} />}
       </div>
 
       <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
@@ -253,6 +268,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           ordinals={ordinals}
           originPerformanceId={originId}
           marks={marks}
+          programme={programme}
           ft={ft}
           onSelectOrigin={(id) => setOriginId((current) => (current === id ? null : id))}
         />
@@ -342,8 +358,8 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
               startTime={sheetPerformance.startTime}
               endTime={sheetPerformance.endTime}
               stageName={sheetStage.name}
-              series={sheetPerformance.series}
-              host={sheetPerformance.host}
+              context={contextLine(sheetPerformance, programme)}
+              sideTag={programme.side.otherShowTag}
               tier={marks.tierOf(sheetPerformance.id)}
               note={marks.noteOf(sheetPerformance.id)}
               otherShows={otherShows}

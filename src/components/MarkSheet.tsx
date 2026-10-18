@@ -24,9 +24,14 @@ interface MarkSheetProps {
   startTime: Date;
   endTime: Date;
   stageName: string;
-  /** Side programme this set belongs to; null/absent for the main programme. */
-  series?: string | null;
-  host?: string | null;
+  /**
+   * What the set is and who credits it ("Exhibition · U? · Curated by Fai
+   * Aldhukair"), from contextLine in src/lib/programme.ts; null for a plain
+   * main-programme concert.
+   */
+  context?: string | null;
+  /** Tag after an "Also plays" entry that's in the side programme ("free daytime", "U?"). */
+  sideTag?: string;
   tier: MarkTier | null;
   note: string;
   /** The act's other sets across the whole festival; empty for a single-show act. */
@@ -46,8 +51,8 @@ export function MarkSheet({
   startTime,
   endTime,
   stageName,
-  series = null,
-  host = null,
+  context = null,
+  sideTag = "side programme",
   tier,
   note,
   otherShows,
@@ -83,12 +88,7 @@ export function MarkSheet({
             <p className="text-xs text-zinc-400">
               {formatClock(startTime, ft)}–{formatClock(endTime, ft)} · {stageName}
             </p>
-            {series && (
-              <p className="text-xs text-zinc-400">
-                {series}
-                {host && <> · hosted by {host}</>} · free entry
-              </p>
-            )}
+            {context && <p className="text-xs text-zinc-400">{context}</p>}
             {/* Showcase festivals book most acts more than once (see
                 showOrdinals in src/lib/shows.ts), so the real question when
                 a set clashes is "when else can I catch them" — answered here
@@ -103,7 +103,7 @@ export function MarkSheet({
                     {i > 0 && "; "}
                     {formatDayTabLabel(new Date(`${show.date}T12:00:00Z`), ft).weekday}, {formatClock(show.startTime, ft)} at{" "}
                     {show.stageName}
-                    {show.series && " (free daytime)"}
+                    {show.series && ` (${sideTag})`}
                   </span>
                 ))}
               </p>

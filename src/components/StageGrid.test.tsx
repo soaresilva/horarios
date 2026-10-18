@@ -24,7 +24,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
     recommended: false,
-    stageId: "vodafone", artistId: null, series: null, host: null,
+    stageId: "vodafone", artistId: null, series: null, host: null, kind: "CONCERT",
   },
   {
     id: "p2",
@@ -34,7 +34,7 @@ const performances: Performance[] = [
     endTime: lisbon("2026-08-13T21:40:00"),
     notes: null,
     recommended: true,
-    stageId: "palco2", artistId: null, series: null, host: null,
+    stageId: "palco2", artistId: null, series: null, host: null, kind: "CONCERT",
   },
 ];
 
@@ -118,6 +118,7 @@ describe("StageGrid", () => {
       artistId,
       series: null,
       host: null,
+      kind: "CONCERT",
     });
     const lcPerformances = [
       set("s1", "Greg Mendez", "small", "19:45", "20:15"),

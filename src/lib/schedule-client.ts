@@ -49,6 +49,8 @@ export function parseSchedule(dto: ScheduleResponse): Schedule {
       // "unknown" rather than "main programme" to a strict === null check.
       series: p.series ?? null,
       host: p.host ?? null,
+      // Same shim for responses cached before Performance.kind existed.
+      kind: p.kind ?? "CONCERT",
       startTime: new Date(p.startTime),
       endTime: new Date(p.endTime),
     })),

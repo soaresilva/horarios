@@ -43,6 +43,9 @@ export interface StageDTO {
   address: string | null;
 }
 
+/** Mirrors the Prisma `PerformanceKind` enum. Everything that isn't CONCERT is behind the grid's "non-concerts" switch. */
+export type PerformanceKindName = "CONCERT" | "FILM" | "TALK" | "WORKSHOP" | "EXHIBITION" | "OTHER";
+
 export interface PerformanceDTO {
   id: string;
   artistName: string;
@@ -56,10 +59,11 @@ export interface PerformanceDTO {
   stageId: string;
   /** Link to imported reference data; null for festivals with no Artist rows. */
   artistId: string | null;
-  /** Side programme this set belongs to ("The Official Unofficial"); null for the main programme. */
+  /** Side programme this set belongs to ("The Official Unofficial", "U?"); null for the main programme. */
   series: string | null;
-  /** Who curates the room for the side programme; null for main-programme sets. */
+  /** Who curates the set (TOUO's room host, an LGW curated project); null when nobody is credited. */
   host: string | null;
+  kind: PerformanceKindName;
 }
 
 export interface ScheduleResponse {

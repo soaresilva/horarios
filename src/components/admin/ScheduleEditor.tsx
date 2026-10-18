@@ -16,6 +16,8 @@ type EditableStage = Stage & { updatedAt: Date };
 type EditablePerformance = Performance & { updatedAt: Date };
 import { performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { formatDayTabLabel, toFestivalClockValue, type FestivalTime } from "@/lib/time";
+import { programmeCopy } from "@/lib/festival-copy";
+import { kindLabel } from "@/lib/programme";
 
 const initialState: SaveScheduleState = {};
 
@@ -65,12 +67,15 @@ interface RowProps {
   performance?: EditablePerformance;
   defaultDate?: string;
   onDelete?: (id: string, name: string) => void;
+  /** Badge for a side-programme row ("TOUO", "U?"). */
+  sideBadge?: string;
 }
 
 // One row of grid cells (a Fragment, so the cells land directly in the parent
 // grid). `keyName` namespaces its field names — the performance id for an
 // existing row, a synthetic "new-*" key for an add row.
-function PerformanceRow({ stages, keyName, ft, performance, defaultDate, onDelete }: RowProps) {
+function PerformanceRow({ stages, keyName, ft, performance, defaultDate, onDelete, sideBadge = "SIDE" }: RowProps) {
+  const kind = performance ? kindLabel(performance.kind) : null;
   const field = (name: string) => `perf.${keyName}.${name}`;
   return (
     <Fragment>
@@ -109,13 +114,20 @@ function PerformanceRow({ stages, keyName, ft, performance, defaultDate, onDelet
       </label>
       {performance && onDelete ? (
         <span className="flex items-center gap-1">
-          {/* Side-programme rows are owned by scripts/import-touo.ts: an edit
-              here sticks only until that set is next re-imported. Kept in
-              this last cell so every input stays a direct grid sibling
-              (e2e/admin.spec.ts walks following-sibling from the name). */}
+          {/* Side-programme rows are owned by their importer (import-touo,
+              import-lgw): an edit here sticks only until that set is next
+              re-imported. Same for `kind`, which this form doesn't edit.
+              Kept in this last cell so every input stays a direct grid
+              sibling (e2e/admin.spec.ts walks following-sibling from the
+              name). */}
           {performance.series && (
             <span title={performance.series} className="rounded bg-zinc-700 px-1 text-[10px] text-zinc-200">
-              TOUO
+              {sideBadge}
+            </span>
+          )}
+          {kind && (
+            <span title={kind.word} className="rounded bg-zinc-600 px-1 text-[10px] text-zinc-100">
+              {kind.chip}
             </span>
           )}
           <button
@@ -160,6 +172,7 @@ interface ScheduleEditorProps {
 }
 
 export function ScheduleEditor({ festivalSlug, ft, stages, performances, onSaved }: ScheduleEditorProps) {
+  const sideBadge = programmeCopy(festivalSlug).side.adminBadge;
   async function saveAndReport(prevState: SaveScheduleState, formData: FormData) {
     const result = await saveScheduleAction(prevState, formData);
     onSaved?.(result);
@@ -235,6 +248,7 @@ export function ScheduleEditor({ festivalSlug, ft, stages, performances, onSaved
                     keyName={performance.id}
                     performance={performance}
                     onDelete={handleDelete}
+                    sideBadge={sideBadge}
                   />
                 ))}
                 <PerformanceRow stages={stages} ft={ft} keyName={`new-${day}`} defaultDate={day} />

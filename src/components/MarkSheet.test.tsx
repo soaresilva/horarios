@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MarkSheet } from "./MarkSheet";
+import { programmeCopy } from "@/lib/festival-copy";
+import { contextLine } from "@/lib/programme";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
 
 function lisbon(iso: string) {
@@ -97,20 +99,34 @@ describe("MarkSheet", () => {
 });
 
 describe("MarkSheet side programme", () => {
+  const lotd = programmeCopy("lotd26");
+  const lgw = programmeCopy("lgw26");
+
   it("names the side programme, its host and free entry for a TOUO set", () => {
-    renderSheet({ series: "The Official Unofficial", host: "Opposite" });
+    renderSheet({ context: contextLine({ series: "The Official Unofficial", host: "Opposite", kind: "CONCERT" }, lotd) });
     expect(screen.getByText(/The Official Unofficial/)).toHaveTextContent(
       "The Official Unofficial · hosted by Opposite · free entry",
     );
   });
 
   it("says nothing about a side programme for a main-programme set", () => {
-    renderSheet();
+    renderSheet({ context: contextLine({ series: null, host: null, kind: "CONCERT" }, lotd) });
     expect(screen.queryByText(/free entry/)).toBeNull();
   });
 
-  it("tags another set that is in the side programme", () => {
+  it("credits an LGW curated project on a main-programme set, with no prefix", () => {
+    renderSheet({ context: contextLine({ series: null, host: "Curated by aja monet", kind: "CONCERT" }, lgw) });
+    expect(screen.getByText("Curated by aja monet")).toBeInTheDocument();
+  });
+
+  it("names the kind and U? for a U? non-concert, and never says free entry", () => {
+    renderSheet({ context: contextLine({ series: "U?", host: "Curated by Fai Aldhukair", kind: "OTHER" }, lgw) });
+    expect(screen.getByText(/Curated by Fai Aldhukair/)).toHaveTextContent("Not a concert · U? · Curated by Fai Aldhukair");
+  });
+
+  it("tags another set that is in the side programme with the festival's tag", () => {
     renderSheet({
+      sideTag: lotd.side.otherShowTag,
       otherShows: [
         { id: "p2", date: "2026-08-13", startTime: lisbon("2026-08-13T13:15:00"), stageName: "V11", series: "The Official Unofficial" },
         { id: "p3", date: "2026-08-14", startTime: lisbon("2026-08-14T19:50:00"), stageName: "Vodafone", series: null },

@@ -72,7 +72,7 @@ const schedule: Schedule = {
       endTime: new Date("2026-08-13T19:45:00Z"),
       notes: null,
       recommended: false,
-      stageId: "vodafone", artistId: null, series: null, host: null,
+      stageId: "vodafone", artistId: null, series: null, host: null, kind: "CONCERT",
     },
   ],
 };
@@ -135,7 +135,7 @@ const pairedSchedule: Schedule = {
       endTime: new Date("2026-08-10T23:00:00Z"),
       notes: null,
       recommended: false,
-      stageId: "sobe-a-vila", artistId: null, series: null, host: null,
+      stageId: "sobe-a-vila", artistId: null, series: null, host: null, kind: "CONCERT",
     },
     {
       id: "p2",
@@ -145,7 +145,7 @@ const pairedSchedule: Schedule = {
       endTime: new Date("2026-08-11T03:00:00Z"),
       notes: null,
       recommended: false,
-      stageId: "xapas-lounge", artistId: null, series: null, host: null,
+      stageId: "xapas-lounge", artistId: null, series: null, host: null, kind: "CONCERT",
     },
   ],
 };
@@ -200,6 +200,7 @@ describe("TimetableApp side programme switch", () => {
     stageId: "rotown",
     artistId: null,
     host: null,
+    kind: "CONCERT" as const,
   };
   const lotdSchedule: Schedule = {
     ...schedule,
@@ -248,5 +249,82 @@ describe("TimetableApp side programme switch", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: () => {} });
     render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
     expect(screen.queryByRole("switch", { name: /daytime shows/ })).toBeNull();
+  });
+});
+
+describe("TimetableApp Le Guess Who? switches", () => {
+  const lgwFt = { timezone: "Europe/Amsterdam", locale: "en-GB" };
+  const base = {
+    date: "2026-11-08",
+    notes: null,
+    recommended: false,
+    stageId: "basis",
+    artistId: null,
+    host: null,
+    series: null,
+    kind: "CONCERT" as const,
+  };
+  const lgwSchedule: Schedule = {
+    ...schedule,
+    stages: [{ id: "basis", name: "BASIS", slug: "basis", order: 0, zoneId: null, address: null }],
+    performances: [
+      { ...base, id: "concert", artistName: "Yerai Cortés", startTime: new Date("2026-11-08T15:00:00Z"), endTime: new Date("2026-11-08T16:10:00Z") },
+      { ...base, id: "u", artistName: "Woody Grooves", series: "U?", startTime: new Date("2026-11-08T17:00:00Z"), endTime: new Date("2026-11-08T18:00:00Z") },
+      { ...base, id: "expo", artistName: "MUSCLE by Karimah Ashadu", kind: "EXHIBITION" as const, startTime: new Date("2026-11-08T10:00:00Z"), endTime: new Date("2026-11-08T16:00:00Z") },
+      { ...base, id: "u-other", artistName: "Community dinner", series: "U?", kind: "OTHER" as const, startTime: new Date("2026-11-08T17:00:00Z"), endTime: new Date("2026-11-08T18:30:00Z") },
+    ],
+  };
+
+  function renderLgw() {
+    mockUseSchedule.mockReturnValue({ schedule: lgwSchedule, loading: false, error: null, reload: () => {} });
+    render(<TimetableApp festivalSlug="lgw26" ft={lgwFt} layout="TRANSPOSED" />);
+    return screen.getByRole("list", { name: "transposed grid" });
+  }
+
+  it("opens on the main concert programme only: U? and non-concerts are opt-in", () => {
+    window.localStorage.clear();
+    const grid = renderLgw();
+    expect(grid).toHaveTextContent("Yerai Cortés");
+    expect(grid).not.toHaveTextContent("Woody Grooves");
+    expect(grid).not.toHaveTextContent("MUSCLE");
+    expect(grid).not.toHaveTextContent("Community dinner");
+    expect(screen.getByRole("switch", { name: /U\? programme/ })).toHaveAttribute("aria-checked", "false");
+    expect(screen.getByRole("switch", { name: /films, talks/ })).toHaveAttribute("aria-checked", "false");
+  });
+
+  it("applies the two switches independently, and a U? non-concert needs both", async () => {
+    window.localStorage.clear();
+    const grid = renderLgw();
+
+    await userEvent.click(screen.getByRole("switch", { name: /U\? programme/ }));
+    expect(grid).toHaveTextContent("Woody Grooves");
+    expect(grid).not.toHaveTextContent("Community dinner");
+    expect(grid).not.toHaveTextContent("MUSCLE");
+
+    await userEvent.click(screen.getByRole("switch", { name: /films, talks/ }));
+    expect(grid).toHaveTextContent("Community dinner");
+    expect(grid).toHaveTextContent("MUSCLE");
+
+    await userEvent.click(screen.getByRole("switch", { name: /U\? programme/ }));
+    expect(grid).not.toHaveTextContent("Woody Grooves");
+    expect(grid).not.toHaveTextContent("Community dinner");
+    expect(grid).toHaveTextContent("MUSCLE");
+    expect(window.localStorage.getItem("lgw26:showSideProgramme")).toBe("false");
+    expect(window.localStorage.getItem("lgw26:showNonConcerts")).toBe("true");
+    window.localStorage.clear();
+  });
+
+  it("remembers a visitor's choice across reloads", () => {
+    window.localStorage.clear();
+    window.localStorage.setItem("lgw26:showSideProgramme", "true");
+    const grid = renderLgw();
+    expect(grid).toHaveTextContent("Woody Grooves");
+    window.localStorage.clear();
+  });
+
+  it("offers no non-concerts switch for a festival that has none", () => {
+    mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: () => {} });
+    render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
+    expect(screen.queryByRole("switch", { name: /films, talks/ })).toBeNull();
   });
 });

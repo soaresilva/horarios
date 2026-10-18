@@ -1,0 +1,332 @@
+{
+ "day": [
+  {
+   "stages": [
+    {
+     "62": [
+      {
+       "stage": "<span>KABUL à GoGo</span>",
+       "stage_id": 185,
+       "acts": [
+        [],
+        {
+         "s": "arr"
+        }
+       ],
+       "shows": [
+        {
+         "8.5": [
+          {
+           "show_id": 2135,
+           "name": "Kelman Duran live mixed by Chernosyl",
+           "time": "08:30 - 09:30",
+           "endTime": 9.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/kelman-duran-live-mixed-by-chernosyl?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "9.5": [
+          {
+           "show_id": 2145,
+           "name": "ojoo",
+           "time": "09:30 - 10:30",
+           "endTime": 10.5,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/ojoo?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "10.5": [
+          {
+           "show_id": 2141,
+           "name": "SEEKERSINTERNATIONAL",
+           "time": "10:30 - 11:15",
+           "endTime": 11.25,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/seekersinternational?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "11.25": [
+          {
+           "show_id": 2142,
+           "name": "Touching Bass DJs",
+           "time": "11:15 - 13:15",
+           "endTime": 13.25,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/touching-bass-djs?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "13.25": [
+          {
+           "show_id": 2315,
+           "name": "Star David Connection (Nyabinghi)",
+           "time": "13:15 - 14:15",
+           "endTime": 14.25,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/star-david-connection-nyabinghi?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "14.25": [
+          {
+           "show_id": 2133,
+           "name": "Mutabaruka",
+           "time": "14:15 - 15:00",
+           "endTime": 15,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/mutabaruka?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "15": [
+          {
+           "show_id": 2305,
+           "name": "Kat7 (Exile Di Brave and Gavsborg)",
+           "time": "15:00 - 16:00",
+           "endTime": 16,
+           "color": "#e6b01e",
+           "project": "24 HOUR DUB",
+           "project_id": 147,
+           "url": "https://leguesswho.com/lineup/kat7-exile-di-brave-and-gavsborg?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ]
+        },
+        {
+         "s": "arr"
+        }
+       ]
+      },
+      {
+       "s": "arr"
+      }
+     ],
+     "203": [
+      {
+       "stage": "<span>BASIS</span>",
+       "stage_id": 38,
+       "acts": [
+        [],
+        {
+         "s": "arr"
+        }
+       ],
+       "shows": [
+        {
+         "14.5": [
+          {
+           "show_id": 2439,
+           "name": "...",
+           "time": "14:30 - 21:00",
+           "endTime": 21,
+           "color": "#00b2bf",
+           "project": " Perry Gits",
+           "project_id": 165,
+           "url": "https://leguesswho.com/lineup/dotdotdot?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ]
+        },
+        {
+         "s": "arr"
+        }
+       ]
+      },
+      {
+       "s": "arr"
+      }
+     ]
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   "start": 8.5,
+   "end": 26.5,
+   "day": "<span class=\"long\">Sun 8 Nov</span><span class=\"short\">Sun</span>",
+   "id": "2026-11-08"
+  },
+  {
+   "s": "arr"
+  }
+ ],
+ "days": [
+  [
+   [
+    {
+     "id": "2026-11-05",
+     "day": "<span class=\"long\">Thu 5 Nov</span><span class=\"short\">Thu</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-06",
+     "day": "<span class=\"long\">Fri 6 Nov</span><span class=\"short\">Fri</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-07",
+     "day": "<span class=\"long\">Sat 7 Nov</span><span class=\"short\">Sat</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-08",
+     "day": "<span class=\"long\">Sun 8 Nov</span><span class=\"short\">Sun</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ]
+  ],
+  {
+   "s": "arr"
+  }
+ ],
+ "projects": [
+  [
+   [
+    {
+     "id": 147,
+     "name": "24 HOUR DUB",
+     "color": "#e6b01e"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 148,
+     "name": "Curated by Tropical Fuck Storm",
+     "color": "#FF7FD9"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 149,
+     "name": "Curated by Los Thuthanaka",
+     "color": "#869aaf"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 150,
+     "name": "KMRU presents WAI8",
+     "color": "#c77dda"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 151,
+     "name": "Curated by aja monet",
+     "color": "#86cfff"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 152,
+     "name": "Sounds of Cabo Verde",
+     "color": "#ec4620"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 153,
+     "name": "Curated by WAS.",
+     "color": "#FFA8F3"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 155,
+     "name": "totally wired",
+     "color": "#611515"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 156,
+     "name": "Sound & Culture Summit",
+     "color": "9E77B1"
+    },
+    {
+     "s": "arr"
+    }
+   ]
+  ],
+  {
+   "s": "arr"
+  }
+ ]
+}

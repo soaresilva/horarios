@@ -1,0 +1,262 @@
+{
+ "day": [
+  {
+   "stages": [
+    {
+     "10": [
+      {
+       "stage": "<span class=\"venue\">TivoliVredenburg</span><span>Grote Zaal</span>",
+       "stage_id": 5,
+       "acts": [
+        [],
+        {
+         "s": "arr"
+        }
+       ],
+       "shows": [
+        {
+         "18.5": [
+          {
+           "show_id": 2427,
+           "name": "Mohammed el-Kurd",
+           "time": "18:30 - 19:00",
+           "endTime": 19,
+           "color": "#86cfff",
+           "project": " aja monet",
+           "project_id": 151,
+           "url": "https://leguesswho.com/lineup/mohammed-el-kurd?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "19.75": [
+          {
+           "show_id": 2306,
+           "name": "Alsarah & The Nubatones",
+           "time": "19:45 - 20:45",
+           "endTime": 20.75,
+           "color": "#86cfff",
+           "project": " aja monet",
+           "project_id": 151,
+           "url": "https://leguesswho.com/lineup/alsarah-the-nubatones?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "21.75": [
+          {
+           "show_id": 2198,
+           "name": "Harriet Tubman & Georgia Anne Muldrow",
+           "time": "21:45 - 22:45",
+           "endTime": 22.75,
+           "color": "#86cfff",
+           "project": " aja monet",
+           "project_id": 151,
+           "url": "https://leguesswho.com/lineup/harriet-tubman-georgia-anne-muldrow?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "23.5": [
+          {
+           "show_id": 2195,
+           "name": "aja monet",
+           "time": "23:30 - 00:30",
+           "endTime": 24.5,
+           "color": "#86cfff",
+           "project": " aja monet",
+           "project_id": 151,
+           "url": "https://leguesswho.com/lineup/aja-monet?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ],
+         "25": [
+          {
+           "show_id": 2268,
+           "name": "Shadia Mansour",
+           "time": "01:00 - 01:45",
+           "endTime": 25.75,
+           "color": "#86cfff",
+           "project": " aja monet",
+           "project_id": 151,
+           "url": "https://leguesswho.com/lineup/shadia-mansour?referrer=timetable",
+           "sticky": false
+          },
+          {
+           "s": "arr"
+          }
+         ]
+        },
+        {
+         "s": "arr"
+        }
+       ]
+      },
+      {
+       "s": "arr"
+      }
+     ]
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   "start": 11,
+   "end": 26.25,
+   "day": "<span class=\"long\">Thu 5 Nov</span><span class=\"short\">Thu</span>",
+   "id": "2026-11-05"
+  },
+  {
+   "s": "arr"
+  }
+ ],
+ "days": [
+  [
+   [
+    {
+     "id": "2026-11-05",
+     "day": "<span class=\"long\">Thu 5 Nov</span><span class=\"short\">Thu</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-06",
+     "day": "<span class=\"long\">Fri 6 Nov</span><span class=\"short\">Fri</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-07",
+     "day": "<span class=\"long\">Sat 7 Nov</span><span class=\"short\">Sat</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": "2026-11-08",
+     "day": "<span class=\"long\">Sun 8 Nov</span><span class=\"short\">Sun</span>"
+    },
+    {
+     "s": "arr"
+    }
+   ]
+  ],
+  {
+   "s": "arr"
+  }
+ ],
+ "projects": [
+  [
+   [
+    {
+     "id": 147,
+     "name": "24 HOUR DUB",
+     "color": "#e6b01e"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 148,
+     "name": "Curated by Tropical Fuck Storm",
+     "color": "#FF7FD9"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 149,
+     "name": "Curated by Los Thuthanaka",
+     "color": "#869aaf"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 150,
+     "name": "KMRU presents WAI8",
+     "color": "#c77dda"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 151,
+     "name": "Curated by aja monet",
+     "color": "#86cfff"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 152,
+     "name": "Sounds of Cabo Verde",
+     "color": "#ec4620"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 153,
+     "name": "Curated by WAS.",
+     "color": "#FFA8F3"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 155,
+     "name": "totally wired",
+     "color": "#611515"
+    },
+    {
+     "s": "arr"
+    }
+   ],
+   [
+    {
+     "id": 156,
+     "name": "Sound & Culture Summit",
+     "color": "9E77B1"
+    },
+    {
+     "s": "arr"
+    }
+   ]
+  ],
+  {
+   "s": "arr"
+  }
+ ]
+}

@@ -32,7 +32,7 @@ const performances: (Performance & { updatedAt: Date })[] = [
     endTime: lisbon("2026-08-13T20:45:00"),
     notes: null,
     recommended: true,
-    stageId: "vodafone", artistId: null, series: null, host: null,
+    stageId: "vodafone", artistId: null, series: null, host: null, kind: "CONCERT",
     updatedAt: performanceUpdatedAt,
   },
 ];
@@ -112,11 +112,27 @@ describe("ScheduleEditor side-programme rows", () => {
       series: "The Official Unofficial",
       host: "Cowbell Practice",
     };
-    render(<ScheduleEditor festivalSlug="pdc26" ft={ft} stages={stages} performances={[...performances, touo]} />);
+    render(<ScheduleEditor festivalSlug="lotd26" ft={ft} stages={stages} performances={[...performances, touo]} />);
     const tags = screen.getAllByText("TOUO");
     expect(tags).toHaveLength(1);
     expect(tags[0]).toHaveAttribute("title", "The Official Unofficial");
     // The tag sits beside the row's own Delete button, not inside the name cell.
     expect(tags[0].parentElement).toContainElement(screen.getByRole("button", { name: "Delete Rockpool Dramas" }));
+  });
+
+  it("uses the festival's own badge and tags non-concert kinds", () => {
+    const u = {
+      ...performances[0],
+      id: "lgw26-p-2376",
+      artistName: "EPHEMERA",
+      series: "U?",
+      host: "Curated by Fai Aldhukair",
+      kind: "OTHER" as const,
+    };
+    const film = { ...performances[0], id: "lgw26-p-1", artistName: "Blakk wi Blak", kind: "FILM" as const };
+    render(<ScheduleEditor festivalSlug="lgw26" ft={ft} stages={stages} performances={[...performances, u, film]} />);
+    expect(screen.getAllByText("U?")).toHaveLength(1);
+    expect(screen.getByText("EVENT")).toHaveAttribute("title", "Not a concert");
+    expect(screen.getByText("FILM")).toBeInTheDocument();
   });
 });

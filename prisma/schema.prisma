@@ -25,6 +25,19 @@ enum TimetableLayout {
   TRANSPOSED
 }
 
+// What a timetable entry is, for the grid's "non-concerts" switch. Every row
+// is CONCERT unless an importer says otherwise; Le Guess Who? (scripts/lgw/
+// kinds.ts) is the first festival with films, talks, workshops and day-long
+// exhibitions on the same grid as its concerts.
+enum PerformanceKind {
+  CONCERT
+  FILM
+  TALK
+  WORKSHOP
+  EXHIBITION
+  OTHER
+}
+
 // One festival edition (Paredes de Coura 2026, Left of the Dial 2026, ...).
 // Each gets its own public route at /<slug> and admin route at
 // /admin/<slug>; there is no `archived` column — a festival reads as past
@@ -66,7 +79,9 @@ model Zone {
   slug               String
   order              Int        @default(0)
   /// Approximate walking minutes from the festival's hub — for Left of the
-  /// Dial, the Eendrachtsplein ticket desk.
+  /// Dial, the Eendrachtsplein ticket desk; for Le Guess Who?,
+  /// TivoliVredenburg (null on its own zone). The label's wording is
+  /// ProgrammeCopy.hubName in src/lib/festival-copy.ts.
   walkMinutesFromHub Int?
   stages             Stage[]
   walksFrom          ZoneWalk[] @relation("ZoneWalkFrom")
@@ -186,13 +201,16 @@ model Performance {
   artist      Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
   /// Which programme a set belongs to when it isn't the festival's own: null
   /// for the main programme, "The Official Unofficial" for LOTD's free
-  /// daytime side programme (scripts/import-touo.ts). Side-programme sets
+  /// daytime side programme (scripts/import-touo.ts), "U?" for Le Guess
+  /// Who?'s (scripts/import-lgw.ts). Side-programme sets
   /// share Stage rows with the main programme when it's the same room, so
   /// this is what tells them apart on the grid.
   series      String?
-  /// Who curates the set's room for the side programme ("Hosted by …" on
-  /// the TOUO timetable). Null for main-programme sets.
+  /// Who curates the set: the room's host for TOUO ("hosted by …"), the
+  /// curated project for Le Guess Who? ("Curated by aja monet", "24 HOUR
+  /// DUB"), on either programme. Null when nobody is credited.
   host        String?
+  kind        PerformanceKind @default(CONCERT)
   favorites   Favorite[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

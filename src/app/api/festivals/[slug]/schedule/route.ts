@@ -87,6 +87,7 @@ export async function GET(_request: Request, { params }: Params) {
     artistId: p.artistId,
     series: p.series,
     host: p.host,
+    kind: p.kind,
   }));
 
   const body: ScheduleResponse = {

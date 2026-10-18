@@ -33,6 +33,8 @@ describe("walkMinutesBetween", () => {
 describe("zoneWalkLabel", () => {
   it("measures from the ticket desk when no set has been tapped", () => {
     expect(zoneWalkLabel(museumpark, walks, null, null)).toBe("4 min from ticket desk");
+    // Le Guess Who? names its hub instead.
+    expect(zoneWalkLabel(museumpark, walks, null, null, "TivoliVredenburg")).toBe("4 min from TivoliVredenburg");
   });
 
   it("measures from the tapped set's venue once one is chosen", () => {
