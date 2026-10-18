@@ -8,9 +8,13 @@ export type UseShowHelpResult = BooleanPref;
 // "tap to change" hint, and the how-to sentences of each edition's
 // disclaimer (FestivalCopy.help). Shown by default so a first-time visitor
 // still gets the explainer; a visitor who knows the gestures switches it off
-// per festival.
+// once for every festival. Unlike the other switches this one is about the
+// visitor, not the edition, so it shares one storage key ("app:showHelp")
+// instead of being scoped by festival slug.
 const useHelpPref = createSlugBooleanPref("showHelp");
 
-export function useShowHelp(festivalSlug: string): UseShowHelpResult {
-  return useHelpPref(festivalSlug, true);
+const SHARED_SCOPE = "app";
+
+export function useShowHelp(): UseShowHelpResult {
+  return useHelpPref(SHARED_SCOPE, true);
 }

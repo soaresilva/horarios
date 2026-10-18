@@ -47,7 +47,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { tierOf, noteOf, cycle, setTier, setNote, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
   const hint = useMarksHintDismissed(festivalSlug);
   const { show: showNotes, toggle: toggleShowNotes } = useShowNotes(festivalSlug);
-  const { show: showHelp, toggle: toggleShowHelp } = useShowHelp(festivalSlug);
+  const { show: showHelp, toggle: toggleShowHelp } = useShowHelp();
   const programme = programmeCopy(festivalSlug);
   const { show: showSideProgramme, toggle: toggleSideProgramme } = useShowSideProgramme(
     festivalSlug,

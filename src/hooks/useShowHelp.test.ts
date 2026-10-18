@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import { useShowHelp } from "./useShowHelp";
 
-const KEY = "lotd26:showHelp";
+const KEY = "app:showHelp";
 
 afterEach(() => {
   window.localStorage.clear();
@@ -10,12 +10,12 @@ afterEach(() => {
 
 describe("useShowHelp", () => {
   it("defaults to true (help shown) when nothing is stored", () => {
-    const { result } = renderHook(() => useShowHelp("lotd26"));
+    const { result } = renderHook(() => useShowHelp());
     expect(result.current.show).toBe(true);
   });
 
-  it("toggles off and persists 'false' under the festival's key", () => {
-    const { result } = renderHook(() => useShowHelp("lotd26"));
+  it("toggles off and persists 'false' under the shared key", () => {
+    const { result } = renderHook(() => useShowHelp());
     act(() => result.current.toggle());
     expect(result.current.show).toBe(false);
     expect(window.localStorage.getItem(KEY)).toBe("false");
@@ -23,19 +23,18 @@ describe("useShowHelp", () => {
 
   it("rehydrates a stored 'false' on mount", () => {
     window.localStorage.setItem(KEY, "false");
-    const { result } = renderHook(() => useShowHelp("lotd26"));
+    const { result } = renderHook(() => useShowHelp());
     expect(result.current.show).toBe(false);
   });
 
-  it("is scoped per festival slug, so each timetable keeps its own choice", () => {
-    const { result: lotd } = renderHook(() => useShowHelp("lotd26"));
-    const { result: lgw } = renderHook(() => useShowHelp("lgw26"));
+  it("is shared: toggling in one timetable updates every mounted instance", () => {
+    const { result: a } = renderHook(() => useShowHelp());
+    const { result: b } = renderHook(() => useShowHelp());
 
-    act(() => lotd.current.toggle());
+    act(() => a.current.toggle());
 
-    expect(lotd.current.show).toBe(false);
-    expect(lgw.current.show).toBe(true);
-    expect(window.localStorage.getItem("lgw26:showHelp")).toBeNull();
+    expect(a.current.show).toBe(false);
+    expect(b.current.show).toBe(false);
   });
 
   it("falls back to true when localStorage throws", () => {
@@ -44,7 +43,7 @@ describe("useShowHelp", () => {
       throw new Error("blocked");
     };
     try {
-      const { result } = renderHook(() => useShowHelp("lotd26"));
+      const { result } = renderHook(() => useShowHelp());
       expect(result.current.show).toBe(true);
     } finally {
       window.localStorage.getItem = original;

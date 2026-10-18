@@ -347,7 +347,7 @@ describe("TimetableApp help text switch", () => {
     expect(screen.queryByText("tap to change")).not.toBeInTheDocument();
     // The switch itself and the recommends control are not help text.
     expect(screen.getByRole("switch", { name: /help text/ })).toHaveAttribute("aria-checked", "false");
-    expect(window.localStorage.getItem("pdc26:showHelp")).toBe("false");
+    expect(window.localStorage.getItem("app:showHelp")).toBe("false");
   });
 
   it("hides the how-to sentences of a festival's disclaimer but keeps its facts", async () => {
@@ -363,7 +363,7 @@ describe("TimetableApp help text switch", () => {
   });
 
   it("keeps a festival's disclaimer visible when help is off and the festival has no help copy", async () => {
-    window.localStorage.setItem("pdc26:showHelp", "false");
+    window.localStorage.setItem("app:showHelp", "false");
     render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
 
     expect(screen.getByRole("switch", { name: /help text/ })).toHaveAttribute("aria-checked", "false");
