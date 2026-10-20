@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { getMarks, replaceAllMarks, useMarks, type MarkView } from "@/hooks/useMarks";
+import { useCrewMember } from "@/hooks/crewMembership";
+import { crewsEnabled } from "@/lib/festival-copy";
 import {
   generatePairingCode,
   listMarks,
@@ -141,6 +143,32 @@ export function useFavoritesSync(festivalSlug: string): UseFavoritesSyncResult {
     window.addEventListener("online", flush);
     return () => window.removeEventListener("online", flush);
   }, [flush]);
+
+  // Being in a crew means your marks are on the server wherever crews are
+  // switched on, without visiting the sync panel festival by festival. Runs
+  // when this device joins a crew and whenever it opens another crew-enabled
+  // festival it hasn't synced yet. optIntoSync is additive (it never deletes
+  // rows another device already pushed), and the pull after it brings those
+  // rows down here. A failure (offline) leaves it unsynced, to retry on the
+  // next mount or membership change.
+  const crewMember = useCrewMember();
+  const crewSyncInFlight = useRef(false);
+  useEffect(() => {
+    if (!crewMember || !crewsEnabled(festivalSlug) || readSynced(festivalSlug) || crewSyncInFlight.current) return;
+    crewSyncInFlight.current = true;
+    void (async () => {
+      try {
+        await optIntoSync(festivalSlug, getMarks(festivalSlug));
+        writeSynced(festivalSlug, true);
+        writeDirty(festivalSlug, false);
+        await pull();
+      } catch {
+        // stays unsynced; retried next time
+      } finally {
+        crewSyncInFlight.current = false;
+      }
+    })();
+  }, [crewMember, festivalSlug, pull]);
 
   // Shared tail of every local edit: mark dirty (if opted into sync) and
   // (re)start the push debounce. The optimistic local write itself already

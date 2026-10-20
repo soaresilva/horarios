@@ -222,4 +222,87 @@ describe("FavoritesListView", () => {
 
     expect(container.querySelector(".bg-interested\\/15")).toBeInTheDocument();
   });
+
+  describe("crew", () => {
+    const mine = performance({ id: "mine", artistName: "Mine", stageId: "worm1" });
+    const theirs = performance({
+      id: "theirs",
+      artistName: "Theirs Only",
+      stageId: "kunsthal",
+      startTime: lisbon("2026-08-13T21:00:00"),
+      endTime: lisbon("2026-08-13T21:40:00"),
+    });
+    const mineLater = performance({
+      id: "mine-later",
+      artistName: "Mine Later",
+      stageId: "kunsthal",
+      startTime: lisbon("2026-08-13T22:00:00"),
+      endTime: lisbon("2026-08-13T22:40:00"),
+    });
+    const friendsOf = (id: string) =>
+      id === "theirs"
+        ? [{ tag: "M", colorIndex: 1, tier: "must" as const, note: "meet by the sound desk" }]
+        : id === "mine"
+          ? [{ tag: "Zs", colorIndex: 2, tier: "interested" as const }]
+          : [];
+    const crewMarks = fakeMarks({ tierOf: tierOfMap({ mine: "must", "mine-later": "interested" }), friendsOf });
+
+    function renderList(crewSets?: { show: boolean; toggle: () => void }) {
+      return render(
+        <FavoritesListView
+          performances={[mine, theirs, mineLater]}
+          stages={zonedStages}
+          zoneWalks={zoneWalks}
+          artistsById={new Map()}
+          ordinals={new Map()}
+          marks={crewMarks}
+          ft={ft}
+          crewSets={crewSets}
+        />,
+      );
+    }
+
+    it("shows friends' bubbles on your own sets, and no crew-only sets while the switch is off", () => {
+      const { container } = renderList({ show: false, toggle: () => {} });
+      expect(screen.queryByText("Theirs Only")).toBeNull();
+      expect(container.querySelector('[data-performance-id="mine"] [data-crew-tag="Zs"]')).toBeInTheDocument();
+      expect(screen.getByRole("switch", { name: /crew picks/ })).toHaveAttribute("aria-checked", "false");
+    });
+
+    it("adds crew-only sets, dimmed, with the friend's note, when the switch is on", () => {
+      const { container } = renderList({ show: true, toggle: () => {} });
+      const row = container.querySelector('[data-performance-id="theirs"]')!;
+      expect(row).toHaveAttribute("data-crew-only", "true");
+      expect(row.querySelector(".border-dashed")).toBeInTheDocument();
+      expect(row).toHaveTextContent("M: meet by the sound desk");
+    });
+
+    it("measures the walk between your own sets, skipping the crew-only one in between", () => {
+      renderList({ show: true, toggle: () => {} });
+      // mine (Worm 1, Eendrachtsplein) → mine-later (Kunsthal, Museumpark) is 12 min,
+      // and the crew-only Kunsthal set between them gets no walk line of its own.
+      expect(screen.getAllByText(/min walk|same venue|same building/)).toEqual([screen.getByText("12 min walk")]);
+    });
+
+    it("has no switch when there's no crew", () => {
+      renderList(undefined);
+      expect(screen.queryByRole("switch", { name: /crew picks/ })).toBeNull();
+    });
+
+    it("points to the switch from the empty state when only friends picked sets", () => {
+      render(
+        <FavoritesListView
+          performances={[theirs]}
+          stages={zonedStages}
+          zoneWalks={zoneWalks}
+          artistsById={new Map()}
+          ordinals={new Map()}
+          marks={fakeMarks({ friendsOf })}
+          ft={ft}
+          crewSets={{ show: false, toggle: () => {} }}
+        />,
+      );
+      expect(screen.getByText(/Your crew picked 1 set: switch on crew picks/)).toBeInTheDocument();
+    });
+  });
 });

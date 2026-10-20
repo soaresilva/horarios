@@ -16,7 +16,8 @@
     "import:lotd": "tsx scripts/import-lotd.ts",
     "import:touo": "tsx scripts/import-touo.ts",
     "import:lc": "tsx scripts/import-lc.ts",
-    "import:lgw": "tsx scripts/import-lgw.ts"
+    "import:lgw": "tsx scripts/import-lgw.ts",
+    "stats:crews": "tsx scripts/crew-stats.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.9.0",

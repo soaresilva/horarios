@@ -25,6 +25,20 @@ vi.mock("@/hooks/useFavoritesSync", () => ({
     redeemCode: async () => ({ error: "invalid" as const }),
   }),
 }));
+// Crews: the real hook imports the crew Server Actions (server-only). Inert
+// here; the button is a marker so its per-festival gating is observable.
+vi.mock("@/hooks/useCrew", () => ({
+  useCrew: () => ({
+    crew: null,
+    fetchedAt: null,
+    friendsOf: () => [],
+    create: async () => ({ error: "invalid" as const }),
+    join: async () => ({ error: "invalid" as const }),
+    update: async () => ({ error: "invalid" as const }),
+    leave: async () => {},
+  }),
+}));
+vi.mock("@/components/CrewButton", () => ({ CrewButton: () => <span>CREW BUTTON</span> }));
 vi.mock("@/components/DayTabs", () => ({ DayTabs: () => null }));
 vi.mock("@/components/FavoritesListView", () => ({ FavoritesListView: () => <div>FAVORITES LIST VIEW</div> }));
 vi.mock("@/components/InstallBanner", () => ({ InstallBanner: () => null }));
@@ -368,5 +382,21 @@ describe("TimetableApp help text switch", () => {
 
     expect(screen.getByRole("switch", { name: /help text/ })).toHaveAttribute("aria-checked", "false");
     expect(screen.queryByText(/tap a set to mark it/i)).not.toBeInTheDocument();
+  });
+});
+
+describe("TimetableApp crews", () => {
+  beforeEach(() => {
+    mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
+  });
+
+  it("shows the crew button on Left of the Dial", () => {
+    render(<TimetableApp festivalSlug="lotd26" ft={ft} layout="TRANSPOSED" />);
+    expect(screen.getByText("CREW BUTTON")).toBeInTheDocument();
+  });
+
+  it.each(["pdc26", "lc26oct", "lgw26"])("has no crew button on %s, where crews are off", (slug) => {
+    render(<TimetableApp festivalSlug={slug} ft={ft} layout="VERTICAL" />);
+    expect(screen.queryByText("CREW BUTTON")).toBeNull();
   });
 });

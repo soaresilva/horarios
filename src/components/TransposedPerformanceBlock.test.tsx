@@ -59,6 +59,13 @@ function renderBlock(overrides: Partial<MarkControls> = {}, artist: Artist | und
   );
 }
 
+const crewFriends = [
+  { tag: "D", colorIndex: 0, tier: "must" as const, note: "front left" },
+  { tag: "M", colorIndex: 1, tier: "must" as const },
+  { tag: "Zs", colorIndex: 2, tier: "interested" as const },
+  { tag: "J", colorIndex: 3, tier: "interested" as const },
+];
+
 describe("TransposedPerformanceBlock", () => {
   it("calls onSelectOrigin with the performance id when the block body is tapped", async () => {
     const onSelectOrigin = vi.fn();
@@ -207,5 +214,25 @@ describe("TransposedPerformanceBlock on Le Guess Who?", () => {
     const block = container.querySelector("[data-performance-id]")!;
     expect(block.className).not.toContain("border-dashed");
     expect(block.getAttribute("title")).toBe("Curated by aja monet");
+  });
+
+  it("shows two friends' tags then +N on the clock line, and a tap opens the sheet, not the walking origin", async () => {
+    const openSheet = vi.fn();
+    const user = userEvent.setup();
+    const { container } = renderBlock({ friendsOf: () => crewFriends, openSheet });
+    expect([...container.querySelectorAll("[data-crew-tag]")].map((el) => el.textContent)).toEqual(["D", "M"]);
+    expect(screen.getByText("+2")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^Crew:/ }));
+    expect(openSheet).toHaveBeenCalledWith("p1");
+    expect(screen.getByRole("button", { name: /Measure walking times/ })).toHaveAttribute("aria-pressed", "false");
+  });
+
+  it("puts each friend's note in the bubbles' hover text", () => {
+    renderBlock({ friendsOf: () => crewFriends });
+    expect(screen.getByRole("button", { name: /^Crew:/ })).toHaveAttribute(
+      "title",
+      "D: must-see · front left\nM: must-see\nZs: interested\nJ: interested",
+    );
   });
 });

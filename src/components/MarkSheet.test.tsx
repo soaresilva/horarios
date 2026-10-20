@@ -136,4 +136,21 @@ describe("MarkSheet side programme", () => {
       "QUI, 13:15 at V11 (free daytime); SEX, 19:50 at Vodafone",
     );
   });
+
+  it("lists each crewmate's tier and note in a Crew section", () => {
+    renderSheet({
+      crew: [
+        { tag: "D", colorIndex: 0, tier: "must", note: "front left, get there early" },
+        { tag: "Zs", colorIndex: 2, tier: "interested" },
+      ],
+    });
+    const section = screen.getByRole("region", { name: "Crew" });
+    expect(section).toHaveTextContent("Dmust-seefront left, get there early");
+    expect(section).toHaveTextContent("Zsinterested");
+  });
+
+  it("has no Crew section when no friend marked the set", () => {
+    renderSheet({ crew: [] });
+    expect(screen.queryByRole("region", { name: "Crew" })).toBeNull();
+  });
 });

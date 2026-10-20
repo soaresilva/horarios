@@ -1,6 +1,7 @@
 "use client";
 
 import { ArtistLinksRail } from "@/components/ArtistLinksRail";
+import { CrewBubbles } from "@/components/CrewBubbles";
 import { Pencil, ThumbsUp } from "@/components/icons";
 import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
@@ -51,6 +52,7 @@ export function TransposedPerformanceBlock({
   const showOrdinal = ordinal && ordinal.total > 1;
   const tier = marks.tierOf(performance.id);
   const note = marks.noteOf(performance.id);
+  const friends = marks.friendsOf?.(performance.id) ?? [];
   const showInlineNote = marks.showNotes && note !== "";
   const longPress = useLongPress(() => marks.openSheet(performance.id));
   // Side-programme sets (TOUO, U?) share venue rows with the main
@@ -154,6 +156,10 @@ export function TransposedPerformanceBlock({
               <Pencil className="inline h-2.5 w-2.5" />
             </span>
           )}
+          {/* Friends' picks, on the clock line for the same reason the ✎
+              is: the rail has no room (see the pr-9 note above). Two
+              bubbles then "+N", which a 40-minute block at 5px/min holds. */}
+          <CrewBubbles friends={friends} max={2} onOpen={() => marks.openSheet(performance.id)} className="ml-1" />
         </span>
         {/* Third line, only present when the row grew to ROW_HEIGHT_WITH_NOTE
             (TransposedGrid.tsx) to hold it. pointer-events-auto because the

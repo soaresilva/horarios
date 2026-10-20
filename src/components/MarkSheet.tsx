@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import { CrewBubbles } from "@/components/CrewBubbles";
 import { Close } from "@/components/icons";
 import type { MarkTier } from "@/hooks/useMarks";
+import { tierWord, type FriendMark } from "@/lib/crew";
 import { NOTE_MAX_LENGTH } from "@/lib/marks";
 import { formatClock, formatDayTabLabel, type FestivalTime } from "@/lib/time";
 
@@ -36,6 +38,8 @@ interface MarkSheetProps {
   note: string;
   /** The act's other sets across the whole festival; empty for a single-show act. */
   otherShows: OtherShow[];
+  /** Crewmates' marks on this set, strongest first; the section is hidden when empty. */
+  crew?: FriendMark[];
   ft: FestivalTime;
   onSetTier: (tier: MarkTier | null) => void;
   onSetNote: (text: string) => void;
@@ -56,6 +60,7 @@ export function MarkSheet({
   tier,
   note,
   otherShows,
+  crew = [],
   ft,
   onSetTier,
   onSetNote,
@@ -159,6 +164,23 @@ export function MarkSheet({
           onChange={(e) => onSetNote(e.target.value)}
           className="mb-3 h-20 w-full resize-none rounded-md border border-zinc-700 bg-zinc-950 p-2 text-sm text-zinc-100 placeholder:text-zinc-600"
         />
+
+        {/* The one place a friend's note is readable on a phone: blocks only
+            have room for their tag bubble, and hover doesn't exist on touch. */}
+        {crew.length > 0 && (
+          <section aria-label="Crew" className="mb-3 border-t border-zinc-800 pt-2">
+            <p className="mb-1.5 text-[10px] font-semibold tracking-wide text-zinc-500 uppercase">Crew</p>
+            <ul className="flex flex-col gap-1.5">
+              {crew.map((friend) => (
+                <li key={friend.tag} className="flex items-start gap-2 text-xs">
+                  <CrewBubbles friends={[friend]} />
+                  <span className="w-16 shrink-0 text-zinc-400">{tierWord(friend.tier)}</span>
+                  {friend.note && <span className="min-w-0 text-zinc-300 italic">{friend.note}</span>}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         <button
           type="button"

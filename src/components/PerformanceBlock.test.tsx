@@ -40,6 +40,13 @@ function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
   };
 }
 
+const crewFriends = [
+  { tag: "D", colorIndex: 0, tier: "must" as const, note: "front left" },
+  { tag: "M", colorIndex: 1, tier: "must" as const },
+  { tag: "Zs", colorIndex: 2, tier: "interested" as const },
+  { tag: "J", colorIndex: 3, tier: "interested" as const },
+];
+
 describe("PerformanceBlock", () => {
   it("renders Spotify and Instagram links for an artist that has both, opening in a new tab", () => {
     render(<PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks()} ft={ft} showRecommendation={false} />);
@@ -257,5 +264,50 @@ describe("PerformanceBlock", () => {
       await userEvent.click(screen.getByRole("button", { name: /Lip Critic/ }));
       expect(cycle).toHaveBeenCalledWith("p1");
     });
+  });
+
+  it("shows no crew bubbles on a festival without crews (friendsOf undefined)", () => {
+    const { container } = render(
+      <PerformanceBlock performance={performance()} layout={layout} alternate={false} marks={fakeMarks()} ft={ft} showRecommendation={false} />,
+    );
+    expect(container.querySelector("[data-crew-tag]")).toBeNull();
+  });
+
+  it("shows friends' tags on the time line, three then +N, and opens the sheet on tap", async () => {
+    const openSheet = vi.fn();
+    const cycle = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <PerformanceBlock
+        performance={performance()}
+        layout={layout}
+        alternate={false}
+        marks={fakeMarks({ friendsOf: (id) => (id === "p1" ? crewFriends : []), openSheet, cycle })}
+        ft={ft}
+        showRecommendation={false}
+      />,
+    );
+    expect([...container.querySelectorAll("[data-crew-tag]")].map((el) => el.textContent)).toEqual(["D", "M", "Zs"]);
+    expect(screen.getByText("+1")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /^Crew:/ }));
+    expect(openSheet).toHaveBeenCalledWith("p1");
+    expect(cycle).not.toHaveBeenCalled();
+  });
+
+  it("fits only two bubbles in a narrow (compact) column", () => {
+    const { container } = render(
+      <PerformanceBlock
+        performance={performance()}
+        layout={layout}
+        alternate={false}
+        marks={fakeMarks({ friendsOf: () => crewFriends })}
+        ft={ft}
+        showRecommendation={false}
+        compact
+      />,
+    );
+    expect(container.querySelectorAll("[data-crew-tag]")).toHaveLength(2);
+    expect(screen.getByText("+2")).toBeInTheDocument();
   });
 });

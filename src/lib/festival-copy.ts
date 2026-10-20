@@ -90,6 +90,15 @@ export interface FestivalCopy {
   horizontalScale?: HorizontalScale;
   /** Side programme, host and non-concert wording; anything unset falls back to DEFAULT_PROGRAMME_COPY. */
   programme?: Partial<Omit<ProgrammeCopy, "side">> & { side?: SideProgrammeCopy };
+  /**
+   * Crews: friends' picks as tag bubbles on each block (src/lib/crew.ts).
+   * Defaults to false. Gates the UI, the server's crew reads and writes
+   * (src/app/crew/actions.ts), and the "a crew member's marks sync to the
+   * server" rule in useFavoritesSync, so a festival that's off never sends
+   * or receives crew data. Membership itself spans festivals: switching a
+   * festival on later shows existing crews there straight away.
+   */
+  crews?: boolean;
 }
 
 export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
@@ -115,6 +124,9 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     // above already covers starring — the legend row would be redundant on
     // an already-dense grid.
     legend: false,
+    // The first festival with crews (Diogo, 2026-10-20), the day before it
+    // opened. The rest follow once LOTD shows people actually use it.
+    crews: true,
     programme: {
       side: {
         chip: "FREE",
@@ -182,6 +194,10 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
 
 export function festivalCopy(slug: string): FestivalCopy | undefined {
   return FESTIVAL_COPY[slug];
+}
+
+export function crewsEnabled(slug: string): boolean {
+  return FESTIVAL_COPY[slug]?.crews ?? false;
 }
 
 export function programmeCopy(slug: string): ProgrammeCopy {

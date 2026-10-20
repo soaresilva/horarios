@@ -102,4 +102,17 @@ describe("SideStageSection", () => {
     // so the only svg that could appear in the icon rail is the ✎ Pencil.
     expect(document.querySelectorAll("svg").length).toBe(0);
   });
+
+  it("shows friends' tags in the row without making them a second tap target", () => {
+    const { container } = render(
+      <SideStageSection
+        stage={stage}
+        performances={[performance()]}
+        marks={fakeMarks({ friendsOf: () => [{ tag: "M", colorIndex: 1, tier: "must" }] })}
+        ft={ft}
+      />,
+    );
+    expect(container.querySelector('[data-crew-tag="M"]')).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Crew:/ })).toBeNull();
+  });
 });

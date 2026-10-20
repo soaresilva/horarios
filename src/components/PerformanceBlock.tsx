@@ -3,6 +3,7 @@
 import type { Artist, Performance } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
 import type { BlockLayout, FestivalTime } from "@/lib/time";
+import { CrewBubbles } from "@/components/CrewBubbles";
 import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
 import { InlineNote } from "@/components/InlineNote";
 import { getArtistLinks } from "@/lib/artist-links";
@@ -40,6 +41,7 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
     : getArtistLinks(performance.artistName);
   const tier = marks.tierOf(performance.id);
   const note = marks.noteOf(performance.id);
+  const friends = marks.friendsOf?.(performance.id) ?? [];
 
   const longPress = useLongPress(() => marks.openSheet(performance.id));
 
@@ -122,6 +124,15 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
         </span>
         <span className="text-[10px] leading-tight text-zinc-400 sm:text-xs">
           {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
+          {/* Friends' picks ride on the time line so they fit any block
+              height. One tap target over the pointer-events-none layer,
+              opening the sheet where their notes are readable. */}
+          <CrewBubbles
+            friends={friends}
+            max={compact ? 2 : 3}
+            onOpen={() => marks.openSheet(performance.id)}
+            className="ml-1"
+          />
         </span>
         {showInlineNote && <InlineNote note={note} lines={noteLines === 2 ? 2 : 1} />}
       </div>

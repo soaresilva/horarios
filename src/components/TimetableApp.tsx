@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { CrewButton } from "@/components/CrewButton";
 import { DayTabs } from "@/components/DayTabs";
 import { FavoritesListView } from "@/components/FavoritesListView";
 import { HelpToggle } from "@/components/HelpToggle";
@@ -17,14 +18,15 @@ import { StageGrid } from "@/components/StageGrid";
 import { SyncFavoritesButton } from "@/components/SyncFavoritesButton";
 import { TransposedGrid } from "@/components/TransposedGrid";
 import { ViewToggle, type TimetableView } from "@/components/ViewToggle";
+import { useCrew } from "@/hooks/useCrew";
 import { useFavoritesSync } from "@/hooks/useFavoritesSync";
 import type { MarkControls } from "@/hooks/useMarks";
 import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useShowHelp } from "@/hooks/useShowHelp";
 import { useShowNotes } from "@/hooks/useShowNotes";
-import { useShowNonConcerts, useShowSideProgramme } from "@/hooks/useShowSideProgramme";
-import { festivalCopy, programmeCopy } from "@/lib/festival-copy";
+import { useShowCrewSets, useShowNonConcerts, useShowSideProgramme } from "@/hooks/useShowSideProgramme";
+import { crewsEnabled, festivalCopy, programmeCopy } from "@/lib/festival-copy";
 import { contextLine } from "@/lib/programme";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { otherShowsOf, showOrdinals } from "@/lib/shows";
@@ -48,6 +50,12 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const hint = useMarksHintDismissed(festivalSlug);
   const { show: showNotes, toggle: toggleShowNotes } = useShowNotes(festivalSlug);
   const { show: showHelp, toggle: toggleShowHelp } = useShowHelp();
+  // Crews (friends' picks as tag bubbles) are switched on per festival in
+  // festival-copy.ts. Off, useCrew stays inert and `friendsOf` is left
+  // undefined, so every block renders exactly as it did before crews.
+  const crewOn = crewsEnabled(festivalSlug);
+  const crew = useCrew(festivalSlug, crewOn);
+  const crewSets = useShowCrewSets(festivalSlug);
   const programme = programmeCopy(festivalSlug);
   const { show: showSideProgramme, toggle: toggleSideProgramme } = useShowSideProgramme(
     festivalSlug,
@@ -95,8 +103,9 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         dismissHint();
       },
       showNotes,
+      friendsOf: crewOn ? crew.friendsOf : undefined,
     }),
-    [tierOf, noteOf, cycle, setTier, setNote, dismissHint, showNotes],
+    [tierOf, noteOf, cycle, setTier, setNote, dismissHint, showNotes, crewOn, crew.friendsOf],
   );
   // Grid (either layout) vs. the favorites-only list. Orthogonal to
   // `layout`, so it isn't reset when the day changes — a visitor who
@@ -243,6 +252,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           </>
         )}
         <SyncFavoritesButton synced={synced} generateCode={generateCode} redeemCode={redeemCode} />
+        {crewOn && <CrewButton crew={crew} festivalSlug={festivalSlug} ft={ft} />}
         <NotesToggle show={showNotes} onToggle={toggleShowNotes} />
         {hasSideProgramme && (
           <SideProgrammeToggle show={showSideProgramme} onToggle={toggleSideProgramme} copy={programme.side} />
@@ -266,6 +276,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           ordinals={ordinals}
           marks={marks}
           ft={ft}
+          crewSets={crew.crew && crew.crew.members.length > 0 ? crewSets : undefined}
         />
       ) : isTransposed ? (
         <TransposedGrid
@@ -373,6 +384,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
               tier={marks.tierOf(sheetPerformance.id)}
               note={marks.noteOf(sheetPerformance.id)}
               otherShows={otherShows}
+              crew={marks.friendsOf?.(sheetPerformance.id)}
               ft={ft}
               onSetTier={(tier) => marks.setTier(sheetPerformance.id, tier)}
               onSetNote={(text) => marks.setNote(sheetPerformance.id, text)}

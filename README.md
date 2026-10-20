@@ -83,7 +83,7 @@ process's local timezone).
 
 ```bash
 npm test          # Vitest — time/grid math, grouping, importer parsers, RTL components
-npm run test:e2e  # Playwright — admin CRUD, offline-after-first-visit, transposed grid
+npm run test:e2e  # Playwright — admin CRUD, offline-after-first-visit, transposed grid, crews
 ```
 
 `test:e2e` runs Chromium for everything, plus **WebKit (iPhone 14) for `e2e/lotd.spec.ts`,
@@ -269,6 +269,42 @@ The finer points:
 
 Rows are `lgw26-p-<show_id>` / `lgw26-a-<name slug>`, so a rename or time change
 updates the row and keeps visitors' marks on it.
+
+## Crews (friends' picks)
+
+A crew is a small group of friends (up to 8) who see each other's marks. Each person picks a
+1-2 character tag ("D", "Zs"); one starts a crew from the **◍ crew** button in the legend row
+and shares the 6-character code (`KX7-PQ2`); the others join with it. From then on every set a
+crewmate marked shows their tag as a bubble on the block: **filled = must-see, outlined =
+interested**. Tapping the bubbles opens the set's sheet with each friend's tier and note;
+hovering shows the same as a tooltip. The **My favorites** list shows bubbles and friends'
+notes in full, and its **crew picks** switch also lists sets only friends marked (dashed),
+with walking times still measured between your own sets only.
+
+- **Per festival switch.** `crews: true` in `src/lib/festival-copy.ts`; only `lotd26` has it
+  (pinned by `src/lib/festival-copy.test.ts`). It gates the UI, the Server Actions
+  (`src/app/crew/actions.ts`) and the auto-sync below. Membership is global, so turning another
+  festival on later shows existing crews there straight away.
+- **Crews ride on favorites sync.** Being in a crew switches sync on for any crew-enabled
+  festival you open (`useFavoritesSync`), which is what puts your `Favorite` rows where crewmates
+  can read them. Paired devices share a visitor id, so they share the crew seat too.
+- **Privacy model.** The code is the credential, same threat model as pairing codes: a guessed
+  code shows a stranger set picks, nothing more. Crewmates only ever see tags and colours, never
+  a visitor id (`toCrewDTO` in `src/lib/crew.ts`, tested). Notes are shared unless you switch
+  **Share my notes** off; notes on sets you didn't mark are never shared.
+- **Freshness.** The crew is polled every 60s while the tab is visible and on focus, and the
+  last snapshot is kept in localStorage, so bubbles survive no signal at the venue.
+- **Limits.** One crew per visitor. No owner or kick: leave and start a new crew to retire a
+  leaked code. The crew row is deleted when its last member leaves.
+
+Usage, read-only, for deciding which festival gets crews next:
+
+```bash
+npm run stats:crews   # crews by size, and per festival the crews where 2+ members marked sets
+```
+
+Run it against production the same way as the importers (env pulled into a scratch file, never
+`.env.local`).
 
 ## Deployment (Vercel + Neon)
 

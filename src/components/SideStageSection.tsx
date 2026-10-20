@@ -2,6 +2,7 @@
 
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock, type FestivalTime } from "@/lib/time";
+import { CrewBubbles } from "@/components/CrewBubbles";
 import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
 import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
@@ -22,6 +23,7 @@ interface SideStageSectionProps {
 function SideStageRow({ performance, marks, ft, showRecommendations }: { performance: Performance; marks: MarkControls; ft: FestivalTime; showRecommendations: boolean }) {
   const tier = marks.tierOf(performance.id);
   const note = marks.noteOf(performance.id);
+  const friends = marks.friendsOf?.(performance.id) ?? [];
   const links = getArtistLinks(performance.artistName);
   const longPress = useLongPress(() => marks.openSheet(performance.id));
 
@@ -64,7 +66,10 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
               <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
             )}
           </span>
-          <span className="text-xs text-zinc-400">
+          <span className="flex shrink-0 items-center gap-1.5 text-xs text-zinc-400">
+            {/* Not a tap target of its own: the whole row is already the
+                tier button. A long-press opens the sheet with friends' notes. */}
+            <CrewBubbles friends={friends} max={3} />
             {formatClock(performance.startTime, ft)}–{formatClock(performance.endTime, ft)}
           </span>
         </span>

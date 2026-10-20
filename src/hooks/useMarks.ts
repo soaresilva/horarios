@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useSyncExternalStore } from "react";
+import type { FriendMark } from "@/lib/crew";
 import type { MarksPayload } from "@/lib/marks";
 
 // Keyed by festival slug, so marking a Rotterdam set doesn't appear in the
@@ -160,6 +161,11 @@ export interface MarkControls extends MarkView {
   openSheet: (id: string) => void;
   /** "display notes" is on: blocks render the note inline instead of behind the ✎ tooltip. */
   showNotes: boolean;
+  /**
+   * Crewmates' marks on a set (useCrew), strongest first. Undefined on a
+   * festival without crews, so blocks there render exactly as before.
+   */
+  friendsOf?: (id: string) => FriendMark[];
 }
 
 function tierOfIn(state: MarksState, id: string): MarkTier | null {

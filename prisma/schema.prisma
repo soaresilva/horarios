@@ -265,3 +265,43 @@ model PairingCode {
 
   @@index([expiresAt])
 }
+
+// A small group of friends who can see each other's marks (the Favorite rows
+// above) on every festival that has crews switched on (`crews` in
+// src/lib/festival-copy.ts). The 6-character code is the only credential:
+// same threat model as PairingCode, the worst a guessed code does is show a
+// stranger some set picks. No owner, no kick: anyone holding the code can
+// join until the crew is full (CREW_MAX_MEMBERS in src/lib/crew.ts), and the
+// row goes away when its last member leaves (src/app/crew/actions.ts).
+model Crew {
+  id        String       @id @default(cuid())
+  /// Normalised, no dash ("KX7PQ2"); shown to people as "KX7-PQ2".
+  code      String       @unique
+  members   CrewMember[]
+  createdAt DateTime     @default(now())
+}
+
+// One visitor's seat in a crew. `visitorId` is the same bare cookie value
+// Favorite uses (no Visitor table), and @unique because a visitor is in at
+// most one crew. Devices paired through PairingCode share a visitorId, so
+// they share the seat too. The visitorId never leaves the server: it IS the
+// cookie credential, so crewmates only ever see `tag` and `colorIndex`
+// (toCrewDTO in src/lib/crew.ts).
+model CrewMember {
+  id         String   @id @default(cuid())
+  crewId     String
+  crew       Crew     @relation(fields: [crewId], references: [id], onDelete: Cascade)
+  visitorId  String   @unique
+  /// As typed, 1-2 letters or digits: "D", "Zs".
+  tag        String   @db.VarChar(2)
+  /// Upper-cased tag, so "zs" and "Zs" can't both sit in one crew.
+  tagKey     String   @db.VarChar(2)
+  /// Index into CREW_COLORS (src/lib/crew.ts), the lowest free one at join.
+  colorIndex Int
+  /// Off = crewmates see this member's tiers but not their notes.
+  shareNotes Boolean  @default(true)
+  joinedAt   DateTime @default(now())
+
+  @@unique([crewId, tagKey])
+  @@index([crewId])
+}

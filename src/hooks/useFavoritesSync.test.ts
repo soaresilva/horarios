@@ -175,3 +175,44 @@ describe("useFavoritesSync — pairing code redemption", () => {
     expect(result.current.synced).toBe(false);
   });
 });
+
+describe("useFavoritesSync — crew membership", () => {
+  it("a crew member opening a crew-enabled festival turns sync on there, pushing local marks and then pulling", async () => {
+    window.localStorage.setItem("crew:member", "true");
+    window.localStorage.setItem("lotd26:starred", JSON.stringify(["p1"]));
+    actions.optIntoSync.mockResolvedValue({ visitorId: "v1" });
+    actions.listMarks.mockResolvedValue({ mustSee: ["p1", "p9"], interested: [], notes: {} });
+
+    const { result } = renderHook(() => useFavoritesSync("lotd26"));
+
+    await waitFor(() => expect(result.current.synced).toBe(true));
+    expect(actions.optIntoSync).toHaveBeenCalledWith("lotd26", { mustSee: ["p1"], interested: [], notes: {} });
+    // The pull brings down what another device of this visitor already pushed.
+    await waitFor(() => expect(result.current.tierOf("p9")).toBe("must"));
+  });
+
+  it("does not turn sync on for a festival with crews off, even for a crew member", async () => {
+    window.localStorage.setItem("crew:member", "true");
+    const { result } = renderHook(() => useFavoritesSync("pdc26"));
+    await Promise.resolve();
+    expect(result.current.synced).toBe(false);
+    expect(actions.optIntoSync).not.toHaveBeenCalled();
+  });
+
+  it("does nothing for a visitor who isn't in a crew", async () => {
+    const { result } = renderHook(() => useFavoritesSync("lotd26"));
+    await Promise.resolve();
+    expect(result.current.synced).toBe(false);
+    expect(actions.optIntoSync).not.toHaveBeenCalled();
+  });
+
+  it("stays unsynced when the opt-in fails offline, to retry later", async () => {
+    window.localStorage.setItem("crew:member", "true");
+    actions.optIntoSync.mockRejectedValue(new Error("offline"));
+    const { result } = renderHook(() => useFavoritesSync("lotd26"));
+    await waitFor(() => expect(actions.optIntoSync).toHaveBeenCalled());
+    await Promise.resolve();
+    expect(result.current.synced).toBe(false);
+    expect(window.localStorage.getItem("lotd26:synced")).toBeNull();
+  });
+});
