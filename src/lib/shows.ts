@@ -1,3 +1,18 @@
+const CANCELLED_PREFIX = /^\[cancelled\]\s*/i;
+
+/**
+ * A cancelled-with-no-replacement set stays on the grid rather than
+ * vanishing (see newhvn, Left of the Dial 2026): visitors who'd already
+ * planned around it need to see it crossed out, not silently missing.
+ * Convention over a schema column since so far it's a single one-off act —
+ * admin just prefixes the artistName with "[cancelled]" and every render
+ * spot strikes the name through via this helper.
+ */
+export function parseCancellation(artistName: string): { cancelled: boolean; displayName: string } {
+  const match = artistName.match(CANCELLED_PREFIX);
+  return match ? { cancelled: true, displayName: artistName.slice(match[0].length) } : { cancelled: false, displayName: artistName };
+}
+
 export interface ShowLike {
   id: string;
   artistId: string | null;
@@ -14,7 +29,11 @@ export interface ShowOrdinal {
 // there is one (Left of the Dial has Artist rows), falling back to a
 // normalised display name for festivals that don't (Paredes de Coura), so
 // two different acts sharing a display name don't merge into one.
-function artistKey(performance: ShowLike): string {
+//
+// Exported because it is also the identity a hidden act is stored under
+// (localStorage `${slug}:hidden` and the HiddenAct table), so hiding one set
+// hides exactly the sets the "#2/3" ordinals count together.
+export function actKeyOf(performance: Pick<ShowLike, "artistId" | "artistName">): string {
   return performance.artistId ?? `name:${performance.artistName.trim().toLowerCase()}`;
 }
 
@@ -35,7 +54,7 @@ function artistKey(performance: ShowLike): string {
 export function showOrdinals(performances: ShowLike[]): Map<string, ShowOrdinal> {
   const groups = new Map<string, ShowLike[]>();
   for (const performance of performances) {
-    const key = artistKey(performance);
+    const key = actKeyOf(performance);
     const group = groups.get(key);
     if (group) group.push(performance);
     else groups.set(key, [performance]);
@@ -65,8 +84,8 @@ export function showOrdinals(performances: ShowLike[]): Map<string, ShowOrdinal>
 export function otherShowsOf<T extends ShowLike>(performances: T[], performanceId: string): T[] {
   const self = performances.find((p) => p.id === performanceId);
   if (!self) return [];
-  const key = artistKey(self);
+  const key = actKeyOf(self);
   return performances
-    .filter((p) => p.id !== performanceId && artistKey(p) === key)
+    .filter((p) => p.id !== performanceId && actKeyOf(p) === key)
     .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 }

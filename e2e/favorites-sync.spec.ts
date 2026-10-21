@@ -158,3 +158,113 @@ test("marking stays local until sync is enabled, then a pairing code merges must
     if (code) await prisma.pairingCode.deleteMany({ where: { code } });
   }
 });
+
+// Hidden acts ride the same sync: a hide made after opting in is pushed
+// (HiddenAct row), a paired device adopts it on redeem, and an unhide there
+// pushes the deletion back. Hiding is per act, so both of the act's sets go.
+test("a hidden act syncs to a paired device, and unhiding there clears it on the server", async ({ browser }) => {
+  test.setTimeout(60_000);
+
+  const festival = await prisma.festival.findUniqueOrThrow({ where: { slug: "pdc26" } });
+  const stage = await prisma.stage.findFirstOrThrow({ where: { festivalId: festival.id, slug: "vodafone" } });
+
+  const name = `E2E Hide ${Date.now()}`;
+  // PdC has no Artist rows, so the act key is the normalised name
+  // (actKeyOf in src/lib/shows.ts).
+  const actKey = `name:${name.toLowerCase()}`;
+  // Same early-morning gap as the test above, so nothing seeded overlaps.
+  const [first, second] = await Promise.all([
+    prisma.performance.create({
+      data: {
+        artistName: name,
+        date: new Date("2026-08-12"),
+        startTime: new Date("2026-08-12T04:00:00Z"),
+        endTime: new Date("2026-08-12T04:30:00Z"),
+        stageId: stage.id,
+      },
+    }),
+    prisma.performance.create({
+      data: {
+        artistName: name,
+        date: new Date("2026-08-12"),
+        startTime: new Date("2026-08-12T05:00:00Z"),
+        endTime: new Date("2026-08-12T05:30:00Z"),
+        stageId: stage.id,
+      },
+    }),
+  ]);
+
+  const contextA = await browser.newContext();
+  const contextB = await browser.newContext();
+  const deviceA = await contextA.newPage();
+  const deviceB = await contextB.newPage();
+  let code: string | undefined;
+
+  try {
+    await deviceA.goto("/pdc26");
+    await deviceA.getByRole("tab", { name: /12/ }).click();
+    const blocks = deviceA.getByRole("button", { name: new RegExp(name) });
+    await expect(blocks).toHaveCount(2);
+
+    // Sync on first, so the hide below goes through the steady-state push.
+    await deviceA.getByRole("button", { name: /sync favorites/i }).click();
+    await deviceA.getByRole("button", { name: "Show a code for this device" }).click();
+    code = await deviceA.locator("p.text-xl").innerText();
+    expect(code).toMatch(/^\d{6}$/);
+    // The panel is an anchored popover with only its own close button.
+    await deviceA.getByRole("button", { name: "Close" }).click();
+
+    // Long-press the first set, hide the act from the sheet.
+    const box = (await blocks.first().boundingBox())!;
+    await deviceA.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await deviceA.mouse.down();
+    await deviceA.waitForTimeout(600);
+    await deviceA.mouse.up();
+    const hideButton = deviceA.getByRole("button", { name: /hide this act/i });
+    await expect(hideButton).toContainText("all 2 sets");
+    await hideButton.click();
+
+    await expect(deviceA.getByRole("button", { name: new RegExp(name) })).toHaveCount(0);
+    await expect(deviceA.getByRole("switch", { name: "Show hidden acts (1)" })).toBeVisible();
+    await expect
+      .poll(() => prisma.hiddenAct.count({ where: { festivalId: festival.id, actKey } }), { timeout: 10_000 })
+      .toBe(1);
+
+    // Device B pairs and adopts the hide.
+    await deviceB.goto("/pdc26");
+    await deviceB.getByRole("tab", { name: /12/ }).click();
+    await expect(deviceB.getByRole("button", { name: new RegExp(name) })).toHaveCount(2);
+    await deviceB.getByRole("button", { name: /sync favorites/i }).click();
+    await deviceB.getByRole("button", { name: "Enter a code from another device" }).click();
+    await deviceB.getByPlaceholder("123456").fill(code);
+    await deviceB.getByRole("button", { name: "Sync", exact: true }).click();
+    await expect(deviceB.getByText(/synced! your favorites now match/i)).toBeVisible();
+    await deviceB.getByRole("button", { name: "Close" }).click();
+    await expect(deviceB.getByRole("button", { name: new RegExp(name) })).toHaveCount(0);
+
+    // Show hidden: both sets come back, dimmed.
+    await deviceB.getByRole("switch", { name: "Show hidden acts (1)" }).click();
+    const hiddenBlocks = deviceB.locator(`[data-hidden="true"]`, { hasText: name });
+    await expect(hiddenBlocks).toHaveCount(2);
+
+    // Unhide from B's sheet; the push deletes the server row.
+    const boxB = (await hiddenBlocks.first().boundingBox())!;
+    await deviceB.mouse.move(boxB.x + boxB.width / 2, boxB.y + boxB.height / 2);
+    await deviceB.mouse.down();
+    await deviceB.waitForTimeout(600);
+    await deviceB.mouse.up();
+    await deviceB.getByRole("button", { name: /unhide this act/i }).click();
+    await expect(deviceB.locator(`[data-hidden="true"]`, { hasText: name })).toHaveCount(0);
+    await expect
+      .poll(() => prisma.hiddenAct.count({ where: { festivalId: festival.id, actKey } }), { timeout: 10_000 })
+      .toBe(0);
+  } finally {
+    await contextA.close();
+    await contextB.close();
+    await prisma.performance.deleteMany({ where: { id: { in: [first.id, second.id] } } });
+    // No FK from HiddenAct to Performance, so its rows need their own
+    // cleanup. Scoped to this run's unique act key, never a bare filter.
+    await prisma.hiddenAct.deleteMany({ where: { festivalId: festival.id, actKey } });
+    if (code) await prisma.pairingCode.deleteMany({ where: { code } });
+  }
+});

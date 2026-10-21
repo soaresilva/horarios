@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { clampMarksPayload, inlineNoteLines, markAriaLabel, NOTE_MAX_LENGTH } from "./marks";
+import {
+  clampMarksPayload,
+  HIDDEN_KEY_MAX_LENGTH,
+  HIDDEN_MAX_COUNT,
+  inlineNoteLines,
+  markAriaLabel,
+  marksPayloadSchema,
+  NOTE_MAX_LENGTH,
+} from "./marks";
 
 describe("clampMarksPayload", () => {
   it("truncates a note longer than NOTE_MAX_LENGTH without touching the tiers", () => {
@@ -41,5 +49,30 @@ describe("inlineNoteLines", () => {
     [90, 2],
   ])("extent %ipx -> %i lines", (extent, expected) => {
     expect(inlineNoteLines(extent)).toBe(expected);
+  });
+});
+
+describe("marksPayloadSchema — hidden acts", () => {
+  const tiers = { mustSee: [], interested: [], notes: {} };
+
+  // A tab still running JS from before hiding existed. syncMarks reads the
+  // absent list as "leave HiddenAct rows alone"; defaulting it to [] here
+  // would wipe every hide the visitor made on another device.
+  it("accepts a payload with no hidden list and leaves it absent", () => {
+    const parsed = marksPayloadSchema.parse(tiers);
+    expect(parsed.hidden).toBeUndefined();
+    expect(clampMarksPayload(parsed).hidden).toBeUndefined();
+  });
+
+  it("passes an explicit empty list through, which is what clears every hide", () => {
+    expect(clampMarksPayload(marksPayloadSchema.parse({ ...tiers, hidden: [] })).hidden).toEqual([]);
+  });
+
+  it("rejects an oversized key or list", () => {
+    expect(() => marksPayloadSchema.parse({ ...tiers, hidden: ["x".repeat(HIDDEN_KEY_MAX_LENGTH + 1)] })).toThrow();
+    expect(() =>
+      marksPayloadSchema.parse({ ...tiers, hidden: Array.from({ length: HIDDEN_MAX_COUNT + 1 }, (_, i) => `k${i}`) }),
+    ).toThrow();
+    expect(marksPayloadSchema.parse({ ...tiers, hidden: ["x".repeat(HIDDEN_KEY_MAX_LENGTH)] }).hidden).toHaveLength(1);
   });
 });

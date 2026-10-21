@@ -44,27 +44,28 @@ enum PerformanceKind {
 // once `endDate` has gone by (see isFestivalOver in src/lib/festival.ts),
 // so nothing needs remembering to flip a flag when an edition wraps up.
 model Festival {
-  id        String          @id @default(cuid())
-  slug      String          @unique
-  name      String
-  location  String
-  startDate DateTime        @db.Date
-  endDate   DateTime        @db.Date
-  layout    TimetableLayout @default(VERTICAL)
+  id         String          @id @default(cuid())
+  slug       String          @unique
+  name       String
+  location   String
+  startDate  DateTime        @db.Date
+  endDate    DateTime        @db.Date
+  layout     TimetableLayout @default(VERTICAL)
   // BCP-47 tag for weekday abbreviations and clock formatting. "pt-PT" keeps
   // the Portuguese QUA/QUI/SEX labels matching bolachas.org's own timetable;
   // any other locale falls through to Intl's short weekday (see
   // formatDayTabLabel in src/lib/time.ts).
-  locale    String          @default("pt-PT")
+  locale     String          @default("pt-PT")
   // IANA zone (e.g. "Europe/Lisbon", "Europe/Amsterdam") every performance
   // time for this festival is anchored to, regardless of a viewer's or
   // admin's own device timezone.
-  timezone  String
-  stages    Stage[]
-  zones     Zone[]
-  artists   Artist[]
-  createdAt DateTime        @default(now())
-  updatedAt DateTime        @default(now()) @updatedAt
+  timezone   String
+  stages     Stage[]
+  zones      Zone[]
+  artists    Artist[]
+  hiddenActs HiddenAct[]
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @default(now()) @updatedAt
 }
 
 // A cluster of venues close enough together that walking between them is
@@ -174,31 +175,31 @@ model Stage {
 }
 
 model Performance {
-  id          String   @id @default(cuid())
+  id          String          @id @default(cuid())
   artistName  String
-  date        DateTime @db.Date
+  date        DateTime        @db.Date
   // @db.Timestamptz, not the Prisma default (timestamp without time zone):
   // node-postgres serializes plain `timestamp` columns using the Node
   // process's local timezone getters, so the naive value stored would
   // silently depend on the server's TZ env var. Timestamptz always stores
   // and returns a real UTC instant regardless of the process timezone.
-  startTime   DateTime @db.Timestamptz
-  endTime     DateTime @db.Timestamptz
+  startTime   DateTime        @db.Timestamptz
+  endTime     DateTime        @db.Timestamptz
   notes       String?
   // Admin-curated "bolachas recommends" flag, surfaced on the public page as
   // a small blue thumbs-up after the artist name (see PerformanceBlock /
   // SideStageSection). Distinct from a viewer's client-side "starred"
   // favourites, which live in localStorage, never the DB.
-  recommended Boolean  @default(false)
+  recommended Boolean         @default(false)
   stageId     String
-  stage       Stage    @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  stage       Stage           @relation(fields: [stageId], references: [id], onDelete: Cascade)
   /// Optional enrichment link to imported reference data (bio links, country,
   /// the act's own page). Nullable because Paredes de Coura has no Artist
   /// rows, and SetNull rather than Cascade because deleting an artist must
   /// never delete a scheduled set. `artistName` stays the source of truth for
   /// what's displayed and what the admin form edits.
   artistId    String?
-  artist      Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  artist      Artist?         @relation(fields: [artistId], references: [id], onDelete: SetNull)
   /// Which programme a set belongs to when it isn't the festival's own: null
   /// for the main programme, "The Official Unofficial" for LOTD's free
   /// daytime side programme (scripts/import-touo.ts), "U?" for Le Guess
@@ -212,8 +213,8 @@ model Performance {
   host        String?
   kind        PerformanceKind @default(CONCERT)
   favorites   Favorite[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
 
   @@index([date, stageId])
   @@index([artistId])
@@ -246,6 +247,29 @@ model Favorite {
   createdAt     DateTime    @default(now())
 
   @@unique([visitorId, performanceId])
+  @@index([visitorId])
+}
+
+// A visitor's server-synced "hide this act" on one festival: the inverse of
+// a Favorite, and like Favorite only written once a visitor has opted into
+// cross-device sync (otherwise hides live only in localStorage, see
+// src/hooks/useMarks.ts). Keyed by act, not by performance: hiding one set
+// hides every set by that act, including sets an importer adds later.
+// `actKey` is actKeyOf() in src/lib/shows.ts, the same grouping the "#2/3"
+// ordinals use: the Artist id, or "name:<trimmed lowercase name>" on a
+// festival without Artist rows (Paredes de Coura). No FK to Artist for that
+// reason. A separate table rather than a Favorite tier on purpose: crew reads
+// (src/app/crew/actions.ts) only ever touch Favorite, so what a visitor hid
+// can't reach their crewmates.
+model HiddenAct {
+  id         String   @id @default(cuid())
+  visitorId  String
+  festivalId String
+  festival   Festival @relation(fields: [festivalId], references: [id], onDelete: Cascade)
+  actKey     String   @db.VarChar(200)
+  createdAt  DateTime @default(now())
+
+  @@unique([visitorId, festivalId, actKey])
   @@index([visitorId])
 }
 

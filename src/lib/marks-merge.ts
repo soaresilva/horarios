@@ -15,6 +15,9 @@ import type { MarksPayload } from "@/lib/marks";
 //   tri-state instead of a boolean
 // - note: the server's note wins if it has a non-empty one for that id, else
 //   the local one
+// - hidden acts: union, server-first then local-only, deduped. A hide on
+//   either device survives pairing; there's no "unhidden" state to weigh
+//   against it.
 // Order is server-first then new local-only ids, so a merge is deterministic
 // and stable for tests/snapshots.
 export function mergeMarks(server: MarksPayload, local: MarksPayload): MarksPayload {
@@ -52,5 +55,7 @@ export function mergeMarks(server: MarksPayload, local: MarksPayload): MarksPayl
     if (note) notes[id] = note;
   }
 
-  return { mustSee, interested, notes };
+  const hidden = Array.from(new Set([...server.hidden, ...local.hidden]));
+
+  return { mustSee, interested, notes, hidden };
 }

@@ -1,11 +1,11 @@
 {
-  "fetchedAt": "2026-10-09T14:46:06.330Z",
+  "fetchedAt": "2026-10-21T19:09:03.557Z",
   "edition": 2026,
   "acts": [
     {
       "slug": "ruby-gill-sa-au",
       "name": "Ruby Gill",
-      "country": "SA/AU",
+      "country": "AU",
       "genres": "folk / singer-songwriter",
       "spotifyUrl": "https://open.spotify.com/artist/51KkytVOUvaM9m0CoY9mBU",
       "instagramUrl": "https://www.instagram.com/rubymarygill/",
@@ -1709,8 +1709,8 @@
     },
     {
       "slug": "newhvn-ie",
-      "name": "newhvn",
-      "country": "IE",
+      "name": "[cancelled] newhvn",
+      "country": null,
       "genres": "alternative rock / grunge / rock",
       "spotifyUrl": "https://open.spotify.com/artist/77UoDI9DORxjrexne9KCTo",
       "instagramUrl": "https://www.instagram.com/new.hvn/",
@@ -1775,7 +1775,7 @@
       "name": "Wyatt",
       "country": "UK",
       "genres": "alt-country / rock",
-      "spotifyUrl": null,
+      "spotifyUrl": "https://open.spotify.com/artist/4SLgQO3VSUSc9prFr4OEmU",
       "instagramUrl": "https://www.instagram.com/wyatt__band/",
       "sourceUrl": "https://leftofthedial.nl/acts/wyatt-uk/",
       "shows": [

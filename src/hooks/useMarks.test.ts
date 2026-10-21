@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { act, renderHook, waitFor } from "@testing-library/react";
-import { getServerSnapshot, useMarks } from "./useMarks";
+import { getMarks, getServerSnapshot, replaceAllMarks, useMarks } from "./useMarks";
 
 afterEach(() => {
   window.localStorage.clear();
@@ -158,5 +158,62 @@ describe("useMarks — corrupt storage", () => {
 
     expect(result.current.tierOf("p1")).toBeNull();
     expect(result.current.noteOf("p1")).toBe("");
+  });
+});
+
+describe("useMarks — hidden acts", () => {
+  it("hides an act under ${slug}:hidden, clearing the given sets' tiers but keeping notes", () => {
+    window.localStorage.setItem("pdc26:starred", JSON.stringify(["p1", "p3"]));
+    window.localStorage.setItem("pdc26:interested", JSON.stringify(["p2"]));
+    window.localStorage.setItem("pdc26:notes", JSON.stringify({ p1: "front left" }));
+    const { result } = renderHook(() => useMarks("pdc26"));
+
+    act(() => result.current.hideAct("name:gordi", ["p1", "p2"]));
+
+    expect(result.current.isActHidden("name:gordi")).toBe(true);
+    expect(result.current.hiddenActs).toEqual(["name:gordi"]);
+    expect(result.current.tierOf("p1")).toBeNull();
+    expect(result.current.tierOf("p2")).toBeNull();
+    expect(result.current.tierOf("p3")).toBe("must");
+    expect(result.current.noteOf("p1")).toBe("front left");
+    expect(JSON.parse(window.localStorage.getItem("pdc26:hidden") ?? "[]")).toEqual(["name:gordi"]);
+  });
+
+  it("unhides, and removes the storage key once nothing is hidden", () => {
+    const { result } = renderHook(() => useMarks("pdc26"));
+    act(() => result.current.hideAct("name:a", []));
+    act(() => result.current.hideAct("name:b", []));
+    act(() => result.current.unhideAct("name:a"));
+    expect(result.current.hiddenActs).toEqual(["name:b"]);
+    act(() => result.current.unhideAct("name:b"));
+    expect(result.current.hiddenActs).toEqual([]);
+    expect(window.localStorage.getItem("pdc26:hidden")).toBeNull();
+  });
+
+  it("hiding the same act twice doesn't duplicate it", () => {
+    const { result } = renderHook(() => useMarks("pdc26"));
+    act(() => result.current.hideAct("name:a", []));
+    act(() => result.current.hideAct("name:a", []));
+    expect(result.current.hiddenActs).toEqual(["name:a"]);
+  });
+
+  it("is scoped per festival", () => {
+    const { result } = renderHook(() => useMarks("lotd26"));
+    act(() => result.current.hideAct("name:a", []));
+    expect(getMarks("pdc26").hidden).toEqual([]);
+    expect(getMarks("lotd26").hidden).toEqual(["name:a"]);
+  });
+
+  it("reads non-array junk under the key as nothing hidden", () => {
+    window.localStorage.setItem("pdc26:hidden", JSON.stringify({ not: "a list" }));
+    const { result } = renderHook(() => useMarks("pdc26"));
+    expect(result.current.hiddenActs).toEqual([]);
+  });
+
+  // A listMarks response the service worker cached before hiding existed.
+  it("replaceAllMarks treats a payload without `hidden` as nothing hidden", () => {
+    window.localStorage.setItem("pdc26:hidden", JSON.stringify(["name:a"]));
+    replaceAllMarks("pdc26", { mustSee: ["p1"], interested: [], notes: {} } as unknown as Parameters<typeof replaceAllMarks>[1]);
+    expect(getMarks("pdc26")).toEqual({ mustSee: ["p1"], interested: [], notes: {}, hidden: [] });
   });
 });

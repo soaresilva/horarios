@@ -7,6 +7,12 @@ import { z } from "zod";
 // would skip entirely.
 export const NOTE_MAX_LENGTH = 280;
 
+// Caps on the hidden-acts list, enforced by the schema below. An act key is
+// an Artist cuid or "name:<artist name>" (actKeyOf in src/lib/shows.ts), so
+// 200 characters is generous; 1000 is more acts than any festival here has.
+export const HIDDEN_KEY_MAX_LENGTH = 200;
+export const HIDDEN_MAX_COUNT = 1000;
+
 // The one shape both sides of the favorites/marks Server Action boundary
 // agree on: the client store (useMarks.ts), the sync hook
 // (useFavoritesSync.ts) and the actions themselves (favorites/actions.ts) all
@@ -15,7 +21,16 @@ export interface MarksPayload {
   mustSee: string[];
   interested: string[];
   notes: Record<string, string>;
+  /** Act keys (actKeyOf in src/lib/shows.ts) the visitor hid from the grid. */
+  hidden: string[];
 }
+
+// What a Server Action actually receives. `hidden` is optional here, and only
+// here: a tab still running JS from before hiding existed sends a payload
+// without it, and because syncMarks is a full replace, reading that absence
+// as "no hidden acts" would wipe every hide the visitor made on their other
+// devices. Absent means "don't touch the hidden list".
+export type IncomingMarksPayload = Omit<MarksPayload, "hidden"> & { hidden?: string[] };
 
 // Validated at the action boundary, not trusted from the client: this checks
 // the *shape* (every id and note is really a string). Length is handled
@@ -27,21 +42,22 @@ export const marksPayloadSchema = z.object({
   mustSee: z.array(z.string()),
   interested: z.array(z.string()),
   notes: z.record(z.string(), z.string()),
+  hidden: z.array(z.string().max(HIDDEN_KEY_MAX_LENGTH)).max(HIDDEN_MAX_COUNT).optional(),
 });
 
 // Truncates rather than rejects: a note a hair over the limit (e.g. a client
 // running slightly-stale JS with a laxer old limit) still gets stored, just
 // shortened, instead of failing the whole sync and losing an unrelated tier
 // change bundled in the same payload.
-export function clampMarksPayload(payload: MarksPayload): MarksPayload {
+export function clampMarksPayload(payload: IncomingMarksPayload): IncomingMarksPayload {
   const notes: Record<string, string> = {};
   for (const [id, note] of Object.entries(payload.notes)) {
     notes[id] = note.slice(0, NOTE_MAX_LENGTH);
   }
-  return { mustSee: payload.mustSee, interested: payload.interested, notes };
+  return { mustSee: payload.mustSee, interested: payload.interested, notes, hidden: payload.hidden };
 }
 
-export const EMPTY_MARKS_PAYLOAD: MarksPayload = { mustSee: [], interested: [], notes: {} };
+export const EMPTY_MARKS_PAYLOAD: MarksPayload = { mustSee: [], interested: [], notes: {}, hidden: [] };
 
 // How many lines of note a vertical-grid block of this pixel height (its
 // `layout.extent`, the same number PerformanceBlock already positions

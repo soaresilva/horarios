@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { CrewButton } from "@/components/CrewButton";
 import { DayTabs } from "@/components/DayTabs";
 import { FavoritesListView } from "@/components/FavoritesListView";
@@ -11,7 +11,7 @@ import { MarkSheet } from "@/components/MarkSheet";
 import { MarksHint } from "@/components/MarksHint";
 import { NotesToggle } from "@/components/NotesToggle";
 import { RecommendationsToggle } from "@/components/RecommendationsToggle";
-import { NonConcertsToggle, SideProgrammeToggle } from "@/components/SideProgrammeToggle";
+import { HiddenToggle, NonConcertsToggle, SideProgrammeToggle } from "@/components/SideProgrammeToggle";
 import { SideStageSection } from "@/components/SideStageSection";
 import { SocialLinks } from "@/components/SocialLinks";
 import { StageGrid } from "@/components/StageGrid";
@@ -20,13 +20,14 @@ import { TransposedGrid } from "@/components/TransposedGrid";
 import { ViewToggle, type TimetableView } from "@/components/ViewToggle";
 import { useCrew } from "@/hooks/useCrew";
 import { useFavoritesSync } from "@/hooks/useFavoritesSync";
-import type { MarkControls } from "@/hooks/useMarks";
+import type { MarkControls, MarkTier } from "@/hooks/useMarks";
 import { useMarksHintDismissed } from "@/hooks/useMarksHintDismissed";
 import { useSchedule } from "@/hooks/useSchedule";
 import { useShowHelp } from "@/hooks/useShowHelp";
 import { useShowNotes } from "@/hooks/useShowNotes";
-import { useShowCrewSets, useShowNonConcerts, useShowSideProgramme } from "@/hooks/useShowSideProgramme";
+import { useShowCrewSets, useShowHidden, useShowNonConcerts, useShowSideProgramme } from "@/hooks/useShowSideProgramme";
 import { crewsEnabled, festivalCopy, programmeCopy } from "@/lib/festival-copy";
+import { actKeysById, countHiddenActs, idsOfAct, isGridVisible } from "@/lib/hidden";
 import { contextLine } from "@/lib/programme";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
 import { otherShowsOf, showOrdinals } from "@/lib/shows";
@@ -46,7 +47,21 @@ interface TimetableAppProps {
 
 export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const { schedule, loading, error, reload } = useSchedule(festivalSlug);
-  const { tierOf, noteOf, cycle, setTier, setNote, synced, generateCode, redeemCode } = useFavoritesSync(festivalSlug);
+  const {
+    tierOf,
+    noteOf,
+    cycle,
+    setTier,
+    setNote,
+    hiddenActs,
+    isActHidden,
+    hideAct,
+    unhideAct,
+    synced,
+    generateCode,
+    redeemCode,
+  } = useFavoritesSync(festivalSlug);
+  const { show: showHidden, toggle: toggleShowHidden } = useShowHidden(festivalSlug);
   const hint = useMarksHintDismissed(festivalSlug);
   const { show: showNotes, toggle: toggleShowNotes } = useShowNotes(festivalSlug);
   const { show: showHelp, toggle: toggleShowHelp } = useShowHelp();
@@ -79,6 +94,37 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   const [sheetPerformanceId, setSheetPerformanceId] = useState<string | null>(null);
   const dismissHint = hint.dismiss;
 
+  // Hiding is per act (actKeyOf in src/lib/shows.ts), but every surface
+  // below asks per set, so the set → act lookup is built once per schedule.
+  const actKeyById = useMemo(() => actKeysById(schedule?.performances ?? []), [schedule]);
+  const actHidden = useCallback(
+    (id: string) => {
+      const key = actKeyById.get(id);
+      return key !== undefined && isActHidden(key);
+    },
+    [actKeyById, isActHidden],
+  );
+  const hiddenCount = useMemo(() => countHiddenActs(hiddenActs, actKeyById), [hiddenActs, actKeyById]);
+  // Unhiding the last act also turns "show hidden" back off. Left on, the
+  // next hide would only dim the act instead of taking it off the grid.
+  const unhide = useCallback(
+    (actKey: string) => {
+      unhideAct(actKey);
+      if (showHidden && hiddenCount === 1) toggleShowHidden();
+    },
+    [unhideAct, showHidden, hiddenCount, toggleShowHidden],
+  );
+  // Marking a set of a hidden act brings the act back: you've just said you
+  // want to see it. Only reachable while "show hidden" is on (or from a
+  // pairing merge), since a hidden act's sets aren't on the grid otherwise.
+  const unhideIfMarked = useCallback(
+    (id: string, nextTier: MarkTier | null) => {
+      const key = actKeyById.get(id);
+      if (nextTier !== null && key !== undefined && isActHidden(key)) unhide(key);
+    },
+    [actKeyById, isActHidden, unhide],
+  );
+
   // Single object threaded down instead of the old isStarred/onToggleStar
   // pair, replacing four props (tier read, note read, cycle, open-sheet)
   // with one across every block/grid component. Wraps the raw mark
@@ -90,10 +136,14 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
       tierOf,
       noteOf,
       cycle: (id: string) => {
+        // cycle goes null → must → interested → null, so it lands on a tier
+        // from anything but "interested".
+        unhideIfMarked(id, tierOf(id) === "interested" ? null : "must");
         cycle(id);
         dismissHint();
       },
       setTier: (id: string, tier) => {
+        unhideIfMarked(id, tier);
         setTier(id, tier);
         dismissHint();
       },
@@ -104,8 +154,9 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
       },
       showNotes,
       friendsOf: crewOn ? crew.friendsOf : undefined,
+      actHidden,
     }),
-    [tierOf, noteOf, cycle, setTier, setNote, dismissHint, showNotes, crewOn, crew.friendsOf],
+    [tierOf, noteOf, cycle, setTier, setNote, dismissHint, showNotes, crewOn, crew.friendsOf, actHidden, unhideIfMarked],
   );
   // Grid (either layout) vs. the favorites-only list. Orthogonal to
   // `layout`, so it isn't reset when the day changes — a visitor who
@@ -163,8 +214,14 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   // nothing left drops out and a 10:00 talk stops stretching the axis.
   const hasSideProgramme = schedule.performances.some((p) => p.series !== null);
   const hasNonConcerts = schedule.performances.some((p) => p.kind !== "CONCERT");
+  // Hidden acts go the same way, before the room/stage split, so a room
+  // left with nothing but hidden acts drops out too (isGridVisible keeps a
+  // marked set whatever).
   const gridPerformances = dayPerformances.filter(
-    (p) => (showSideProgramme || p.series === null) && (showNonConcerts || p.kind === "CONCERT"),
+    (p) =>
+      (showSideProgramme || p.series === null) &&
+      (showNonConcerts || p.kind === "CONCERT") &&
+      isGridVisible({ actHidden: actHidden(p.id), tier: tierOf(p.id), showHidden }),
   );
   const copy = festivalCopy(festivalSlug);
   const notes = [copy?.disclaimer, showHelp ? copy?.help : undefined].filter(Boolean).join(" ");
@@ -258,6 +315,12 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           <SideProgrammeToggle show={showSideProgramme} onToggle={toggleSideProgramme} copy={programme.side} />
         )}
         {hasNonConcerts && <NonConcertsToggle show={showNonConcerts} onToggle={toggleNonConcerts} />}
+        {/* Only once something is hidden. Also while the switch is still on
+            with nothing left to show, so it can't get stuck on unseen and
+            make the next hide look like it did nothing. */}
+        {(hiddenCount > 0 || showHidden) && (
+          <HiddenToggle show={showHidden} count={hiddenCount} onToggle={toggleShowHidden} />
+        )}
         <HelpToggle show={showHelp} onToggle={toggleShowHelp} />
       </div>
 
@@ -277,6 +340,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           marks={marks}
           ft={ft}
           crewSets={crew.crew && crew.crew.members.length > 0 ? crewSets : undefined}
+          showHidden={showHidden}
         />
       ) : isTransposed ? (
         <TransposedGrid
@@ -367,6 +431,8 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           // other sets are usually on other days, which is the entire reason
           // to show them. A stage that somehow has no row is dropped rather
           // than rendered as "at undefined".
+          const actKey = actKeyById.get(sheetPerformance.id);
+          const actIds = actKey === undefined ? [] : idsOfAct(schedule.performances, actKey);
           const otherShows = otherShowsOf(schedule.performances, sheetPerformance.id).flatMap((p) => {
             const stage = schedule.stages.find((s) => s.id === p.stageId);
             return stage
@@ -389,6 +455,21 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
               onSetTier={(tier) => marks.setTier(sheetPerformance.id, tier)}
               onSetNote={(text) => marks.setNote(sheetPerformance.id, text)}
               onClose={() => setSheetPerformanceId(null)}
+              hidden={actHidden(sheetPerformance.id)}
+              actSetCount={actIds.length}
+              onHide={
+                actKey === undefined
+                  ? undefined
+                  : () => {
+                      hideAct(actKey, actIds);
+                      setSheetPerformanceId(null);
+                    }
+              }
+              onUnhide={
+                actKey === undefined
+                  ? undefined
+                  : () => unhide(actKey)
+              }
             />
           );
         })()}

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { TimetableApp } from "./TimetableApp";
 import { PDC_FESTIVAL_TIME as ft } from "@/lib/time";
@@ -12,19 +12,22 @@ import type { Schedule } from "@/lib/schedule-client";
 // the loading/error/schedule branching at the top of the component — so
 // every child is stubbed to keep the test focused and fast.
 vi.mock("@/hooks/useSchedule");
-vi.mock("@/hooks/useFavoritesSync", () => ({
-  useFavoritesSync: () => ({
-    tierOf: () => null,
-    noteOf: () => "",
-    cycle: () => {},
-    setTier: () => {},
-    setNote: () => {},
-    synced: false,
-    startSync: async () => {},
-    generateCode: async () => ({ error: "not mocked" }),
-    redeemCode: async () => ({ error: "invalid" as const }),
-  }),
-}));
+// The real useFavoritesSync imports server-only Server Actions, so it's
+// swapped for the plain localStorage store it wraps (useMarks). Unsynced
+// marking and hiding behave identically through either, and the hide tests
+// below get real state to drive.
+vi.mock("@/hooks/useFavoritesSync", async () => {
+  const { useMarks } = await import("@/hooks/useMarks");
+  return {
+    useFavoritesSync: (festivalSlug: string) => ({
+      ...useMarks(festivalSlug),
+      synced: false,
+      startSync: async () => {},
+      generateCode: async () => ({ error: "not mocked" }),
+      redeemCode: async () => ({ error: "invalid" as const }),
+    }),
+  };
+});
 // Crews: the real hook imports the crew Server Actions (server-only). Inert
 // here; the button is a marker so its per-festival gating is observable.
 vi.mock("@/hooks/useCrew", () => ({
@@ -48,12 +51,24 @@ vi.mock("@/components/SocialLinks", () => ({ SocialLinks: () => null }));
 vi.mock("@/components/StageGrid", () => ({ StageGrid: () => null }));
 vi.mock("@/components/SyncFavoritesButton", () => ({ SyncFavoritesButton: () => null }));
 // Lists what it was handed, so the side-programme switch's filtering is
-// observable without rendering the real two-axis grid.
+// observable without rendering the real two-axis grid. Each row also carries
+// the block's two gestures as text-free buttons (so toHaveTextContent checks
+// above are unaffected): "hold" opens MarkSheet, "tap" cycles the tier.
 vi.mock("@/components/TransposedGrid", () => ({
-  TransposedGrid: ({ performances }: { performances: { id: string; artistName: string }[] }) => (
+  TransposedGrid: ({
+    performances,
+    marks,
+  }: {
+    performances: { id: string; artistName: string }[];
+    marks: import("@/hooks/useMarks").MarkControls;
+  }) => (
     <ul aria-label="transposed grid">
       {performances.map((p) => (
-        <li key={p.id}>{p.artistName}</li>
+        <li key={p.id} data-testid={p.id} data-hidden={marks.actHidden?.(p.id) ? "true" : undefined}>
+          {p.artistName}
+          <button type="button" aria-label={`hold ${p.id}`} onClick={() => marks.openSheet(p.id)} />
+          <button type="button" aria-label={`tap ${p.id}`} onClick={() => marks.cycle(p.id)} />
+        </li>
       ))}
     </ul>
   ),
@@ -398,5 +413,130 @@ describe("TimetableApp crews", () => {
   it.each(["pdc26", "lc26oct", "lgw26"])("has no crew button on %s, where crews are off", (slug) => {
     render(<TimetableApp festivalSlug={slug} ft={ft} layout="VERTICAL" />);
     expect(screen.queryByText("CREW BUTTON")).toBeNull();
+  });
+});
+
+describe("TimetableApp hidden acts", () => {
+  const lotdFt = { timezone: "Europe/Amsterdam", locale: "en-GB" };
+  const base = {
+    date: "2026-10-23",
+    notes: null,
+    recommended: false,
+    artistId: null,
+    host: null,
+    series: null,
+    kind: "CONCERT" as const,
+  };
+  // August plays twice on the day in two different rooms, so hiding from
+  // one set has to reach the other.
+  const hideSchedule: Schedule = {
+    ...schedule,
+    stages: [
+      { id: "rotown", name: "Rotown", slug: "rotown", order: 0, zoneId: null, address: null },
+      { id: "worm", name: "WORM", slug: "worm", order: 1, zoneId: null, address: null },
+    ],
+    performances: [
+      { ...base, id: "aug1", stageId: "rotown", artistName: "August", startTime: new Date("2026-10-23T18:00:00Z"), endTime: new Date("2026-10-23T18:40:00Z") },
+      { ...base, id: "aug2", stageId: "worm", artistName: "August", startTime: new Date("2026-10-23T21:00:00Z"), endTime: new Date("2026-10-23T21:40:00Z") },
+      { ...base, id: "gordi", stageId: "rotown", artistName: "Gordi", startTime: new Date("2026-10-23T19:00:00Z"), endTime: new Date("2026-10-23T19:40:00Z") },
+    ],
+  };
+
+  beforeEach(() => {
+    window.localStorage.clear();
+    mockUseSchedule.mockReturnValue({ schedule: hideSchedule, loading: false, error: null, reload: () => {} });
+  });
+
+  function renderLotd() {
+    render(<TimetableApp festivalSlug="lotd26" ft={lotdFt} layout="TRANSPOSED" />);
+    return screen.getByRole("list", { name: "transposed grid" });
+  }
+
+  it("offers no switch until something is hidden", () => {
+    renderLotd();
+    expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
+  });
+
+  it("hides every set by the act from the sheet, and the switch brings them back dimmed", async () => {
+    const grid = renderLotd();
+    await userEvent.click(screen.getByRole("button", { name: "hold aug1" }));
+    const hideButton = screen.getByRole("button", { name: /hide this act/i });
+    expect(hideButton).toHaveTextContent("(all 2 sets)");
+    await userEvent.click(hideButton);
+
+    // Both sets gone (including the one on another stage), sheet closed.
+    expect(within(grid).queryByTestId("aug1")).toBeNull();
+    expect(within(grid).queryByTestId("aug2")).toBeNull();
+    expect(grid).toHaveTextContent("Gordi");
+    expect(screen.queryByRole("button", { name: /hide this act/i })).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem("lotd26:hidden") ?? "[]")).toEqual(["name:august"]);
+
+    const toggle = screen.getByRole("switch", { name: "Show hidden acts (1)" });
+    expect(toggle).toHaveAttribute("aria-checked", "false");
+    await userEvent.click(toggle);
+
+    expect(within(grid).getByTestId("aug1")).toHaveAttribute("data-hidden", "true");
+    expect(within(grid).getByTestId("aug2")).toHaveAttribute("data-hidden", "true");
+    expect(within(grid).getByTestId("gordi")).not.toHaveAttribute("data-hidden");
+  });
+
+  it("unhiding from the sheet restores the act and turns the switch back off", async () => {
+    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
+    window.localStorage.setItem("lotd26:showHidden", "true");
+    const grid = renderLotd();
+
+    await userEvent.click(screen.getByRole("button", { name: "hold aug2" }));
+    await userEvent.click(screen.getByRole("button", { name: /unhide this act/i }));
+
+    expect(within(grid).getByTestId("aug1")).not.toHaveAttribute("data-hidden");
+    expect(within(grid).getByTestId("aug2")).not.toHaveAttribute("data-hidden");
+    expect(window.localStorage.getItem("lotd26:hidden")).toBeNull();
+    // Nothing left hidden, so the switch is off and gone: hiding the next
+    // act takes it off the grid instead of just dimming it.
+    expect(window.localStorage.getItem("lotd26:showHidden")).toBe("false");
+    expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
+  });
+
+  it("hiding clears the act's marks, so a must-see set doesn't keep it on the grid", async () => {
+    window.localStorage.setItem("lotd26:starred", JSON.stringify(["aug1"]));
+    window.localStorage.setItem("lotd26:notes", JSON.stringify({ aug1: "maybe" }));
+    const grid = renderLotd();
+
+    await userEvent.click(screen.getByRole("button", { name: "hold aug1" }));
+    await userEvent.click(screen.getByRole("button", { name: /hide this act/i }));
+
+    expect(within(grid).queryByTestId("aug1")).toBeNull();
+    expect(JSON.parse(window.localStorage.getItem("lotd26:starred") ?? "[]")).toEqual([]);
+    expect(JSON.parse(window.localStorage.getItem("lotd26:notes") ?? "{}")).toEqual({ aug1: "maybe" });
+  });
+
+  it("marking a dimmed set unhides its act", async () => {
+    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
+    window.localStorage.setItem("lotd26:showHidden", "true");
+    const grid = renderLotd();
+
+    await userEvent.click(within(grid).getByRole("button", { name: "tap aug1" }));
+
+    expect(JSON.parse(window.localStorage.getItem("lotd26:starred") ?? "[]")).toEqual(["aug1"]);
+    expect(within(grid).getByTestId("aug2")).not.toHaveAttribute("data-hidden");
+    expect(window.localStorage.getItem("lotd26:hidden")).toBeNull();
+  });
+
+  // A pairing merge can bring a mark from one device and a hide from the
+  // other. The marked set stays; the act's other set doesn't.
+  it("keeps a marked set of a hidden act on the grid, dimmed", () => {
+    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
+    window.localStorage.setItem("lotd26:starred", JSON.stringify(["aug2"]));
+    const grid = renderLotd();
+
+    expect(within(grid).getByTestId("aug2")).toHaveAttribute("data-hidden", "true");
+    expect(within(grid).queryByTestId("aug1")).toBeNull();
+  });
+
+  it("ignores a hidden key no act on this festival matches", () => {
+    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:renamed since"]));
+    const grid = renderLotd();
+    expect(grid).toHaveTextContent("August");
+    expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
   });
 });

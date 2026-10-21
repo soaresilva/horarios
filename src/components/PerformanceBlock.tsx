@@ -4,12 +4,13 @@ import type { Artist, Performance } from "@/lib/schedule-client";
 import { formatClock } from "@/lib/time";
 import type { BlockLayout, FestivalTime } from "@/lib/time";
 import { CrewBubbles } from "@/components/CrewBubbles";
-import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
+import { EyeOff, Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
 import { InlineNote } from "@/components/InlineNote";
 import { getArtistLinks } from "@/lib/artist-links";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
 import { inlineNoteLines, markAriaLabel } from "@/lib/marks";
+import { parseCancellation } from "@/lib/shows";
 
 interface PerformanceBlockProps {
   performance: Performance;
@@ -42,6 +43,10 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
   const tier = marks.tierOf(performance.id);
   const note = marks.noteOf(performance.id);
   const friends = marks.friendsOf?.(performance.id) ?? [];
+  const { cancelled, displayName } = parseCancellation(performance.artistName);
+  // The act is hidden and only on screen because "show hidden" is on (or
+  // the set is still marked): dimmed, with an eye-off before the name.
+  const hidden = marks.actHidden?.(performance.id) ?? false;
 
   const longPress = useLongPress(() => marks.openSheet(performance.id));
 
@@ -66,11 +71,25 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
   const glyph = tier === "interested" ? "☆" : "★";
   const glyphColor = tier === "must" ? "text-accent" : tier === "interested" ? "text-interested" : "text-zinc-600";
 
+  const nameNode = artist?.sourceUrl ? (
+    <a
+      href={artist.sourceUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pointer-events-auto underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
+    >
+      {displayName}
+    </a>
+  ) : (
+    displayName
+  );
+
   return (
     <div
       data-performance-id={performance.id}
+      data-hidden={hidden ? "true" : undefined}
       style={{ top: layout.offset, height: layout.extent }}
-      className={`absolute left-1 right-1 rounded-md transition-colors ${showInlineNote ? "overflow-hidden" : ""} ${tint}`}
+      className={`absolute left-1 right-1 rounded-md transition-colors ${showInlineNote ? "overflow-hidden" : ""} ${tint} ${hidden ? "opacity-40" : ""}`}
     >
       {/* Fills the whole box: tap cycles the tier (unmarked → must-see →
           interested → unmarked), a 500ms hold opens the note sheet.
@@ -106,18 +125,9 @@ export function PerformanceBlock({ performance, layout, alternate, marks, showRe
             compact ? "text-xs hyphens-auto break-words" : "text-sm"
           }`}
         >
-          {artist?.sourceUrl ? (
-            <a
-              href={artist.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pointer-events-auto underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
-            >
-              {performance.artistName}
-            </a>
-          ) : (
-            performance.artistName
-          )}
+          {hidden && <EyeOff className="mr-1 inline-block h-3 w-3 align-[-0.125em] text-zinc-400" />}
+          {cancelled && <span className="text-zinc-500">[cancelled] </span>}
+          {cancelled ? <span className="text-zinc-500 line-through">{nameNode}</span> : nameNode}
           {performance.recommended && showRecommendation && (
             <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
           )}

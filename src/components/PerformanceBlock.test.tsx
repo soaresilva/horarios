@@ -310,4 +310,51 @@ describe("PerformanceBlock", () => {
     expect(container.querySelectorAll("[data-crew-tag]")).toHaveLength(2);
     expect(screen.getByText("+2")).toBeInTheDocument();
   });
+
+  // newhvn, Left of the Dial 2026: cancelled with no replacement booked, so
+  // the set stays on the grid struck through rather than vanishing (see
+  // parseCancellation in src/lib/shows.ts).
+  it("crosses out the name and prefixes [cancelled] for a cancelled set", () => {
+    render(
+      <PerformanceBlock
+        performance={performance({ artistName: "[cancelled] newhvn" })}
+        layout={layout}
+        alternate={false}
+        marks={fakeMarks()}
+        ft={ft}
+        showRecommendation={false}
+      />,
+    );
+    expect(screen.getByText("[cancelled]")).toBeInTheDocument();
+    expect(screen.getByText("newhvn")).toHaveClass("line-through");
+  });
+
+  it("draws a hidden act's set dimmed and flagged, and an ordinary set untouched", () => {
+    const { container, rerender } = render(
+      <PerformanceBlock
+        performance={performance()}
+        layout={layout}
+        alternate={false}
+        marks={fakeMarks({ actHidden: () => true })}
+        ft={ft}
+        showRecommendation={false}
+      />,
+    );
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block).toHaveAttribute("data-hidden", "true");
+    expect(block).toHaveClass("opacity-40");
+
+    rerender(
+      <PerformanceBlock
+        performance={performance()}
+        layout={layout}
+        alternate={false}
+        marks={fakeMarks()}
+        ft={ft}
+        showRecommendation={false}
+      />,
+    );
+    expect(block).not.toHaveAttribute("data-hidden");
+    expect(block).not.toHaveClass("opacity-40");
+  });
 });

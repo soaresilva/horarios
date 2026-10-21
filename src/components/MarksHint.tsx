@@ -20,7 +20,7 @@ export function MarksHint({ dismissed, onDismiss }: MarksHintProps) {
 
   return (
     <div className="flex items-center gap-2 border-b border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-[11px] leading-snug text-zinc-400">
-      <p className="flex-1">Tap a set to mark it. Hold it to add a note.</p>
+      <p className="flex-1">Tap a set to mark it. Hold it to add a note or hide the act.</p>
       <button
         type="button"
         onClick={onDismiss}

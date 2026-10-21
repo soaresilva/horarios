@@ -83,3 +83,23 @@ describe("mergeMarks — note conflicts", () => {
     expect(result.interested).toEqual([]);
   });
 });
+
+describe("mergeMarks — hidden acts", () => {
+  it("unions both sides' hidden acts, server first, without duplicates", () => {
+    const merged = mergeMarks(payload({ hidden: ["name:a", "artist-b"] }), payload({ hidden: ["artist-b", "name:c"] }));
+    expect(merged.hidden).toEqual(["name:a", "artist-b", "name:c"]);
+  });
+
+  it("keeps a hide from either side when the other has none", () => {
+    expect(mergeMarks(payload(), payload({ hidden: ["name:a"] })).hidden).toEqual(["name:a"]);
+    expect(mergeMarks(payload({ hidden: ["name:a"] }), payload()).hidden).toEqual(["name:a"]);
+  });
+
+  // Hiding is per act and tiers are per set, so the merge keeps both and
+  // leaves it to the grid: isGridVisible keeps a marked set on screen.
+  it("doesn't drop a tier because the other side hid the act", () => {
+    const merged = mergeMarks(payload({ mustSee: ["p1"] }), payload({ hidden: ["name:a"] }));
+    expect(merged.mustSee).toEqual(["p1"]);
+    expect(merged.hidden).toEqual(["name:a"]);
+  });
+});

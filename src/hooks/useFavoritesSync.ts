@@ -93,7 +93,17 @@ export interface UseFavoritesSyncResult extends MarkView {
 }
 
 export function useFavoritesSync(festivalSlug: string): UseFavoritesSyncResult {
-  const { tierOf, noteOf, cycle: cycleLocal, setTier: setTierLocal, setNote: setNoteLocal } = useMarks(festivalSlug);
+  const {
+    tierOf,
+    noteOf,
+    cycle: cycleLocal,
+    setTier: setTierLocal,
+    setNote: setNoteLocal,
+    hiddenActs,
+    isActHidden,
+    hideAct: hideActLocal,
+    unhideAct: unhideActLocal,
+  } = useMarks(festivalSlug);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const subscribe = useCallback(
@@ -208,6 +218,22 @@ export function useFavoritesSync(festivalSlug: string): UseFavoritesSyncResult {
     [setNoteLocal, scheduleDirtyPush],
   );
 
+  const hideAct = useCallback(
+    (actKey: string, performanceIds: string[]) => {
+      hideActLocal(actKey, performanceIds);
+      scheduleDirtyPush();
+    },
+    [hideActLocal, scheduleDirtyPush],
+  );
+
+  const unhideAct = useCallback(
+    (actKey: string) => {
+      unhideActLocal(actKey);
+      scheduleDirtyPush();
+    },
+    [unhideActLocal, scheduleDirtyPush],
+  );
+
   useEffect(() => {
     return () => {
       if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -237,5 +263,19 @@ export function useFavoritesSync(festivalSlug: string): UseFavoritesSyncResult {
     [festivalSlug],
   );
 
-  return { tierOf, noteOf, cycle, setTier, setNote, synced, startSync, generateCode: generateCodeAction, redeemCode };
+  return {
+    tierOf,
+    noteOf,
+    cycle,
+    setTier,
+    setNote,
+    hiddenActs,
+    isActHidden,
+    hideAct,
+    unhideAct,
+    synced,
+    startSync,
+    generateCode: generateCodeAction,
+    redeemCode,
+  };
 }

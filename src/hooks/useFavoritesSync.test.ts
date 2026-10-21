@@ -70,7 +70,7 @@ describe("useFavoritesSync — opted in", () => {
       await vi.advanceTimersByTimeAsync(2000);
     });
 
-    expect(actions.syncMarks).toHaveBeenCalledWith("pdc26", { mustSee: ["p1"], interested: [], notes: {} });
+    expect(actions.syncMarks).toHaveBeenCalledWith("pdc26", { mustSee: ["p1"], interested: [], notes: {}, hidden: [] });
     expect(window.localStorage.getItem("pdc26:starred:dirty")).toBeNull();
   });
 
@@ -99,7 +99,70 @@ describe("useFavoritesSync — opted in", () => {
       mustSee: [],
       interested: [],
       notes: { p1: "front left, get there early" },
+      hidden: [],
     });
+  });
+
+  it("hiding an act clears its sets' tiers in the same write and pushes the hidden list", async () => {
+    window.localStorage.setItem("pdc26:synced", "true");
+    window.localStorage.setItem("pdc26:starred", JSON.stringify(["p1", "p2"]));
+    window.localStorage.setItem("pdc26:notes", JSON.stringify({ p1: "keep me" }));
+    actions.listMarks.mockResolvedValue({ mustSee: ["p1", "p2"], interested: [], notes: { p1: "keep me" }, hidden: [] });
+    actions.syncMarks.mockResolvedValue({ server: EMPTY_MARKS_PAYLOAD });
+
+    const { result } = renderHook(() => useFavoritesSync("pdc26"));
+    await waitFor(() => expect(actions.listMarks).toHaveBeenCalled());
+
+    vi.useFakeTimers();
+    act(() => {
+      result.current.hideAct("name:gordi", ["p1"]);
+    });
+
+    expect(result.current.isActHidden("name:gordi")).toBe(true);
+    expect(result.current.tierOf("p1")).toBeNull();
+    expect(result.current.tierOf("p2")).toBe("must");
+    expect(window.localStorage.getItem("pdc26:starred:dirty")).toBe("true");
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+    expect(actions.syncMarks).toHaveBeenCalledWith("pdc26", {
+      mustSee: ["p2"],
+      interested: [],
+      notes: { p1: "keep me" },
+      hidden: ["name:gordi"],
+    });
+
+    act(() => {
+      result.current.unhideAct("name:gordi");
+    });
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+    expect(actions.syncMarks).toHaveBeenLastCalledWith("pdc26", {
+      mustSee: ["p2"],
+      interested: [],
+      notes: { p1: "keep me" },
+      hidden: [],
+    });
+  });
+
+  it("a pull adopts the server's hidden acts, and a response without `hidden` reads as none", async () => {
+    window.localStorage.setItem("pdc26:synced", "true");
+    window.localStorage.setItem("pdc26:hidden", JSON.stringify(["name:stale"]));
+    actions.listMarks.mockResolvedValue({ mustSee: [], interested: [], notes: {}, hidden: ["name:gordi"] });
+
+    const { result } = renderHook(() => useFavoritesSync("pdc26"));
+    await waitFor(() => expect(result.current.hiddenActs).toEqual(["name:gordi"]));
+
+    // A response the service worker cached before hiding existed.
+    actions.listMarks.mockResolvedValue({ mustSee: [], interested: [], notes: {} });
+    await act(async () => {
+      window.dispatchEvent(new Event("online"));
+      await Promise.resolve();
+    });
+    await waitFor(() => expect(result.current.hiddenActs).toEqual([]));
+    expect(window.localStorage.getItem("pdc26:hidden")).toBeNull();
   });
 
   it("on mount, a dirty device pushes its own payload instead of pulling and clobbering it", async () => {
@@ -111,7 +174,7 @@ describe("useFavoritesSync — opted in", () => {
     renderHook(() => useFavoritesSync("pdc26"));
 
     await waitFor(() => {
-      expect(actions.syncMarks).toHaveBeenCalledWith("pdc26", { mustSee: ["p1"], interested: [], notes: {} });
+      expect(actions.syncMarks).toHaveBeenCalledWith("pdc26", { mustSee: ["p1"], interested: [], notes: {}, hidden: [] });
     });
     expect(actions.listMarks).not.toHaveBeenCalled();
   });
@@ -144,7 +207,12 @@ describe("useFavoritesSync — opted in", () => {
 
 describe("useFavoritesSync — pairing code redemption", () => {
   it("overwrites localStorage with the merged tiers/notes and marks the device synced", async () => {
-    actions.redeemPairingCode.mockResolvedValue({ mustSee: ["p1"], interested: ["p2"], notes: { p3: "a note" } });
+    actions.redeemPairingCode.mockResolvedValue({
+      mustSee: ["p1"],
+      interested: ["p2"],
+      notes: { p3: "a note" },
+      hidden: ["name:gordi"],
+    });
 
     const { result } = renderHook(() => useFavoritesSync("pdc26"));
 
@@ -157,6 +225,7 @@ describe("useFavoritesSync — pairing code redemption", () => {
     expect(JSON.parse(window.localStorage.getItem("pdc26:starred") ?? "[]")).toEqual(["p1"]);
     expect(JSON.parse(window.localStorage.getItem("pdc26:interested") ?? "[]")).toEqual(["p2"]);
     expect(JSON.parse(window.localStorage.getItem("pdc26:notes") ?? "{}")).toEqual({ p3: "a note" });
+    expect(JSON.parse(window.localStorage.getItem("pdc26:hidden") ?? "[]")).toEqual(["name:gordi"]);
     expect(result.current.synced).toBe(true);
   });
 
@@ -186,7 +255,7 @@ describe("useFavoritesSync — crew membership", () => {
     const { result } = renderHook(() => useFavoritesSync("lotd26"));
 
     await waitFor(() => expect(result.current.synced).toBe(true));
-    expect(actions.optIntoSync).toHaveBeenCalledWith("lotd26", { mustSee: ["p1"], interested: [], notes: {} });
+    expect(actions.optIntoSync).toHaveBeenCalledWith("lotd26", { mustSee: ["p1"], interested: [], notes: {}, hidden: [] });
     // The pull brings down what another device of this visitor already pushed.
     await waitFor(() => expect(result.current.tierOf("p9")).toBe("must"));
   });

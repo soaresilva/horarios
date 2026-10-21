@@ -2,7 +2,7 @@
 
 import { ArtistLinksRail } from "@/components/ArtistLinksRail";
 import { CrewBubbles } from "@/components/CrewBubbles";
-import { Pencil, ThumbsUp } from "@/components/icons";
+import { EyeOff, Pencil, ThumbsUp } from "@/components/icons";
 import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
@@ -10,7 +10,7 @@ import type { ArtistLinks } from "@/lib/artist-links";
 import type { ProgrammeCopy } from "@/lib/festival-copy";
 import { contextLine, kindLabel } from "@/lib/programme";
 import type { Artist, Performance } from "@/lib/schedule-client";
-import type { ShowOrdinal } from "@/lib/shows";
+import { parseCancellation, type ShowOrdinal } from "@/lib/shows";
 import { formatClock, type BlockLayout, type FestivalTime } from "@/lib/time";
 
 interface TransposedPerformanceBlockProps {
@@ -54,6 +54,10 @@ export function TransposedPerformanceBlock({
   const note = marks.noteOf(performance.id);
   const friends = marks.friendsOf?.(performance.id) ?? [];
   const showInlineNote = marks.showNotes && note !== "";
+  const { cancelled, displayName } = parseCancellation(performance.artistName);
+  // The act is hidden and only on screen because "show hidden" is on (or
+  // the set is still marked): dimmed, with an eye-off before the name.
+  const hidden = marks.actHidden?.(performance.id) ?? false;
   const longPress = useLongPress(() => marks.openSheet(performance.id));
   // Side-programme sets (TOUO, U?) share venue rows with the main
   // programme, so they're told apart by a dashed outline and the festival's
@@ -65,9 +69,23 @@ export function TransposedPerformanceBlock({
   const kind = kindLabel(performance.kind);
   const title = contextLine(performance, programme) ?? undefined;
 
+  const nameNode = artist?.sourceUrl ? (
+    <a
+      href={artist.sourceUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="pointer-events-auto underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
+    >
+      {displayName}
+    </a>
+  ) : (
+    displayName
+  );
+
   return (
     <div
       data-performance-id={performance.id}
+      data-hidden={hidden ? "true" : undefined}
       style={{ left: layout.offset, width: layout.extent }}
       // overflow-clip, not overflow-hidden: `hidden` makes the block its own
       // scroll container, which would pin the sticky name below to the
@@ -82,7 +100,7 @@ export function TransposedPerformanceBlock({
               : isSide
                 ? "border border-dashed border-zinc-500 bg-zinc-900/80"
                 : "bg-zinc-800/70"
-      }`}
+      } ${hidden ? "opacity-40" : ""}`}
       title={title}
     >
       {/* Star-only rail, not the full Spotify/Instagram one PerformanceBlock
@@ -119,18 +137,9 @@ export function TransposedPerformanceBlock({
           exactly as before. */}
       <div className="pointer-events-none sticky left-28 flex h-full w-fit max-w-full flex-col justify-center py-1 pr-9 pl-2">
         <span className="line-clamp-2 text-xs leading-tight font-semibold text-zinc-100">
-          {artist?.sourceUrl ? (
-            <a
-              href={artist.sourceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="pointer-events-auto underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
-            >
-              {performance.artistName}
-            </a>
-          ) : (
-            performance.artistName
-          )}
+          {hidden && <EyeOff className="mr-1 inline-block h-3 w-3 align-[-0.125em] text-zinc-400" />}
+          {cancelled && <span className="text-zinc-500">[cancelled] </span>}
+          {cancelled ? <span className="text-zinc-500 line-through">{nameNode}</span> : nameNode}
           {performance.recommended && showRecommendation && (
             <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
           )}

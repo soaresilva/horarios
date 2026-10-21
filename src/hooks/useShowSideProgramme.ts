@@ -31,3 +31,12 @@ const useCrewSetsPref = createSlugBooleanPref("showCrewSets");
 export function useShowCrewSets(festivalSlug: string): BooleanPref {
   return useCrewSetsPref(festivalSlug, false);
 }
+
+// The "show hidden" switch: brings acts the visitor hid back onto the grid,
+// dimmed, so they can be unhidden from MarkSheet. Off by default, since
+// hiding something and having it stay put is the whole point.
+const useHiddenPref = createSlugBooleanPref("showHidden");
+
+export function useShowHidden(festivalSlug: string): BooleanPref {
+  return useHiddenPref(festivalSlug, false);
+}

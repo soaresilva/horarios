@@ -1,5 +1,6 @@
 "use client";
 
+import { EyeOff } from "@/components/icons";
 import type { SideProgrammeCopy } from "@/lib/festival-copy";
 
 // Same track/knob/role="switch" shape and py-1.5 thumb-sized hit area as
@@ -56,6 +57,28 @@ export function NonConcertsToggle({ show, onToggle }: { show: boolean; onToggle:
     >
       <SwitchTrack on={show} />
       <span className={show ? "text-zinc-400" : "text-zinc-500"}>films, talks &amp; exhibitions</span>
+    </button>
+  );
+}
+
+// The "show hidden" switch. Rendered only while the visitor has hidden at
+// least one act on this festival (TimetableApp decides), so nobody sees a
+// control for a feature they haven't used. The count says how much is out
+// of view.
+export function HiddenToggle({ show, count, onToggle }: { show: boolean; count: number; onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={show}
+      onClick={onToggle}
+      aria-label={`Show hidden acts (${count})`}
+      title={show ? "Hide the acts you hid again" : "Show the acts you hid, dimmed"}
+      className="flex items-center gap-1.5 py-1.5"
+    >
+      <SwitchTrack on={show} />
+      <EyeOff className={`h-3 w-3 ${show ? "text-zinc-400" : "text-zinc-500"}`} />
+      <span className={show ? "text-zinc-400" : "text-zinc-500"}>hidden ({count})</span>
     </button>
   );
 }

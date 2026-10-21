@@ -235,4 +235,16 @@ describe("TransposedPerformanceBlock on Le Guess Who?", () => {
       "D: must-see · front left\nM: must-see\nZs: interested\nJ: interested",
     );
   });
+
+  it("draws a hidden act's set dimmed and flagged", () => {
+    const { container } = renderBlock({ actHidden: () => true });
+    const block = container.querySelector("[data-performance-id]")!;
+    expect(block).toHaveAttribute("data-hidden", "true");
+    expect(block).toHaveClass("opacity-40");
+  });
+
+  it("leaves an ordinary set undimmed", () => {
+    const { container } = renderBlock();
+    expect(container.querySelector("[data-performance-id]")).not.toHaveAttribute("data-hidden");
+  });
 });

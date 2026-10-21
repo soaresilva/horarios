@@ -12,6 +12,14 @@ sheet with explicit tier buttons and a free-text note (280 characters) for that 
 "front left, get there early", "skip if the queue is bad". Notes stay on-device unless
 the visitor opts into cross-device sync below, exactly like the tiers themselves.
 
+The same sheet can **hide the act**: every set by that act leaves the grid, on every day
+(grouped like the `#2/3` ordinals, by `Artist` id or by normalised name, `actKeyOf` in
+`src/lib/shows.ts`). Hiding clears the act's marks, and a set that still carries a mark
+always stays on the grid. Once anything is hidden, a **hidden (N)** switch in the legend
+row brings hidden acts back, dimmed with an eye-off glyph, so they can be unhidden from the
+sheet (marking one unhides it too). Hidden acts sync with favorites (`HiddenAct` table),
+and crewmates never see them: crew reads only touch `Favorite`.
+
 Four editions, two layouts, chosen per festival by `Festival.layout`:
 
 - **`/pdc26`** — Vodafone Paredes de Coura 2026 (Aug 9–16, including the bonus
@@ -300,7 +308,7 @@ with walking times still measured between your own sets only.
 Usage, read-only, for deciding which festival gets crews next:
 
 ```bash
-npm run stats:crews   # crews by size, and per festival the crews where 2+ members marked sets
+npm run stats:crews   # crews by size, crews where 2+ members marked sets, hidden acts per festival
 ```
 
 Run it against production the same way as the importers (env pulled into a scratch file, never

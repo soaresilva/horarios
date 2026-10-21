@@ -3,14 +3,14 @@
 import { useMemo } from "react";
 import { ArtistLinksRail } from "@/components/ArtistLinksRail";
 import { CrewBubbles } from "@/components/CrewBubbles";
-import { ThumbsUp } from "@/components/icons";
+import { EyeOff, ThumbsUp } from "@/components/icons";
 import type { BooleanPref } from "@/hooks/slugBooleanPref";
 import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { artistLinksFor } from "@/lib/artist-links";
 import { crewColor } from "@/lib/crew";
 import type { Artist, Performance, Stage, ZoneWalk } from "@/lib/schedule-client";
-import type { ShowOrdinal } from "@/lib/shows";
+import { parseCancellation, type ShowOrdinal } from "@/lib/shows";
 import { formatClock, type FestivalTime } from "@/lib/time";
 import { stageMapsUrl } from "@/lib/venues";
 import { walkSegmentBetweenStages, type WalkSegment } from "@/lib/zones";
@@ -30,6 +30,12 @@ interface FavoritesListViewProps {
    * switch never shows for anyone it can't do anything for.
    */
   crewSets?: BooleanPref;
+  /**
+   * The "show hidden" switch. Your own marked sets list whatever it says (a
+   * set you marked never silently vanishes); it only decides whether a
+   * crewmate's pick of an act you hid shows up here.
+   */
+  showHidden?: boolean;
 }
 
 /** How a walk segment reads between two rows, or null when there's nothing honest to show. */
@@ -40,13 +46,25 @@ function walkLabel(segment: WalkSegment): string | null {
   return `${segment.minutes} min walk`;
 }
 
-export function FavoritesListView({ performances, stages, zoneWalks, artistsById, ordinals, marks, ft, crewSets }: FavoritesListViewProps) {
+export function FavoritesListView({
+  performances,
+  stages,
+  zoneWalks,
+  artistsById,
+  ordinals,
+  marks,
+  ft,
+  crewSets,
+  showHidden = false,
+}: FavoritesListViewProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const stagesById = useMemo(() => new Map(stages.map((s) => [s.id, s])), [stages]);
 
   const friendsOf = (id: string) => marks.friendsOf?.(id) ?? [];
   const isMine = (p: Performance) => marks.tierOf(p.id) !== null;
-  const isCrewOnly = (p: Performance) => !isMine(p) && friendsOf(p.id).length > 0;
+  const isHidden = (p: Performance) => marks.actHidden?.(p.id) ?? false;
+  const isCrewOnly = (p: Performance) =>
+    !isMine(p) && friendsOf(p.id).length > 0 && (showHidden || !isHidden(p));
   const showCrew = crewSets?.show ?? false;
   const crewOnlyCount = performances.filter(isCrewOnly).length;
 
@@ -100,6 +118,7 @@ export function FavoritesListView({ performances, stages, zoneWalks, artistsById
         {listed.map((performance) => {
           const stage = stagesById.get(performance.stageId)!;
           const mine = isMine(performance);
+          const hidden = isHidden(performance);
           const label = walkLabels.get(performance.id) ?? null;
 
           const links = artistLinksFor(performance, artistsById);
@@ -110,6 +129,19 @@ export function FavoritesListView({ performances, stages, zoneWalks, artistsById
           const note = marks.noteOf(performance.id);
           const friends = friendsOf(performance.id);
           const friendNotes = friends.filter((f) => f.note);
+          const { cancelled, displayName } = parseCancellation(performance.artistName);
+          const nameNode = artist?.sourceUrl ? (
+            <a
+              href={artist.sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
+            >
+              {displayName}
+            </a>
+          ) : (
+            displayName
+          );
           const tint = !mine
             ? "border border-dashed border-zinc-600 bg-zinc-900/60"
             : tier === "must"
@@ -117,7 +149,13 @@ export function FavoritesListView({ performances, stages, zoneWalks, artistsById
               : "bg-interested/15 ring-1 ring-interested/70";
 
           return (
-            <div key={performance.id} data-performance-id={performance.id} data-crew-only={mine ? undefined : "true"} className="flex flex-col">
+            <div
+              key={performance.id}
+              data-performance-id={performance.id}
+              data-crew-only={mine ? undefined : "true"}
+              data-hidden={hidden ? "true" : undefined}
+              className={`flex flex-col ${hidden ? "opacity-40" : ""}`}
+            >
               {label && (
                 <div className="flex items-center gap-2 py-1 pl-4 text-[10px] text-zinc-600">
                   <span aria-hidden className="h-3 w-px bg-zinc-700" />
@@ -128,18 +166,9 @@ export function FavoritesListView({ performances, stages, zoneWalks, artistsById
                 <span
                   className={`block text-sm leading-tight font-medium sm:text-base ${mine ? "text-zinc-100" : "text-zinc-400"}`}
                 >
-                  {artist?.sourceUrl ? (
-                    <a
-                      href={artist.sourceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline decoration-zinc-600 decoration-dotted underline-offset-2 hover:decoration-accent"
-                    >
-                      {performance.artistName}
-                    </a>
-                  ) : (
-                    performance.artistName
-                  )}
+                  {hidden && <EyeOff className="mr-1 inline-block h-3 w-3 align-[-0.125em] text-zinc-400" />}
+                  {cancelled && <span className="text-zinc-500">[cancelled] </span>}
+                  {cancelled ? <span className="text-zinc-500 line-through">{nameNode}</span> : nameNode}
                   {performance.recommended && showRecommendations && (
                     <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
                   )}

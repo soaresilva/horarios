@@ -3,6 +3,10 @@
 // at least two members marked something", since a crew of one, or a crew
 // where only one person marks, shares nothing.
 //
+// Also counts hidden acts (HiddenAct, src/app/favorites/actions.ts) per
+// festival. Those rows only exist for visitors who sync, so they undercount
+// hiding overall, but they show whether the feature gets used at all.
+//
 //   npm run stats:crews
 //
 // Against production, the same way the importers run there: pull the env
@@ -31,6 +35,12 @@ async function main() {
     WHERE t.marking >= 2
     GROUP BY f.slug ORDER BY f.slug`;
 
+  const hidden = await prisma.$queryRaw<{ slug: string; acts: number; visitors: number }[]>`
+    SELECT f.slug, COUNT(*)::int AS acts, COUNT(DISTINCT h."visitorId")::int AS visitors
+    FROM "HiddenAct" h
+    JOIN "Festival" f ON f.id = h."festivalId"
+    GROUP BY f.slug ORDER BY f.slug`;
+
   const totalCrews = sizes.reduce((n, row) => n + row.crews, 0);
   const totalMembers = sizes.reduce((n, row) => n + row.size * row.crews, 0);
   console.log(`crews: ${totalCrews}, members: ${totalMembers}`);
@@ -38,6 +48,9 @@ async function main() {
   console.log("crews where 2+ members marked sets:");
   if (perFestival.length === 0) console.log("  none yet");
   for (const row of perFestival) console.log(`  ${row.slug}: ${row.sharing} crews, ${row.members} members marking`);
+  console.log("hidden acts (synced visitors only):");
+  if (hidden.length === 0) console.log("  none yet");
+  for (const row of hidden) console.log(`  ${row.slug}: ${row.acts} acts hidden by ${row.visitors} visitors`);
 }
 
 main()

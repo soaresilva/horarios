@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { otherShowsOf, showOrdinals } from "./shows";
+import { actKeyOf, otherShowsOf, parseCancellation, showOrdinals } from "./shows";
 
 const at = (iso: string) => new Date(`${iso}+02:00`);
 
@@ -86,5 +86,32 @@ describe("otherShowsOf", () => {
     const a = { id: "s1", artistId: "x", artistName: "Palms", startTime: at("2026-10-23T19:00:00") };
     const b = { id: "s2", artistId: "y", artistName: "Palms", startTime: at("2026-10-24T19:00:00") };
     expect(otherShowsOf([a, b], "s1")).toEqual([]);
+  });
+});
+
+describe("parseCancellation", () => {
+  it("strips a leading [cancelled] tag and flags the set as cancelled", () => {
+    expect(parseCancellation("[cancelled] newhvn")).toEqual({ cancelled: true, displayName: "newhvn" });
+  });
+
+  it("is case-insensitive and tolerates a missing space after the tag", () => {
+    expect(parseCancellation("[CANCELLED]newhvn")).toEqual({ cancelled: true, displayName: "newhvn" });
+  });
+
+  it("leaves an ordinary artist name untouched", () => {
+    expect(parseCancellation("Gordi")).toEqual({ cancelled: false, displayName: "Gordi" });
+  });
+});
+
+describe("actKeyOf", () => {
+  it("uses the Artist id where there is one", () => {
+    expect(actKeyOf({ artistId: "cuid-1", artistName: "Gordi" })).toBe("cuid-1");
+  });
+
+  // Paredes de Coura has no Artist rows. The key is what HiddenAct stores,
+  // so a re-typed capital or stray space mustn't unhide an act.
+  it("falls back to the trimmed, lower-cased name", () => {
+    expect(actKeyOf({ artistId: null, artistName: "  Cass McCombs " })).toBe("name:cass mccombs");
+    expect(actKeyOf({ artistId: null, artistName: "CASS MCCOMBS" })).toBe("name:cass mccombs");
   });
 });

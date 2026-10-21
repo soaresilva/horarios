@@ -3,13 +3,14 @@
 import type { Performance, Stage } from "@/lib/schedule-client";
 import { formatClock, type FestivalTime } from "@/lib/time";
 import { CrewBubbles } from "@/components/CrewBubbles";
-import { Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
+import { EyeOff, Instagram, Pencil, Spotify, ThumbsUp } from "@/components/icons";
 import { InlineNote } from "@/components/InlineNote";
 import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
 import { useShowRecommendations } from "@/hooks/useShowRecommendations";
 import { getArtistLinks } from "@/lib/artist-links";
 import { markAriaLabel } from "@/lib/marks";
+import { parseCancellation } from "@/lib/shows";
 
 interface SideStageSectionProps {
   stage: Stage;
@@ -26,6 +27,10 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
   const friends = marks.friendsOf?.(performance.id) ?? [];
   const links = getArtistLinks(performance.artistName);
   const longPress = useLongPress(() => marks.openSheet(performance.id));
+  const { cancelled, displayName } = parseCancellation(performance.artistName);
+  // The act is hidden and only on screen because "show hidden" is on (or
+  // the set is still marked): dimmed, with an eye-off before the name.
+  const hidden = marks.actHidden?.(performance.id) ?? false;
 
   const tint =
     tier === "must"
@@ -38,7 +43,11 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
   const showInlineNote = marks.showNotes && note !== "";
 
   return (
-    <li data-performance-id={performance.id} className="relative">
+    <li
+      data-performance-id={performance.id}
+      data-hidden={hidden ? "true" : undefined}
+      className={`relative ${hidden ? "opacity-40" : ""}`}
+    >
       {/* Fills the row: tap cycles the tier, hold opens the note sheet.
           flex-col with a single full-width child (the name+time span below)
           lays out identically to a plain flex-row of the same two children,
@@ -61,7 +70,9 @@ function SideStageRow({ performance, marks, ft, showRecommendations }: { perform
       >
         <span className="flex w-full items-center justify-between gap-2">
           <span className="text-sm font-medium text-zinc-100">
-            {performance.artistName}
+            {hidden && <EyeOff className="mr-1 inline-block h-3 w-3 align-[-0.125em] text-zinc-400" />}
+            {cancelled && <span className="text-zinc-500">[cancelled] </span>}
+            <span className={cancelled ? "text-zinc-500 line-through" : ""}>{displayName}</span>
             {performance.recommended && showRecommendations && (
               <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
             )}

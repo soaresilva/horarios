@@ -284,6 +284,28 @@ describe("FavoritesListView", () => {
       expect(screen.getAllByText(/min walk|same venue|same building/)).toEqual([screen.getByText("12 min walk")]);
     });
 
+    // Rule: your own marked sets always list; a crewmate's pick of an act you
+    // hid only shows with "show hidden" on, dimmed like on the grid.
+    it("drops a crew-only set of an act you hid unless show hidden is on", () => {
+      const marks = { ...crewMarks, actHidden: (id: string) => id === "theirs" || id === "mine" };
+      const props = {
+        performances: [mine, theirs, mineLater],
+        stages: zonedStages,
+        zoneWalks,
+        artistsById: new Map(),
+        ordinals: new Map(),
+        marks,
+        ft,
+        crewSets: { show: true, toggle: () => {} },
+      };
+      const { container, rerender } = render(<FavoritesListView {...props} />);
+      expect(screen.queryByText("Theirs Only")).toBeNull();
+      expect(container.querySelector('[data-performance-id="mine"]')).toHaveAttribute("data-hidden", "true");
+
+      rerender(<FavoritesListView {...props} showHidden />);
+      expect(container.querySelector('[data-performance-id="theirs"]')).toHaveAttribute("data-hidden", "true");
+    });
+
     it("has no switch when there's no crew", () => {
       renderList(undefined);
       expect(screen.queryByRole("switch", { name: /crew picks/ })).toBeNull();

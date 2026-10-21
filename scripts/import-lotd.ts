@@ -22,7 +22,7 @@ import { parseActPage, isEditionYear, type ParsedAct } from "../src/lib/lotd-par
 import { withDerivedEndTimes } from "../src/lib/lotd-endtimes";
 import { fromFestivalDayTime, type FestivalTime } from "../src/lib/time";
 import { fetchSequentially, politeFetch } from "./lotd/http";
-import { applyShowOverrides } from "./lotd/overrides";
+import { applyNameOverrides, applyShowOverrides } from "./lotd/overrides";
 import { dateForDay, stageSlugForVenue } from "./lotd/venues";
 
 const FESTIVAL_ID = "lotd26";
@@ -106,8 +106,8 @@ async function runFetch(limit?: number) {
   // comment), and leftofthedial.nl hasn't corrected the underlying acts —
   // a plain hand-edit of the committed snapshot would be silently
   // clobbered by the next `--fetch`. See scripts/lotd/overrides.ts.
-  const corrected = applyShowOverrides(acts);
-  const overriddenSlugs = corrected.filter((a, i) => a.shows !== acts[i].shows).map((a) => a.slug);
+  const corrected = applyNameOverrides(applyShowOverrides(acts));
+  const overriddenSlugs = corrected.filter((a, i) => a.shows !== acts[i].shows || a.name !== acts[i].name).map((a) => a.slug);
   if (overriddenSlugs.length) console.log(`Applied known-source-error overrides: ${overriddenSlugs.join(", ")}`);
 
   const withShows = corrected.filter((a) => a.shows.length > 0);

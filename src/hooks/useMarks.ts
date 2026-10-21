@@ -15,6 +15,9 @@ import type { MarksPayload } from "@/lib/marks";
 const mustSeeKey = (festivalSlug: string) => `${festivalSlug}:starred`;
 const interestedKey = (festivalSlug: string) => `${festivalSlug}:interested`;
 const notesKey = (festivalSlug: string) => `${festivalSlug}:notes`;
+// Act keys (actKeyOf in src/lib/shows.ts), not performance ids: hiding is
+// per act, so a set an importer adds later for a hidden act is hidden too.
+const hiddenKey = (festivalSlug: string) => `${festivalSlug}:hidden`;
 
 export type MarkTier = "must" | "interested";
 
@@ -22,6 +25,7 @@ interface MarksState {
   mustSee: string[];
   interested: string[];
   notes: Record<string, string>;
+  hidden: string[];
 }
 
 // Per-slug stores rather than module-level singletons, now that two
@@ -30,7 +34,7 @@ const listenersBySlug = new Map<string, Set<() => void>>();
 const cacheBySlug = new Map<string, MarksState>();
 const EMPTY_IDS: string[] = [];
 const EMPTY_NOTES: Record<string, string> = {};
-const EMPTY_STATE: MarksState = { mustSee: EMPTY_IDS, interested: EMPTY_IDS, notes: EMPTY_NOTES };
+const EMPTY_STATE: MarksState = { mustSee: EMPTY_IDS, interested: EMPTY_IDS, notes: EMPTY_NOTES, hidden: EMPTY_IDS };
 
 function listenersFor(slug: string): Set<() => void> {
   let set = listenersBySlug.get(slug);
@@ -44,7 +48,8 @@ function listenersFor(slug: string): Set<() => void> {
 function readIds(key: string): string[] {
   try {
     const raw = window.localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : [];
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -73,7 +78,12 @@ function notesEqual(a: Record<string, string>, b: Record<string, string>): boole
 }
 
 function statesEqual(a: MarksState, b: MarksState): boolean {
-  return idsEqual(a.mustSee, b.mustSee) && idsEqual(a.interested, b.interested) && notesEqual(a.notes, b.notes);
+  return (
+    idsEqual(a.mustSee, b.mustSee) &&
+    idsEqual(a.interested, b.interested) &&
+    notesEqual(a.notes, b.notes) &&
+    idsEqual(a.hidden, b.hidden)
+  );
 }
 
 function readState(slug: string): MarksState {
@@ -81,6 +91,7 @@ function readState(slug: string): MarksState {
     mustSee: readIds(mustSeeKey(slug)),
     interested: readIds(interestedKey(slug)),
     notes: readNotes(notesKey(slug)),
+    hidden: readIds(hiddenKey(slug)),
   };
 }
 
@@ -122,6 +133,11 @@ function setState(slug: string, next: MarksState) {
     } else {
       window.localStorage.removeItem(notesKey(slug));
     }
+    if (next.hidden.length > 0) {
+      window.localStorage.setItem(hiddenKey(slug), JSON.stringify(next.hidden));
+    } else {
+      window.localStorage.removeItem(hiddenKey(slug));
+    }
   } catch {
     // localStorage unavailable (private browsing, quota, etc.) — marking
     // just won't persist across reloads; not worth surfacing an error for.
@@ -135,14 +151,24 @@ function setState(slug: string, next: MarksState) {
 // additive — every existing caller and test of this hook is unaffected.
 export function getMarks(festivalSlug: string): MarksPayload {
   const state = readState(festivalSlug);
-  return { mustSee: state.mustSee, interested: state.interested, notes: state.notes };
+  return { mustSee: state.mustSee, interested: state.interested, notes: state.notes, hidden: state.hidden };
 }
 
+// `hidden` may be missing from a server response the service worker cached
+// before hiding existed; that reads as "none hidden", not a crash.
 export function replaceAllMarks(festivalSlug: string, payload: MarksPayload): void {
-  setState(festivalSlug, { mustSee: payload.mustSee, interested: payload.interested, notes: payload.notes });
+  setState(festivalSlug, {
+    mustSee: payload.mustSee,
+    interested: payload.interested,
+    notes: payload.notes,
+    hidden: payload.hidden ?? [],
+  });
 }
 
-export interface MarkView {
+// Tiers and notes: everything a block or the list needs to read and change a
+// set's mark. MarkControls builds on this, not on MarkView, so the hiding
+// API below stays with TimetableApp (the one place that resolves act keys).
+export interface MarkTierView {
   tierOf: (id: string) => MarkTier | null;
   noteOf: (id: string) => string;
   /** null → must → interested → null. */
@@ -151,13 +177,26 @@ export interface MarkView {
   setNote: (id: string, text: string) => void;
 }
 
+export interface MarkView extends MarkTierView {
+  /** Act keys hidden from the grid, in the order they were hidden. */
+  hiddenActs: string[];
+  isActHidden: (actKey: string) => boolean;
+  /**
+   * Hides the act and clears the tier on `performanceIds` (its sets) in the
+   * same write, so the act really leaves the grid: a marked set always stays
+   * visible (isGridVisible in src/lib/hidden.ts). Notes are kept.
+   */
+  hideAct: (actKey: string, performanceIds: string[]) => void;
+  unhideAct: (actKey: string) => void;
+}
+
 // What the block/grid layer needs, on top of the raw mark state: a way to
 // open MarkSheet for a given performance. Built once in TimetableApp
 // (wrapping useFavoritesSync's MarkView with an openSheet callback) and
 // threaded down as a single `marks` prop everywhere that used to take the
 // isStarred/onToggleStar pair — StageGrid, SideStageSection, TransposedGrid,
 // PerformanceBlock, TransposedPerformanceBlock, FavoritesListView.
-export interface MarkControls extends MarkView {
+export interface MarkControls extends MarkTierView {
   openSheet: (id: string) => void;
   /** "display notes" is on: blocks render the note inline instead of behind the ✎ tooltip. */
   showNotes: boolean;
@@ -166,6 +205,12 @@ export interface MarkControls extends MarkView {
    * festival without crews, so blocks there render exactly as before.
    */
   friendsOf?: (id: string) => FriendMark[];
+  /**
+   * The set's act is hidden. A block only renders while that's true when the
+   * "show hidden" switch is on (or the set is marked), and then draws itself
+   * dimmed. Undefined in tests that don't care, which reads as "not hidden".
+   */
+  actHidden?: (id: string) => boolean;
 }
 
 function tierOfIn(state: MarksState, id: string): MarkTier | null {
@@ -190,6 +235,18 @@ function withNote(state: MarksState, id: string, text: string): MarksState {
   if (text === "") delete notes[id];
   else notes[id] = text;
   return { ...state, notes };
+}
+
+function withHidden(state: MarksState, actKey: string, hidden: boolean, clearIds: string[] = []): MarksState {
+  const rest = state.hidden.filter((key) => key !== actKey);
+  if (!hidden) return { ...state, hidden: rest };
+  const clear = new Set(clearIds);
+  return {
+    ...state,
+    mustSee: state.mustSee.filter((id) => !clear.has(id)),
+    interested: state.interested.filter((id) => !clear.has(id)),
+    hidden: [...rest, actKey],
+  };
 }
 
 export function useMarks(festivalSlug: string): MarkView {
@@ -236,8 +293,30 @@ export function useMarks(festivalSlug: string): MarkView {
     [festivalSlug],
   );
 
+  const hideAct = useCallback(
+    (actKey: string, performanceIds: string[]) => {
+      const current = getSnapshotFor(festivalSlug);
+      setState(festivalSlug, withHidden(current, actKey, true, performanceIds));
+    },
+    [festivalSlug],
+  );
+
+  const unhideAct = useCallback(
+    (actKey: string) => {
+      const current = getSnapshotFor(festivalSlug);
+      if (!current.hidden.includes(actKey)) return;
+      setState(festivalSlug, withHidden(current, actKey, false));
+    },
+    [festivalSlug],
+  );
+
   const tierOf = useCallback((id: string) => tierOfIn(state, id), [state]);
   const noteOf = useCallback((id: string) => state.notes[id] ?? "", [state]);
+  const hiddenActs = state.hidden;
+  const isActHidden = useCallback((actKey: string) => state.hidden.includes(actKey), [state]);
 
-  return useMemo(() => ({ tierOf, noteOf, cycle, setTier, setNote }), [tierOf, noteOf, cycle, setTier, setNote]);
+  return useMemo(
+    () => ({ tierOf, noteOf, cycle, setTier, setNote, hiddenActs, isActHidden, hideAct, unhideAct }),
+    [tierOf, noteOf, cycle, setTier, setNote, hiddenActs, isActHidden, hideAct, unhideAct],
+  );
 }

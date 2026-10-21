@@ -115,4 +115,13 @@ describe("SideStageSection", () => {
     expect(container.querySelector('[data-crew-tag="M"]')).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /^Crew:/ })).toBeNull();
   });
+
+  it("draws a hidden act's row dimmed and flagged", () => {
+    const { container } = render(
+      <SideStageSection stage={stage} performances={[performance()]} marks={fakeMarks({ actHidden: () => true })} ft={ft} />,
+    );
+    const row = container.querySelector("[data-performance-id]")!;
+    expect(row).toHaveAttribute("data-hidden", "true");
+    expect(row).toHaveClass("opacity-40");
+  });
 });

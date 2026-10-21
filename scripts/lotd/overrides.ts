@@ -91,10 +91,34 @@ export const SHOW_OVERRIDES: Record<string, ParsedShow[]> = {
   "brooki-ie": [],
 };
 
+/**
+ * Display-name corrections, applied the same way as SHOW_OVERRIDES and for
+ * the same reason: a straight re-run of `--fetch` must not clobber a
+ * hand-applied correction.
+ *
+ * newhvn is cancelled with no replacement announced (2026-10-09). Rather
+ * than clearing their shows like Melanie Baker/Brooki above — which would
+ * make their two slots vanish from the grid as if nothing was ever booked
+ * there — the `[cancelled]` prefix keeps the slots visible but struck
+ * through (see parseCancellation in src/lib/shows.ts and every render spot
+ * that calls it), since visitors may have already planned around them.
+ */
+export const NAME_OVERRIDES: Record<string, string> = {
+  "newhvn-ie": "[cancelled] newhvn",
+};
+
 /** Applies SHOW_OVERRIDES over a freshly-parsed act list, replacing `shows` wholesale for any matching slug. */
 export function applyShowOverrides(acts: ParsedAct[]): ParsedAct[] {
   return acts.map((act) => {
     const override = SHOW_OVERRIDES[act.slug];
     return override ? { ...act, shows: override } : act;
+  });
+}
+
+/** Applies NAME_OVERRIDES over a freshly-parsed act list, replacing `name` for any matching slug. */
+export function applyNameOverrides(acts: ParsedAct[]): ParsedAct[] {
+  return acts.map((act) => {
+    const override = NAME_OVERRIDES[act.slug];
+    return override ? { ...act, name: override } : act;
   });
 }

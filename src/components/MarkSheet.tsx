@@ -2,10 +2,11 @@
 
 import { useEffect } from "react";
 import { CrewBubbles } from "@/components/CrewBubbles";
-import { Close } from "@/components/icons";
+import { Close, EyeOff } from "@/components/icons";
 import type { MarkTier } from "@/hooks/useMarks";
 import { tierWord, type FriendMark } from "@/lib/crew";
 import { NOTE_MAX_LENGTH } from "@/lib/marks";
+import { parseCancellation } from "@/lib/shows";
 import { formatClock, formatDayTabLabel, type FestivalTime } from "@/lib/time";
 
 /** One other set by the same act, already resolved to its venue name. */
@@ -44,6 +45,13 @@ interface MarkSheetProps {
   onSetTier: (tier: MarkTier | null) => void;
   onSetNote: (text: string) => void;
   onClose: () => void;
+  /** This set's act is hidden from the grid. */
+  hidden?: boolean;
+  /** How many sets the act has across the festival, this one included. */
+  actSetCount?: number;
+  /** Hide/unhide the whole act. The button only renders when both are given. */
+  onHide?: () => void;
+  onUnhide?: () => void;
 }
 
 // The only per-show detail surface in the app: explicit tier buttons (a
@@ -65,6 +73,10 @@ export function MarkSheet({
   onSetTier,
   onSetNote,
   onClose,
+  hidden = false,
+  actSetCount = 1,
+  onHide,
+  onUnhide,
 }: MarkSheetProps) {
   // Dismisses on Escape as well as backdrop click and Done — unlike
   // SyncFavoritesPanel (see SyncFavoritesPanel.tsx:55-66), which has
@@ -78,6 +90,8 @@ export function MarkSheet({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [onClose]);
 
+  const { cancelled, displayName } = parseCancellation(artistName);
+
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} aria-hidden="true" />
@@ -89,7 +103,10 @@ export function MarkSheet({
       >
         <div className="mb-3 flex items-start justify-between gap-2">
           <div>
-            <p className="text-sm font-semibold">{artistName}</p>
+            <p className="text-sm font-semibold">
+              {cancelled && <span className="text-zinc-500">[cancelled] </span>}
+              <span className={cancelled ? "text-zinc-500 line-through" : ""}>{displayName}</span>
+            </p>
             <p className="text-xs text-zinc-400">
               {formatClock(startTime, ft)}–{formatClock(endTime, ft)} · {stageName}
             </p>
@@ -180,6 +197,21 @@ export function MarkSheet({
               ))}
             </ul>
           </section>
+        )}
+
+        {/* Hiding acts on the whole act, not this one set (actKeyOf in
+            src/lib/shows.ts), so the label says how many sets go with it.
+            Quieter than Done: it's the escape hatch, not the main action. */}
+        {onHide && onUnhide && (
+          <button
+            type="button"
+            onClick={hidden ? onUnhide : onHide}
+            className="mb-2 flex w-full items-center justify-center gap-1.5 rounded-md border border-zinc-700 px-2 py-1.5 text-xs text-zinc-300"
+          >
+            <EyeOff className="h-3.5 w-3.5 text-zinc-400" />
+            {hidden ? "Unhide this act" : "Hide this act"}
+            {!hidden && actSetCount > 1 && <span className="text-zinc-500">(all {actSetCount} sets)</span>}
+          </button>
         )}
 
         <button

@@ -91,12 +91,30 @@ test.describe("Left of the Dial transposed grid", () => {
   // doesn't occupy, and no pointer event reaches it at all. Without the
   // scroll, the positive test below fails for a reason that has nothing to
   // do with long-press, and the negative one passes vacuously.
+  //
+  // And the point pressed is wherever the mark button itself is hit, not the
+  // block's literal centre: artist names are links (pointer-events-auto over
+  // the button), and on LOTD the centre of a 200px block is usually the
+  // name, so a press there went to the <a> and never opened the sheet.
   async function pressCentre(page: Page, hold: number, drag?: number, selector = "[data-performance-id]") {
     const block = page.locator(selector).first();
     await block.scrollIntoViewIfNeeded();
-    const box = (await block.boundingBox())!;
-    const cx = box.x + box.width / 2;
-    const cy = box.y + box.height / 2;
+    const point = await block.evaluate((el) => {
+      const button = el.querySelector("button");
+      if (!button) return null;
+      const r = button.getBoundingClientRect();
+      for (const fy of [0.5, 0.15, 0.85]) {
+        for (const fx of [0.5, 0.7, 0.85, 0.3]) {
+          const x = r.left + r.width * fx;
+          const y = r.top + r.height * fy;
+          if (document.elementFromPoint(x, y) === button) return { x, y };
+        }
+      }
+      return null;
+    });
+    expect(point, "no spot on the block reaches its mark button").not.toBeNull();
+    const cx = point!.x;
+    const cy = point!.y;
 
     await page.mouse.move(cx, cy);
     await page.mouse.down();

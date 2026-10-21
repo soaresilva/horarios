@@ -153,4 +153,34 @@ describe("MarkSheet side programme", () => {
     renderSheet({ crew: [] });
     expect(screen.queryByRole("region", { name: "Crew" })).toBeNull();
   });
+
+  describe("hide act button", () => {
+    it("isn't offered without hide handlers", () => {
+      renderSheet();
+      expect(screen.queryByRole("button", { name: /hide this act/i })).toBeNull();
+    });
+
+    it("says how many sets go with the act, and calls onHide", async () => {
+      const onHide = vi.fn();
+      renderSheet({ actSetCount: 3, onHide, onUnhide: vi.fn() });
+      const button = screen.getByRole("button", { name: /hide this act/i });
+      expect(button).toHaveTextContent("Hide this act(all 3 sets)");
+      await userEvent.click(button);
+      expect(onHide).toHaveBeenCalledOnce();
+    });
+
+    it("leaves the count off for an act that plays once", () => {
+      renderSheet({ actSetCount: 1, onHide: vi.fn(), onUnhide: vi.fn() });
+      expect(screen.getByRole("button", { name: /hide this act/i })).not.toHaveTextContent("all");
+    });
+
+    it("offers unhide for a hidden act", async () => {
+      const onHide = vi.fn();
+      const onUnhide = vi.fn();
+      renderSheet({ hidden: true, actSetCount: 2, onHide, onUnhide });
+      await userEvent.click(screen.getByRole("button", { name: /unhide this act/i }));
+      expect(onUnhide).toHaveBeenCalledOnce();
+      expect(onHide).not.toHaveBeenCalled();
+    });
+  });
 });
