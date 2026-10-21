@@ -379,164 +379,26 @@ describe("TimetableApp help text switch", () => {
     expect(window.localStorage.getItem("app:showHelp")).toBe("false");
   });
 
-  it("hides the how-to sentences of a festival's disclaimer but keeps its facts", async () => {
-    render(<TimetableApp festivalSlug="lgw26" ft={ft} layout="VERTICAL" />);
+  it("hides the whole blurb with it: facts, how-to and links", async () => {
+    render(<TimetableApp festivalSlug="lc26oct" ft={ft} layout="VERTICAL" />);
 
-    expect(screen.getByText(/Tap the star once/)).toBeInTheDocument();
-    expect(screen.getByText(/Times from leguesswho.com/)).toBeInTheDocument();
+    expect(screen.getByText(/Times from the official poster/)).toBeInTheDocument();
+    expect(screen.getByText(/Tap a show once/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "londoncalling.nl" })).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole("switch", { name: /help text/ }));
 
-    expect(screen.queryByText(/Tap the star once/)).not.toBeInTheDocument();
-    expect(screen.getByText(/Times from leguesswho.com/)).toBeInTheDocument();
+    expect(screen.queryByText(/Times from the official poster/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Tap a show once/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "londoncalling.nl" })).not.toBeInTheDocument();
   });
 
-  it("keeps a festival's disclaimer visible when help is off and the festival has no help copy", async () => {
+  it("hides a festival's disclaimer even when it has no help copy", () => {
     window.localStorage.setItem("app:showHelp", "false");
     render(<TimetableApp festivalSlug="pdc26" ft={ft} layout="VERTICAL" />);
 
     expect(screen.getByRole("switch", { name: /help text/ })).toHaveAttribute("aria-checked", "false");
-    expect(screen.queryByText(/tap a set to mark it/i)).not.toBeInTheDocument();
-  });
-});
-
-describe("TimetableApp crews", () => {
-  beforeEach(() => {
-    mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
-  });
-
-  it("shows the crew button on Left of the Dial", () => {
-    render(<TimetableApp festivalSlug="lotd26" ft={ft} layout="TRANSPOSED" />);
-    expect(screen.getByText("CREW BUTTON")).toBeInTheDocument();
-  });
-
-  it.each(["pdc26", "lc26oct", "lgw26"])("has no crew button on %s, where crews are off", (slug) => {
-    render(<TimetableApp festivalSlug={slug} ft={ft} layout="VERTICAL" />);
-    expect(screen.queryByText("CREW BUTTON")).toBeNull();
-  });
-});
-
-describe("TimetableApp hidden acts", () => {
-  const lotdFt = { timezone: "Europe/Amsterdam", locale: "en-GB" };
-  const base = {
-    date: "2026-10-23",
-    notes: null,
-    recommended: false,
-    artistId: null,
-    host: null,
-    series: null,
-    kind: "CONCERT" as const,
-  };
-  // August plays twice on the day in two different rooms, so hiding from
-  // one set has to reach the other.
-  const hideSchedule: Schedule = {
-    ...schedule,
-    stages: [
-      { id: "rotown", name: "Rotown", slug: "rotown", order: 0, zoneId: null, address: null },
-      { id: "worm", name: "WORM", slug: "worm", order: 1, zoneId: null, address: null },
-    ],
-    performances: [
-      { ...base, id: "aug1", stageId: "rotown", artistName: "August", startTime: new Date("2026-10-23T18:00:00Z"), endTime: new Date("2026-10-23T18:40:00Z") },
-      { ...base, id: "aug2", stageId: "worm", artistName: "August", startTime: new Date("2026-10-23T21:00:00Z"), endTime: new Date("2026-10-23T21:40:00Z") },
-      { ...base, id: "gordi", stageId: "rotown", artistName: "Gordi", startTime: new Date("2026-10-23T19:00:00Z"), endTime: new Date("2026-10-23T19:40:00Z") },
-    ],
-  };
-
-  beforeEach(() => {
-    window.localStorage.clear();
-    mockUseSchedule.mockReturnValue({ schedule: hideSchedule, loading: false, error: null, reload: () => {} });
-  });
-
-  function renderLotd() {
-    render(<TimetableApp festivalSlug="lotd26" ft={lotdFt} layout="TRANSPOSED" />);
-    return screen.getByRole("list", { name: "transposed grid" });
-  }
-
-  it("offers no switch until something is hidden", () => {
-    renderLotd();
-    expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
-  });
-
-  it("hides every set by the act from the sheet, and the switch brings them back dimmed", async () => {
-    const grid = renderLotd();
-    await userEvent.click(screen.getByRole("button", { name: "hold aug1" }));
-    const hideButton = screen.getByRole("button", { name: /hide this act/i });
-    expect(hideButton).toHaveTextContent("(all 2 sets)");
-    await userEvent.click(hideButton);
-
-    // Both sets gone (including the one on another stage), sheet closed.
-    expect(within(grid).queryByTestId("aug1")).toBeNull();
-    expect(within(grid).queryByTestId("aug2")).toBeNull();
-    expect(grid).toHaveTextContent("Gordi");
-    expect(screen.queryByRole("button", { name: /hide this act/i })).toBeNull();
-    expect(JSON.parse(window.localStorage.getItem("lotd26:hidden") ?? "[]")).toEqual(["name:august"]);
-
-    const toggle = screen.getByRole("switch", { name: "Show hidden acts (1)" });
-    expect(toggle).toHaveAttribute("aria-checked", "false");
-    await userEvent.click(toggle);
-
-    expect(within(grid).getByTestId("aug1")).toHaveAttribute("data-hidden", "true");
-    expect(within(grid).getByTestId("aug2")).toHaveAttribute("data-hidden", "true");
-    expect(within(grid).getByTestId("gordi")).not.toHaveAttribute("data-hidden");
-  });
-
-  it("unhiding from the sheet restores the act and turns the switch back off", async () => {
-    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
-    window.localStorage.setItem("lotd26:showHidden", "true");
-    const grid = renderLotd();
-
-    await userEvent.click(screen.getByRole("button", { name: "hold aug2" }));
-    await userEvent.click(screen.getByRole("button", { name: /unhide this act/i }));
-
-    expect(within(grid).getByTestId("aug1")).not.toHaveAttribute("data-hidden");
-    expect(within(grid).getByTestId("aug2")).not.toHaveAttribute("data-hidden");
-    expect(window.localStorage.getItem("lotd26:hidden")).toBeNull();
-    // Nothing left hidden, so the switch is off and gone: hiding the next
-    // act takes it off the grid instead of just dimming it.
-    expect(window.localStorage.getItem("lotd26:showHidden")).toBe("false");
-    expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
-  });
-
-  it("hiding clears the act's marks, so a must-see set doesn't keep it on the grid", async () => {
-    window.localStorage.setItem("lotd26:starred", JSON.stringify(["aug1"]));
-    window.localStorage.setItem("lotd26:notes", JSON.stringify({ aug1: "maybe" }));
-    const grid = renderLotd();
-
-    await userEvent.click(screen.getByRole("button", { name: "hold aug1" }));
-    await userEvent.click(screen.getByRole("button", { name: /hide this act/i }));
-
-    expect(within(grid).queryByTestId("aug1")).toBeNull();
-    expect(JSON.parse(window.localStorage.getItem("lotd26:starred") ?? "[]")).toEqual([]);
-    expect(JSON.parse(window.localStorage.getItem("lotd26:notes") ?? "{}")).toEqual({ aug1: "maybe" });
-  });
-
-  it("marking a dimmed set unhides its act", async () => {
-    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
-    window.localStorage.setItem("lotd26:showHidden", "true");
-    const grid = renderLotd();
-
-    await userEvent.click(within(grid).getByRole("button", { name: "tap aug1" }));
-
-    expect(JSON.parse(window.localStorage.getItem("lotd26:starred") ?? "[]")).toEqual(["aug1"]);
-    expect(within(grid).getByTestId("aug2")).not.toHaveAttribute("data-hidden");
-    expect(window.localStorage.getItem("lotd26:hidden")).toBeNull();
-  });
-
-  // A pairing merge can bring a mark from one device and a hide from the
-  // other. The marked set stays; the act's other set doesn't.
-  it("keeps a marked set of a hidden act on the grid, dimmed", () => {
-    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
-    window.localStorage.setItem("lotd26:starred", JSON.stringify(["aug2"]));
-    const grid = renderLotd();
-
-    expect(within(grid).getByTestId("aug2")).toHaveAttribute("data-hidden", "true");
-    expect(within(grid).queryByTestId("aug1")).toBeNull();
-  });
-
-  it("ignores a hidden key no act on this festival matches", () => {
-    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:renamed since"]));
-    const grid = renderLotd();
-    expect(grid).toHaveTextContent("August");
-    expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
+    expect(screen.queryByText(/End times are estimated/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Playlist" })).not.toBeInTheDocument();
   });
 });

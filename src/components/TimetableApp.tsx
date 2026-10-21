@@ -224,7 +224,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
       isGridVisible({ actHidden: actHidden(p.id), tier: tierOf(p.id), showHidden }),
   );
   const copy = festivalCopy(festivalSlug);
-  const notes = [copy?.disclaimer, showHelp ? copy?.help : undefined].filter(Boolean).join(" ");
+  const notes = [copy?.disclaimer, copy?.help].filter(Boolean).join(" ");
   const gridColumns = copy?.gridColumns ?? 2;
   const main = mainStages(schedule.stages, gridPerformances, gridColumns);
   const other = otherStages(schedule.stages, gridPerformances, gridColumns);
@@ -263,7 +263,9 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
       <InstallBanner />
       {showHelp && <MarksHint dismissed={hint.dismissed} onDismiss={hint.dismiss} />}
 
-      {copy && (
+      {/* The whole blurb (facts, how-to and links) goes with the help switch:
+          the point of switching it off is to give the grid the screen. */}
+      {copy && showHelp && (
         <p className="px-3 pt-1 pb-1 text-[10px] leading-snug text-zinc-600">
           {notes}
           {copy.links && copy.links.length > 0 && (

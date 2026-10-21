@@ -59,11 +59,12 @@ export const DEFAULT_PROGRAMME_COPY: ProgrammeCopy = {
 };
 
 export interface FestivalCopy {
-  /** Facts about the times (sources, estimates, club nights with no end). Always shown. */
+  /** Facts about the times (sources, estimates, club nights with no end). Shown with the help text. */
   disclaimer?: string;
   /**
    * How-to sentences for the grid's gestures and switches. Shown after the
-   * disclaimer until the visitor switches the help text off (useShowHelp).
+   * disclaimer and before the links; all three go when the visitor switches
+   * the help text off (useShowHelp).
    */
   help?: string;
   links?: FestivalLink[];
