@@ -182,6 +182,32 @@ test.describe("Left of the Dial transposed grid", () => {
   // The Official Unofficial: LOTD's free daytime side programme, imported by
   // scripts/import-touo.ts into the same venue rows (Fri/Sat 12:00-16:00).
   // Needs `npm run import:touo -- --apply` to have run against the e2e DB.
+  // Holly Head plays four times over three days (one of them a free daytime
+  // set). On a phone, finding all four used to mean opening every day tab.
+  test("search lists an act's sets across days and opens the one tapped on its own day", async ({ page }) => {
+    const field = page.getByRole("searchbox", { name: "Search acts" });
+    const box = await field.boundingBox();
+    expect(box!.x + box!.width).toBeLessThanOrEqual(page.viewportSize()!.width);
+
+    await field.fill("holly");
+    const rows = page.getByRole("list", { name: "Search results" }).getByRole("listitem");
+    await expect(rows).toHaveCount(4);
+    await expect(rows.nth(0)).toContainText("THU 22");
+    await expect(rows.nth(1)).toContainText("FRI 23");
+    await expect(rows.nth(2)).toContainText("V11 · free daytime");
+    await expect(rows.nth(3)).toContainText("De Doelen WBH");
+
+    await rows.nth(3).getByRole("button").click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toContainText("Holly Head");
+    await expect(dialog).toContainText("De Doelen WBH");
+    await dialog.getByRole("button", { name: "Done" }).click();
+
+    await page.getByRole("button", { name: "Clear search" }).click();
+    await expect(page.getByRole("tab", { name: /24/ })).toHaveAttribute("aria-selected", "true");
+    await expect(page.locator('[data-performance-id="lotd26-p-holly-head-uk-saturday-de-doelen-wbh"]')).toBeVisible();
+  });
+
   test.describe("The Official Unofficial side programme", () => {
     const touoBlocks = '[data-performance-id^="touo26-p-"]';
     const platoRow = (page: Page) =>

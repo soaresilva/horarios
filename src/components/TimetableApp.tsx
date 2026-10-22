@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
+import { SearchField, SearchResults } from "@/components/ArtistSearch";
 import { CrewButton } from "@/components/CrewButton";
 import { DayTabs } from "@/components/DayTabs";
 import { FavoritesListView } from "@/components/FavoritesListView";
@@ -30,6 +31,7 @@ import { crewsEnabled, festivalCopy, programmeCopy } from "@/lib/festival-copy";
 import { actKeysById, countHiddenActs, idsOfAct, isGridVisible } from "@/lib/hidden";
 import { contextLine } from "@/lib/programme";
 import { mainStages, otherStages, performancesForDate, uniqueSortedDates } from "@/lib/grouping";
+import { searchPerformances } from "@/lib/search";
 import { otherShowsOf, showOrdinals } from "@/lib/shows";
 import { formatClock, todayInFestivalTimezone, type FestivalTime } from "@/lib/time";
 
@@ -163,6 +165,10 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
   // switched into their favorites list for one day almost certainly wants
   // it for the next one too.
   const [view, setView] = useState<TimetableView>("grid");
+  // Artist search. While non-empty its results replace the grid or list,
+  // festival-wide; clearing it puts back whatever was there.
+  const [query, setQuery] = useState("");
+  const searchResults = useMemo(() => searchPerformances(schedule?.performances ?? [], query), [schedule, query]);
 
   const days = useMemo(() => (schedule ? uniqueSortedDates(schedule.performances) : []), [schedule]);
   // Across the whole festival, not the selected day: the point of "#2/3" is
@@ -326,13 +332,41 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
         <HelpToggle show={showHelp} onToggle={toggleShowHelp} />
       </div>
 
-      <DayTabs days={days} selected={selectedDay} today={today} ft={ft} onSelect={setDayOverride} />
+      {/* Picking a day ends a search: the results ignore the day, so leaving
+          them up would make the tap look like it did nothing. */}
+      <DayTabs
+        days={days}
+        selected={selectedDay}
+        today={today}
+        ft={ft}
+        onSelect={(day) => {
+          setDayOverride(day);
+          setQuery("");
+        }}
+      />
 
-      <div className="flex justify-end px-3 pb-2">
+      <div className="flex items-center gap-2 px-3 pb-2">
+        <SearchField query={query} onChange={setQuery} />
         <ViewToggle view={view} onChange={setView} />
       </div>
 
-      {view === "list" ? (
+      {query.trim() ? (
+        <SearchResults
+          query={query}
+          results={searchResults}
+          stages={schedule.stages}
+          marks={marks}
+          sideTag={programme.side.otherShowTag}
+          ft={ft}
+          onSelect={(id) => {
+            // Also moves the day tab, so clearing the search lands on the
+            // grid for the day of the set just looked at.
+            const performance = schedule.performances.find((p) => p.id === id);
+            if (performance) setDayOverride(performance.date);
+            marks.openSheet(id);
+          }}
+        />
+      ) : view === "list" ? (
         <FavoritesListView
           performances={dayPerformances}
           stages={schedule.stages}
@@ -425,8 +459,9 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           // alongside the id: the sheet must track the performance's own
           // stage/time if the schedule refetches while it's open, and a
           // stale id (set deleted server-side mid-session) just closes the
-          // sheet instead of crashing.
-          const sheetPerformance = dayPerformances.find((p) => p.id === sheetPerformanceId);
+          // sheet instead of crashing. Festival-wide, not dayPerformances:
+          // search opens it for sets on any day.
+          const sheetPerformance = schedule.performances.find((p) => p.id === sheetPerformanceId);
           const sheetStage = sheetPerformance ? schedule.stages.find((s) => s.id === sheetPerformance.stageId) : null;
           if (!sheetPerformance || !sheetStage) return null;
           // Scanned over the whole festival, not dayPerformances: an act's

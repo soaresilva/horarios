@@ -543,3 +543,75 @@ describe("TimetableApp hidden acts", () => {
     expect(screen.queryByRole("switch", { name: /show hidden acts/i })).toBeNull();
   });
 });
+
+describe("TimetableApp artist search", () => {
+  const lotdFt = { timezone: "Europe/Amsterdam", locale: "en-GB" };
+  const base = { notes: null, recommended: false, artistId: null, host: null, series: null, kind: "CONCERT" as const };
+  // August plays Friday and Saturday; the grid opens on Friday.
+  const searchSchedule: Schedule = {
+    ...schedule,
+    stages: [
+      { id: "rotown", name: "Rotown", slug: "rotown", order: 0, zoneId: null, address: null },
+      { id: "worm", name: "WORM", slug: "worm", order: 1, zoneId: null, address: null },
+    ],
+    performances: [
+      { ...base, id: "aug1", date: "2026-10-23", stageId: "rotown", artistName: "August", startTime: new Date("2026-10-23T18:00:00Z"), endTime: new Date("2026-10-23T18:40:00Z") },
+      { ...base, id: "gordi", date: "2026-10-23", stageId: "rotown", artistName: "Gordi", startTime: new Date("2026-10-23T19:00:00Z"), endTime: new Date("2026-10-23T19:40:00Z") },
+      { ...base, id: "aug2", date: "2026-10-24", stageId: "worm", artistName: "August", startTime: new Date("2026-10-24T21:00:00Z"), endTime: new Date("2026-10-24T21:40:00Z") },
+    ],
+  };
+
+  beforeEach(() => {
+    window.localStorage.clear();
+    mockUseSchedule.mockReturnValue({ schedule: searchSchedule, loading: false, error: null, reload: () => {} });
+  });
+
+  function renderLotd() {
+    render(<TimetableApp festivalSlug="lotd26" ft={lotdFt} layout="TRANSPOSED" />);
+  }
+
+  it("replaces the grid with the act's sets from every day, and clearing brings the grid back", async () => {
+    renderLotd();
+    expect(screen.getByRole("list", { name: "transposed grid" })).toHaveTextContent("Gordi");
+
+    await userEvent.type(screen.getByRole("searchbox", { name: "Search acts" }), "aug");
+    expect(screen.queryByRole("list", { name: "transposed grid" })).toBeNull();
+    const rows = within(screen.getByRole("list", { name: "Search results" })).getAllByRole("listitem");
+    expect(rows.map((r) => r.textContent)).toEqual([
+      expect.stringContaining("FRI 23"),
+      expect.stringContaining("SAT 24"),
+    ]);
+
+    await userEvent.click(screen.getByRole("button", { name: "Clear search" }));
+    expect(screen.queryByRole("list", { name: "Search results" })).toBeNull();
+    expect(screen.getByRole("list", { name: "transposed grid" })).toHaveTextContent("Gordi");
+  });
+
+  // Regression guard: the sheet used to look its set up in the selected
+  // day only, so a Saturday result opened from Friday would never show.
+  it("tapping a set on another day opens its sheet and moves the grid to that day", async () => {
+    renderLotd();
+    await userEvent.type(screen.getByRole("searchbox", { name: "Search acts" }), "august");
+    await userEvent.click(within(screen.getByRole("list", { name: "Search results" })).getAllByRole("button")[1]);
+
+    const sheet = screen.getByRole("dialog", { name: "Mark August" });
+    expect(sheet).toHaveTextContent("23:00–23:40 · WORM");
+    await userEvent.click(within(sheet).getByRole("button", { name: "Done" }));
+
+    await userEvent.click(screen.getByRole("button", { name: "Clear search" }));
+    const grid = screen.getByRole("list", { name: "transposed grid" });
+    expect(within(grid).getByTestId("aug2")).toBeInTheDocument();
+    expect(within(grid).queryByTestId("gordi")).toBeNull();
+  });
+
+  it("finds a hidden act, which the grid leaves out", async () => {
+    window.localStorage.setItem("lotd26:hidden", JSON.stringify(["name:august"]));
+    renderLotd();
+    expect(within(screen.getByRole("list", { name: "transposed grid" })).queryByTestId("aug1")).toBeNull();
+
+    await userEvent.type(screen.getByRole("searchbox", { name: "Search acts" }), "aug");
+    const rows = within(screen.getByRole("list", { name: "Search results" })).getAllByRole("listitem");
+    expect(rows).toHaveLength(2);
+    rows.forEach((row) => expect(row).toHaveAttribute("data-hidden", "true"));
+  });
+});
