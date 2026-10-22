@@ -3,7 +3,7 @@
     "https://leguesswho.com/timetable",
     "https://leguesswho.com/u/timetable"
   ],
-  "fetchedAt": "2026-10-18T17:09:16.733Z",
+  "fetchedAt": "2026-10-22T08:54:12.098Z",
   "days": {
     "LGW": [
       "2026-11-05",
@@ -1365,21 +1365,6 @@
       "programme": "LGW",
       "day": "2026-11-06",
       "venue": "TivoliVredenburg",
-      "room": "Ronda",
-      "sourceStageId": 1,
-      "showId": 2176,
-      "name": "Tropical Fuck Storm",
-      "start": 20.75,
-      "end": 21.75,
-      "time": "20:45 - 21:45",
-      "project": "Tropical Fuck Storm",
-      "projectId": 148,
-      "slug": "tropical-fuck-storm"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-06",
-      "venue": "TivoliVredenburg",
       "room": "COSMOS Foyer / Pandora Studio",
       "sourceStageId": 8,
       "showId": 2385,
@@ -1390,6 +1375,21 @@
       "project": "Tropical Fuck Storm",
       "projectId": 148,
       "slug": "chuck-roth"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-06",
+      "venue": "TivoliVredenburg",
+      "room": "Ronda",
+      "sourceStageId": 1,
+      "showId": 2467,
+      "name": "20 Years of GNOD",
+      "start": 20.75,
+      "end": 21.75,
+      "time": "20:45 - 21:45",
+      "project": null,
+      "projectId": null,
+      "slug": "20-years-of-gnod"
     },
     {
       "programme": "LGW",
@@ -1979,6 +1979,21 @@
     {
       "programme": "LGW",
       "day": "2026-11-07",
+      "venue": "EKKO",
+      "room": null,
+      "sourceStageId": 79,
+      "showId": 2469,
+      "name": "Jules Reidy",
+      "start": 16.75,
+      "end": 17.5,
+      "time": "16:45 - 17:30",
+      "project": null,
+      "projectId": null,
+      "slug": "jules-reidy"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-07",
       "venue": "De Helling",
       "room": null,
       "sourceStageId": 10,
@@ -2005,21 +2020,6 @@
       "project": "24 HOUR DUB",
       "projectId": 147,
       "slug": "dubplate-pearl"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-07",
-      "venue": "EKKO",
-      "room": null,
-      "sourceStageId": 79,
-      "showId": 2155,
-      "name": "Palm Springs",
-      "start": 17,
-      "end": 17.666666666666668,
-      "time": "17:00 - 17:40",
-      "project": "Tropical Fuck Storm",
-      "projectId": 148,
-      "slug": "palm-springs"
     },
     {
       "programme": "LGW",
@@ -2444,21 +2444,6 @@
     {
       "programme": "LGW",
       "day": "2026-11-07",
-      "venue": "EKKO",
-      "room": null,
-      "sourceStageId": 79,
-      "showId": 2154,
-      "name": "Gareth Liddiard",
-      "start": 19.75,
-      "end": 20.75,
-      "time": "19:45 - 20:45",
-      "project": "Tropical Fuck Storm",
-      "projectId": 148,
-      "slug": "gareth-liddiard"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-07",
       "venue": "TivoliVredenburg",
       "room": "Cloud Nine",
       "sourceStageId": 3,
@@ -2485,6 +2470,21 @@
       "project": "COSMOS",
       "projectId": 103,
       "slug": "cosmos-x-refuge-worldwide"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-07",
+      "venue": "EKKO",
+      "room": null,
+      "sourceStageId": 79,
+      "showId": 2147,
+      "name": "Bill Orcutt",
+      "start": 19.916666666667,
+      "end": 20.75,
+      "time": "19:55 - 20:45",
+      "project": "Tropical Fuck Storm",
+      "projectId": 148,
+      "slug": "bill-orcutt"
     },
     {
       "programme": "LGW",
@@ -2684,21 +2684,6 @@
     {
       "programme": "LGW",
       "day": "2026-11-07",
-      "venue": "EKKO",
-      "room": null,
-      "sourceStageId": 79,
-      "showId": 2147,
-      "name": "Bill Orcutt",
-      "start": 21.5,
-      "end": 22.333333333333332,
-      "time": "21:30 - 22:20",
-      "project": "Tropical Fuck Storm",
-      "projectId": 148,
-      "slug": "bill-orcutt"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-07",
       "venue": "TivoliVredenburg",
       "room": "Cloud Nine",
       "sourceStageId": 3,
@@ -2710,6 +2695,21 @@
       "project": "Tropical Fuck Storm",
       "projectId": 148,
       "slug": "mark-fell-pat-thomas"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-07",
+      "venue": "EKKO",
+      "room": null,
+      "sourceStageId": 79,
+      "showId": 2470,
+      "name": "Deradoorian",
+      "start": 21.5,
+      "end": 22.166666666666668,
+      "time": "21:30 - 22:10",
+      "project": null,
+      "projectId": null,
+      "slug": "deradoorian"
     },
     {
       "programme": "LGW",
@@ -2852,14 +2852,14 @@
       "venue": "EKKO",
       "room": null,
       "sourceStageId": 79,
-      "showId": 2156,
-      "name": "Lost Animal",
-      "start": 23.25,
+      "showId": 2468,
+      "name": "MEMORIALS",
+      "start": 23,
       "end": 24,
-      "time": "23:15 - 00:00",
+      "time": "23:00 - 00:00",
       "project": "Tropical Fuck Storm",
       "projectId": 148,
-      "slug": "lost-animal"
+      "slug": "memorials"
     },
     {
       "programme": "LGW",
