@@ -27,8 +27,12 @@ export function haversineMetres(a: Point, b: Point): number {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-export function walkMinutes(a: Point, b: Point): number {
-  return Math.ceil((haversineMetres(a, b) * DETOUR_FACTOR) / METRES_PER_MINUTE);
+/**
+ * `detour` defaults to Utrecht's 1.3. Left of the Dial passes its own,
+ * fitted to the festival's published walking times (scripts/lotd/zones.ts).
+ */
+export function walkMinutes(a: Point, b: Point, detour = DETOUR_FACTOR): number {
+  return Math.ceil((haversineMetres(a, b) * detour) / METRES_PER_MINUTE);
 }
 
 /** Mean of a zone's distinct venue pins (rooms in one building count once). */

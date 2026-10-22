@@ -119,6 +119,7 @@ npm run import:lotd -- --fetch            # network  -> scripts/data/lotd26.json
 npm run import:lotd -- --apply --dry-run  # report what would change
 npm run import:lotd -- --apply            # snapshot -> Postgres
 npm run import:lotd -- --apply --prune    # also remove sets that vanished upstream
+npm run import:lotd -- --sql              # zones/rooms migration SQL (see below)
 ```
 
 Two phases with a committed JSON snapshot between them: a Vercel build never depends on
@@ -129,6 +130,22 @@ twice is a no-op — set times keep moving until October, so this is meant to be
 Two things it deliberately will not do: create a `Stage` (an unrecognised venue string
 fails the run, because rooms carry hand-curated zones and addresses), and write
 `recommended` or `notes` (those are admin curation).
+
+**Rooms, zones and walking times** live in `scripts/lotd/rooms.ts`: each room's zone,
+the address from the festival's venue chart (leftofthedial.nl/venues/, checked against
+the Dutch address register, BAG), and its BAG map point. `scripts/lotd/zones.ts` turns
+those into walking minutes with LGW's model (zone centroids × haversine × detour at
+80 m/min, rounded up), using a 1.15 detour fitted to the chart's own "minutes from the
+service desk". A room change (address, zone, a new room) goes like this:
+
+```bash
+# edit scripts/lotd/rooms.ts, then
+npm run import:lotd -- --sql   # prints the Zone/Stage/ZoneWalk upsert block
+```
+
+Paste the block into a new migration. `scripts/lotd/zones.test.ts` fails if the latest
+such block drifts from `rooms.ts`. Existing stages only get their zone and address
+synced, so `/admin` renames survive.
 
 Only start times are published, so end times are derived: 40 minutes, clipped by the
 next set in the same room. To update production, after checking the snapshot diff:

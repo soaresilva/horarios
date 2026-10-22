@@ -4,6 +4,7 @@
 //   npm run import:lotd -- --apply            snapshot -> Postgres
 //   npm run import:lotd -- --apply --prune    also remove sets that vanished
 //   npm run import:lotd -- --apply --dry-run  report what would change
+//   npm run import:lotd -- --sql              print the zones/rooms migration SQL
 //
 // Two phases with a committed JSON snapshot between them, for three reasons:
 // a Vercel build must never depend on a third-party site being up; a schedule
@@ -22,6 +23,7 @@ import { parseActPage, isEditionYear, type ParsedAct } from "../src/lib/lotd-par
 import { withDerivedEndTimes } from "../src/lib/lotd-endtimes";
 import { fromFestivalDayTime, type FestivalTime } from "../src/lib/time";
 import { fetchSequentially, politeFetch } from "./lotd/http";
+import { buildStructureSql } from "./lotd/migration-sql";
 import { applyNameOverrides, applyShowOverrides } from "./lotd/overrides";
 import { dateForDay, stageSlugForVenue } from "./lotd/venues";
 
@@ -331,8 +333,9 @@ async function main() {
 
   if (flag("fetch")) await runFetch(limit);
   else if (flag("apply")) await runApply({ prune: flag("prune"), dryRun: flag("dry-run") });
+  else if (flag("sql")) console.log(buildStructureSql());
   else {
-    console.log("Usage: npm run import:lotd -- (--fetch [--limit=N] | --apply [--prune] [--dry-run])");
+    console.log("Usage: npm run import:lotd -- (--fetch [--limit=N] | --apply [--prune] [--dry-run] | --sql)");
     process.exitCode = 1;
   }
 }
