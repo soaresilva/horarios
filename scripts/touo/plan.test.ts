@@ -73,10 +73,12 @@ describe("planTouo", () => {
     expect(ids).toContain("touo26-p-daufodt-friday-v11");
   });
 
-  it("links exactly the 33 acts that are also on the LOTD lineup", () => {
+  it("links exactly the 34 acts that are also on the LOTD lineup", () => {
     const linkedActs = new Set(planned.filter((p) => p.artistId).map((p) => p.artistId));
-    expect(linkedActs.size).toBe(33);
-    expect(planned.filter((p) => p.artistId)).toHaveLength(37); // four of them play TOUO twice
+    expect(linkedActs.size).toBe(34);
+    expect(planned.filter((p) => p.artistId)).toHaveLength(38); // four of them play TOUO twice
+    // San Jose joined the main lineup on 2026-10-22, in Esmeralda Road's slots.
+    expect(planned.find((p) => p.id === "touo26-p-san-jose-friday-v11")?.artistId).toBe("lotd26-a-san-jose-uk");
     // Spot checks for the names that only match after normalisation.
     const byArtist = new Map(planned.map((p) => [p.artistId, p.artistName]));
     expect(byArtist.get("lotd26-a-daufodt-no")).toBe("DAUFØDT");

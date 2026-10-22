@@ -16,6 +16,8 @@ export const VENUE_TO_STAGE_SLUG: Record<string, string> = {
   BIRD: "bird",
   "DE DOELEN UP": "de-doelen-up",
   "DE DOELEN WBH": "de-doelen-wbh",
+  // San Jose's page (Esmeralda Road's replacement, 2026-10-22) drops the "De".
+  "DOELEN UP": "de-doelen-up",
   MONO: "mono",
   PARADIJSKERK: "paradijskerk",
   REIJNGOUD: "reijngoud",

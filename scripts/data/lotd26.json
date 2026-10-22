@@ -1,7 +1,28 @@
 {
-  "fetchedAt": "2026-10-21T19:09:03.557Z",
+  "fetchedAt": "2026-10-22T13:18:46.363Z",
   "edition": 2026,
   "acts": [
+    {
+      "slug": "san-jose-uk",
+      "name": "San Jose",
+      "country": "UK",
+      "genres": "folk / indie rock / rock",
+      "spotifyUrl": "https://open.spotify.com/artist/4S7RqxJANGm2g4AmBQuCJr",
+      "instagramUrl": "https://www.instagram.com/san.jose.band/",
+      "sourceUrl": "https://leftofthedial.nl/acts/san-jose-uk/",
+      "shows": [
+        {
+          "day": "THURSDAY",
+          "venue": "ANNABEL UP",
+          "time": "21:10"
+        },
+        {
+          "day": "FRIDAY",
+          "venue": "DOELEN UP",
+          "time": "16:20"
+        }
+      ]
+    },
     {
       "slug": "ruby-gill-sa-au",
       "name": "Ruby Gill",
@@ -889,24 +910,13 @@
     },
     {
       "slug": "esmeralda-road-ie",
-      "name": "Esmeralda Road",
-      "country": "IE",
+      "name": "Esmeralda Road (IE) [CANCELLED]",
+      "country": null,
       "genres": "math rock / post-punk / rock",
       "spotifyUrl": "https://open.spotify.com/artist/6S9cVNSaKsE2rdeVqban5w",
       "instagramUrl": "https://www.instagram.com/esmeraldaroad/",
       "sourceUrl": "https://leftofthedial.nl/acts/esmeralda-road-ie/",
-      "shows": [
-        {
-          "day": "THURSDAY",
-          "venue": "ANNABEL UP",
-          "time": "21:10"
-        },
-        {
-          "day": "FRIDAY",
-          "venue": "DE DOELEN UP",
-          "time": "16:20"
-        }
-      ]
+      "shows": []
     },
     {
       "slug": "spanish-horses-uk",
