@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { TimeAxisHorizontal } from "@/components/TimeAxisHorizontal";
 import { TransposedPerformanceBlock } from "@/components/TransposedPerformanceBlock";
 import { useNow } from "@/hooks/useNow";
@@ -11,7 +11,7 @@ import { activeStagesSortedByOrder, stagesByZone } from "@/lib/grouping";
 import type { ProgrammeCopy } from "@/lib/festival-copy";
 import type { Artist, Performance, Stage, Zone, ZoneWalk } from "@/lib/schedule-client";
 import type { ShowOrdinal } from "@/lib/shows";
-import { stageMapsUrl } from "@/lib/venues";
+import { stageMapsUrls } from "@/lib/venues";
 import { zoneWalkLabel } from "@/lib/zones";
 import {
   blockLayout,
@@ -72,6 +72,7 @@ export function TransposedGrid({
   const scrollRef = useRef<HTMLDivElement>(null);
   const hasScrolledRef = useRef(false);
   const now = useNow(30_000);
+  const mapsUrls = useMemo(() => stageMapsUrls(stages), [stages]);
 
   const window = computeDayWindow(performances);
   const active = activeStagesSortedByOrder(stages, performances);
@@ -147,7 +148,7 @@ export function TransposedGrid({
                       className={`sticky left-0 z-20 ${VENUE_COL} flex shrink-0 items-center border-r border-zinc-800 bg-background px-2`}
                     >
                       <a
-                        href={stageMapsUrl(stage)}
+                        href={mapsUrls.get(stage.id)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="line-clamp-2 text-[10px] leading-tight text-zinc-400 hover:text-accent"

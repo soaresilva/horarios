@@ -1,7 +1,8 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { buildStructureSql, SQL_BEGIN, SQL_END } from "./migration-sql";
+import { stageMapsUrls } from "../../src/lib/venues";
+import { buildStructureSql, SQL_BEGIN, SQL_END, stageAddress } from "./migration-sql";
 import type { LgwSnapshot } from "./snapshot";
 import { parseVenuePage } from "./venue-page";
 import { HUB_ZONE, ROOMS, ZONES, roomFor } from "./venues";
@@ -69,6 +70,26 @@ describe("ROOMS", () => {
     expect(roomFor("TivoliVredenburg", "Ronda").slug).toBe("ronda");
     expect(roomFor("ACU", null).slug).toBe("acu");
     expect(() => roomFor("TivoliVredenburg", "Kelder")).toThrow(/Unknown room/);
+  });
+});
+
+describe("maps links from the committed snapshot", () => {
+  const stages = ROOMS.map((r) => ({ id: r.slug, name: r.name, address: stageAddress(committed.venues[r.venue]!), venue: r.venue }));
+  const urls = stageMapsUrls(stages);
+
+  it("sends all six TivoliVredenburg rooms to the same address", () => {
+    const tivoli = stages.filter((s) => s.venue === "TivoliVredenburg");
+    expect(tivoli).toHaveLength(6);
+    expect(new Set(tivoli.map((s) => urls.get(s.id)))).toEqual(
+      new Set(["https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Vredenburgkade 11, 3511 WC Utrecht")]),
+    );
+  });
+
+  it("gives every room of one venue one link", () => {
+    for (const venue of new Set(stages.map((s) => s.venue))) {
+      const links = new Set(stages.filter((s) => s.venue === venue).map((s) => urls.get(s.id)));
+      expect(links.size, venue).toBe(1);
+    }
   });
 });
 

@@ -12,7 +12,7 @@ import { crewColor } from "@/lib/crew";
 import type { Artist, Performance, Stage, ZoneWalk } from "@/lib/schedule-client";
 import { parseCancellation, type ShowOrdinal } from "@/lib/shows";
 import { formatClock, type FestivalTime } from "@/lib/time";
-import { stageMapsUrl } from "@/lib/venues";
+import { stageMapsUrls } from "@/lib/venues";
 import { walkSegmentBetweenStages, type WalkSegment } from "@/lib/zones";
 
 interface FavoritesListViewProps {
@@ -59,6 +59,7 @@ export function FavoritesListView({
 }: FavoritesListViewProps) {
   const { show: showRecommendations } = useShowRecommendations();
   const stagesById = useMemo(() => new Map(stages.map((s) => [s.id, s])), [stages]);
+  const mapsUrls = useMemo(() => stageMapsUrls(stages), [stages]);
 
   const friendsOf = (id: string) => marks.friendsOf?.(id) ?? [];
   const isMine = (p: Performance) => marks.tierOf(p.id) !== null;
@@ -182,7 +183,7 @@ export function FavoritesListView({
                     </span>
                   )}
                   {" · "}
-                  <a href={stageMapsUrl(stage)} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
+                  <a href={mapsUrls.get(stage.id)} target="_blank" rel="noopener noreferrer" className="hover:text-accent">
                     {stage.name}
                   </a>
                   <CrewBubbles friends={friends} className="ml-1.5" />

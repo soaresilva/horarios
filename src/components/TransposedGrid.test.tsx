@@ -53,10 +53,10 @@ function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
   };
 }
 
-function renderGrid(marks: MarkControls) {
+function renderGrid(marks: MarkControls, gridStages: Stage[] = stages) {
   return render(
     <TransposedGrid
-      stages={stages}
+      stages={gridStages}
       zones={[]}
       zoneWalks={[]}
       performances={performances}
@@ -100,6 +100,21 @@ describe("TransposedGrid — row height grows only for annotated rows", () => {
 
     expect(rowHeightFor(container, "noted")).toBe("56px");
     expect(rowHeightFor(container, "unnoted")).toBe("56px");
+  });
+});
+
+describe("TransposedGrid venue links", () => {
+  it("rooms of one building link to the same maps address, a lone venue keeps its name", () => {
+    const tivoli = "Vredenburgkade 11, 3511 WC Utrecht";
+    const { getByText } = renderGrid(fakeMarks(), [
+      { ...stages[0], name: "Pandora", address: tivoli },
+      { ...stages[1], name: "Grote Zaal", address: tivoli },
+      // Never plays this day: still counts, so the link doesn't change by day.
+      { id: "ekko", name: "EKKO", slug: "ekko", order: 2, zoneId: null, address: "Bemuurde Weerd Westzijde 3, 3513 BH Utrecht" },
+    ]);
+    const search = (q: string) => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+    expect(getByText("Pandora").closest("a")!.getAttribute("href")).toBe(search(tivoli));
+    expect(getByText("Grote Zaal").closest("a")!.getAttribute("href")).toBe(search(tivoli));
   });
 });
 
