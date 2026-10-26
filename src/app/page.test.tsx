@@ -1,12 +1,15 @@
 import { describe, expect, it, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Home from "./page";
+import ArchivePage from "./archive/page";
 import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 // Home is an async Server Component that queries Postgres directly, so the
 // DB access is stubbed rather than hit for real (same reasoning as not
 // unit-testing src/app/admin/page.tsx) — only the query result -> markup
 // mapping is under test here.
+vi.mock("next/navigation", () => ({ redirect: vi.fn() }));
 vi.mock("@/lib/prisma", () => ({
   prisma: { festival: { findMany: vi.fn() } },
 }));
@@ -77,5 +80,36 @@ describe("Home (archive index)", () => {
       "href",
       "https://bolachas.org",
     );
+  });
+
+  it("redirects to the featured festival instead of listing", async () => {
+    mockFindMany.mockResolvedValue([
+      { id: "a", slug: "lgw26", featured: false },
+      { id: "b", slug: "lotd26", featured: true },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ] as any);
+    await Home();
+    expect(redirect).toHaveBeenCalledWith("/lotd26");
+  });
+
+  it("does not redirect when no festival is featured", async () => {
+    vi.mocked(redirect).mockClear();
+    mockFindMany.mockResolvedValue([]);
+    render(await Home());
+    expect(redirect).not.toHaveBeenCalled();
+  });
+
+  it("/archive always lists, even when a festival is featured", async () => {
+    vi.mocked(redirect).mockClear();
+    mockFindMany.mockResolvedValue([
+      {
+        id: "b", slug: "lotd26", name: "Left of the Dial", location: "Rotterdam",
+        startDate: new Date(), endDate: new Date(), featured: true,
+      },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    ] as any);
+    render(await ArchivePage());
+    expect(redirect).not.toHaveBeenCalled();
+    expect(screen.getByRole("link", { name: /Left of the Dial/ })).toHaveAttribute("href", "/lotd26");
   });
 });

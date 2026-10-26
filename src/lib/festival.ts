@@ -22,3 +22,10 @@ export function formatFestivalDateRange(startDate: Date, endDate: Date): string 
   }
   return `${day(startDate)} ${month(startDate)} – ${day(endDate)} ${month(endDate)} ${year(endDate)}`;
 }
+
+// The festival `/` redirects to, or undefined when none is featured and the
+// archive list should render instead. The DB allows only one, but if data
+// ever disagrees the most recent edition wins (input order is startDate desc).
+export function pickFeatured<T extends { featured: boolean }>(festivals: T[]): T | undefined {
+  return festivals.find((f) => f.featured);
+}

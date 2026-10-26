@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatFestivalDateRange, isFestivalOver } from "./festival";
+import { formatFestivalDateRange, isFestivalOver, pickFeatured } from "./festival";
 
 describe("isFestivalOver", () => {
   it("is false while the festival's end date is still today or in the future", () => {
@@ -37,5 +37,19 @@ describe("formatFestivalDateRange", () => {
     // west-of-UTC zone would push it back a day if this used local time.
     const single = new Date("2026-08-09T00:00:00Z");
     expect(formatFestivalDateRange(single, single)).toBe("9–9 Aug 2026");
+  });
+});
+
+describe("pickFeatured", () => {
+  it("returns the featured festival", () => {
+    const list = [{ slug: "a", featured: false }, { slug: "b", featured: true }];
+    expect(pickFeatured(list)?.slug).toBe("b");
+  });
+  it("returns undefined when none is featured or the list is empty", () => {
+    expect(pickFeatured([{ featured: false }])).toBeUndefined();
+    expect(pickFeatured([])).toBeUndefined();
+  });
+  it("takes the first (most recent) if data ever has two", () => {
+    expect(pickFeatured([{ slug: "new", featured: true }, { slug: "old", featured: true }])?.slug).toBe("new");
   });
 });

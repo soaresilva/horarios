@@ -182,3 +182,17 @@ export async function deletePerformanceById(festivalSlug: string, id: string): P
   revalidatePath(`/admin/${festivalSlug}`);
   revalidatePath(`/${festivalSlug}`);
 }
+
+// Picks the festival `/` redirects to, or clears the pick when `slug` is
+// empty. Clear-then-set runs in one transaction so the single-featured
+// unique index is never violated and a failed set can't leave `/` with none.
+export async function setFeaturedFestivalAction(formData: FormData): Promise<void> {
+  await requireSession();
+  const slug = String(formData.get("slug") ?? "");
+  await prisma.$transaction(async (tx) => {
+    await tx.festival.updateMany({ where: { featured: true }, data: { featured: false } });
+    if (slug) await tx.festival.update({ where: { slug }, data: { featured: true } });
+  });
+  revalidatePath("/");
+  revalidatePath("/admin");
+}

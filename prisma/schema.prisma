@@ -60,6 +60,11 @@ model Festival {
   // time for this festival is anchored to, regardless of a viewer's or
   // admin's own device timezone.
   timezone   String
+  // The one edition `/` redirects to (set from /admin). At most one row is
+  // true; setFeaturedFestivalAction clears the others in the same transaction
+  // and the partial unique index in the add_featured_festival migration
+  // enforces it. When none is featured, `/` shows the archive list.
+  featured   Boolean         @default(false)
   stages     Stage[]
   zones      Zone[]
   artists    Artist[]

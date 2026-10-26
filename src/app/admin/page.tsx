@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { logoutAction } from "@/app/admin/actions";
+import { logoutAction, setFeaturedFestivalAction } from "@/app/admin/actions";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 
@@ -23,6 +23,29 @@ export default async function AdminPage() {
           </button>
         </form>
       </header>
+
+      {festivals.length > 0 && (
+        <form action={setFeaturedFestivalAction} className="flex flex-col gap-2 rounded-md border border-zinc-800 p-4 text-sm">
+          <h2 className="font-medium">Homepage</h2>
+          <p className="text-xs text-zinc-500">
+            <code>/</code> redirects to this festival. With none selected it shows the archive list (also at{" "}
+            <code>/archive</code>).
+          </p>
+          <label className="flex items-center gap-2">
+            <input type="radio" name="slug" value="" defaultChecked={!festivals.some((f) => f.featured)} />
+            None (archive list)
+          </label>
+          {festivals.map((festival) => (
+            <label key={festival.id} className="flex items-center gap-2">
+              <input type="radio" name="slug" value={festival.slug} defaultChecked={festival.featured} />
+              {festival.name}
+            </label>
+          ))}
+          <button type="submit" className="self-start rounded-md bg-zinc-800 px-3 py-1.5">
+            Save
+          </button>
+        </form>
+      )}
 
       <div className="flex flex-col gap-2">
         {festivals.length === 0 ? (
