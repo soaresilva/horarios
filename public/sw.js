@@ -10,7 +10,9 @@
 // which an offline visitor would otherwise be served with missing arrays.
 // v8 adds the London Calling October 2026 route to the precache below.
 // v9 adds Le Guess Who? 2026, and Performance.kind to the schedule response.
-const CACHE_VERSION = "horarios-v9";
+// v10 drops the stale-while-revalidate copy of the manifest (it pinned
+// installs to the old start_url) and stops precaching the now-redirecting "/".
+const CACHE_VERSION = "horarios-v10";
 const SCHEDULE_CACHE = `${CACHE_VERSION}-schedule`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 const CURRENT_CACHES = [SCHEDULE_CACHE, ASSET_CACHE];
@@ -35,7 +37,7 @@ const OFFLINE_FALLBACK_URL = "/offline.html";
 // static file at build time, so precaching it here needs a matching edit —
 // the rest of the app still works offline without it, just without this
 // as-you-install head start.
-const SHELL_URLS = ["/", "/pdc26", "/lotd26", "/lc26oct", "/lgw26", "/manifest.webmanifest", OFFLINE_FALLBACK_URL];
+const SHELL_URLS = ["/archive", "/pdc26", "/lotd26", "/lc26oct", "/lgw26", "/manifest.webmanifest", OFFLINE_FALLBACK_URL];
 const SCHEDULE_URLS = [
   "/api/festivals/pdc26/schedule",
   "/api/festivals/lotd26/schedule",
@@ -43,9 +45,32 @@ const SCHEDULE_URLS = [
   "/api/festivals/lgw26/schedule",
 ];
 
+// "/" redirects to the festival featured in /admin. cache.addAll would store
+// the followed (redirected: true) response, which the browser refuses to serve
+// to a navigation, so "/" is cached as a synthetic 302 to the final URL
+// instead. Offline, that 302 lands on the festival route cached above.
+async function fetchRoot(request, cacheName) {
+  const cache = await caches.open(cacheName);
+  try {
+    const response = await fetch(request.url, { redirect: "follow" });
+    if (response.redirected) {
+      const redirect = Response.redirect(response.url, 302);
+      await cache.put("/", redirect.clone());
+      return redirect;
+    }
+    if (response.ok) await cache.put("/", response.clone());
+    return response;
+  } catch (err) {
+    const cached = await cache.match("/");
+    if (cached) return cached;
+    throw err;
+  }
+}
+
 self.addEventListener("install", (event) => {
   event.waitUntil(
     Promise.all([
+      fetchRoot(new Request("/"), ASSET_CACHE),
       caches.open(ASSET_CACHE).then((cache) => cache.addAll(SHELL_URLS)),
       // Also fetched by the page itself on mount, but that fetch races SW
       // activation on a first-ever visit and can miss the cache. Fetching
@@ -125,6 +150,13 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // The manifest carries start_url, which changes when the featured festival
+  // does; a cached copy would keep installing the previous edition.
+  if (url.pathname === "/manifest.webmanifest") {
+    event.respondWith(networkFirst(request, ASSET_CACHE));
+    return;
+  }
+
   // HTML documents must be network-first, not stale-while-revalidate. The
   // document is what names the hashed bundle URLs for the current build, so
   // serving a stale copy pins the visitor to the *previous* deploy's entire
@@ -132,6 +164,10 @@ self.addEventListener("fetch", (event) => {
   // this one. That left every deploy invisible until the app was opened
   // twice, which made shipped fixes look like they had never deployed.
   // Offline still works: this falls back to the cached document.
+  if (request.mode === "navigate" && url.pathname === "/") {
+    event.respondWith(fetchRoot(request, ASSET_CACHE).catch(offlineFallback));
+    return;
+  }
   if (request.mode === "navigate") {
     // Only navigations get the offline-fallback-page safety net: the
     // schedule API's networkFirst above must keep rethrowing on total

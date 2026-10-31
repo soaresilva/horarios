@@ -241,7 +241,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
     <div className="flex h-dvh flex-col bg-background text-zinc-100">
       <header className="flex items-start justify-between px-3 pt-3">
         <div className="flex flex-col gap-0.5">
-          <Link href="/" className="text-[10px] text-zinc-600 hover:text-zinc-400">
+          <Link href="/archive" className="text-[10px] text-zinc-600 hover:text-zinc-400">
             ← Horários archive
           </Link>
           <h1 className="text-sm font-semibold tracking-wide text-zinc-300">

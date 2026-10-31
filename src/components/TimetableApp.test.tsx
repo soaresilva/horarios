@@ -128,9 +128,9 @@ describe("TimetableApp loading/error states", () => {
     // The real timetable UI is still up...
     expect(screen.getByText("Horários Bolachas")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Try again" })).not.toBeInTheDocument();
-    // ...with a way back to the archive index at "/", now that this
+    // ...with a way back to the archive index at "/archive", now that this
     // component only renders under /pdc26 rather than at the site root.
-    expect(screen.getByRole("link", { name: /Horários archive/ })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: /Horários archive/ })).toHaveAttribute("href", "/archive");
 
     // ...with a small, non-blocking notice instead of a full-page takeover.
     expect(screen.getByRole("button", { name: /refresh failed/i })).toBeInTheDocument();
