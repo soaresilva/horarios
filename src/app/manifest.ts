@@ -5,11 +5,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Horários Bolachas",
     short_name: "Horários Bolachas",
     description: "Offline-friendly festival stage timetables.",
-    // Opens on the live edition rather than the archive index: whoever
-    // installs this to a home screen is doing it to check set times at the
-    // festival, and "/" would cost them a tap every time. Update this when
-    // the next edition takes over.
-    start_url: "/lotd26",
+    // "/" redirects to the festival picked in /admin (see Home in
+    // src/app/page.tsx), so switching editions never needs a code change.
+    // Installed PWAs keep the start_url they were installed with: a home
+    // screen icon made before this change must be removed and re-added.
+    start_url: "/",
     display: "standalone",
     background_color: "#09090b",
     theme_color: "#09090b",
