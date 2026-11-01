@@ -108,7 +108,7 @@ describe("SideStageSection", () => {
       <SideStageSection
         stage={stage}
         performances={[performance()]}
-        marks={fakeMarks({ friendsOf: () => [{ tag: "M", colorIndex: 1, tier: "must" }] })}
+        marks={fakeMarks({ friendsOf: () => [{ id: "M", tag: "M", colorIndex: 1, crewIds: ["x"], tier: "must" }] })}
         ft={ft}
       />,
     );

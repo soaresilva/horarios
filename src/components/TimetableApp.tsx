@@ -375,7 +375,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
           ordinals={ordinals}
           marks={marks}
           ft={ft}
-          crewSets={crew.crew && crew.crew.members.length > 0 ? crewSets : undefined}
+          crewSets={crew.friends.length > 0 ? crewSets : undefined}
           showHidden={showHidden}
         />
       ) : isTransposed ? (
@@ -488,6 +488,7 @@ export function TimetableApp({ festivalSlug, ft, layout }: TimetableAppProps) {
               note={marks.noteOf(sheetPerformance.id)}
               otherShows={otherShows}
               crew={marks.friendsOf?.(sheetPerformance.id)}
+              crewLabelOf={crew.crewLabelOf}
               ft={ft}
               onSetTier={(tier) => marks.setTier(sheetPerformance.id, tier)}
               onSetNote={(text) => marks.setNote(sheetPerformance.id, text)}

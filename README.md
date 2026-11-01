@@ -297,7 +297,7 @@ updates the row and keeps visitors' marks on it.
 
 ## Crews (friends' picks)
 
-A crew is a small group of friends (up to 8) who see each other's marks. Each person picks a
+A crew is a group of friends (up to 15) who see each other's marks. Each person picks a
 1-2 character tag ("D", "Zs"); one starts a crew from the **◍ crew** button in the legend row
 and shares the 6-character code (`KX7-PQ2`); the others join with it. From then on every set a
 crewmate marked shows their tag as a bubble on the block: **filled = must-see, outlined =
@@ -306,7 +306,12 @@ hovering shows the same as a tooltip. The **My favorites** list shows bubbles an
 notes in full, and its **crew picks** switch also lists sets only friends marked (dashed),
 with walking times still measured between your own sets only.
 
-- **Per festival switch.** `crews: true` in `src/lib/festival-copy.ts`; only `lotd26` has it
+- **Several crews.** One person can be in up to 5. All of them show together on the grid, and
+  a friend you share two crews with is one bubble. Each crew has a **Show on grid** switch in
+  the panel, remembered on that device: you stay in the crew and keep sharing. Your marks go to
+  all your crews. Your tag and **Share my notes** are per crew. A crew can have a short shared
+  name, which any member can change; without one it reads as its code.
+- **Per festival switch.** `crews: true` in `src/lib/festival-copy.ts`; `lotd26` and `lgw26` have it
   (pinned by `src/lib/festival-copy.test.ts`). It gates the UI, the Server Actions
   (`src/app/crew/actions.ts`) and the auto-sync below. Membership is global, so turning another
   festival on later shows existing crews there straight away.
@@ -315,12 +320,14 @@ with walking times still measured between your own sets only.
   can read them. Paired devices share a visitor id, so they share the crew seat too.
 - **Privacy model.** The code is the credential, same threat model as pairing codes: a guessed
   code shows a stranger set picks, nothing more. Crewmates only ever see tags and colours, never
-  a visitor id (`toCrewDTO` in `src/lib/crew.ts`, tested). Notes are shared unless you switch
+  a visitor id (`toCrewsDTO` in `src/lib/crew.ts`, tested). Notes are shared unless you switch
   **Share my notes** off; notes on sets you didn't mark are never shared.
 - **Freshness.** The crew is polled every 60s while the tab is visible and on focus, and the
   last snapshot is kept in localStorage, so bubbles survive no signal at the venue.
-- **Limits.** One crew per visitor. No owner or kick: leave and start a new crew to retire a
-  leaked code. The crew row is deleted when its last member leaves.
+- **Limits.** No owner or kick: leave and start a new crew to retire a leaked code. The crew row
+  is deleted when its last member leaves. Colours are per crew, so across crews they can repeat;
+  two different people with the same tag and colour get different colours. The 5-crew cap bounds
+  each poll: 70 friends' marks is about 125KB at Le Guess Who?.
 
 Usage, read-only, for deciding which festival gets crews next:
 

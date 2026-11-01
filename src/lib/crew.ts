@@ -3,15 +3,25 @@
 // or Node imports, so the client bundle can use the formatting helpers and
 // every rule here is unit-testable without a database.
 
-import type { CrewDTO, CrewError, CrewMemberDTO, CrewTier } from "@/types/crew";
+import type { CrewDTO, CrewError, CrewsDTO, CrewTier, FriendDTO } from "@/types/crew";
 
-/** A crew is for a handful of friends; also the number of distinct colours. */
-export const CREW_MAX_MEMBERS = 8;
+/** Seats in one crew; also the number of distinct colours. */
+export const CREW_MAX_MEMBERS = 15;
+
+/**
+ * Crews one visitor can be in. Bounds what every poll fetches: 5 crews of 15
+ * is 70 friends' marks for the festival, on festival-grounds signal.
+ */
+export const CREW_MAX_PER_VISITOR = 5;
+
+export const CREW_NAME_MAX_LENGTH = 20;
 
 // One colour per seat, picked to stay clear of the two colours that already
 // mean something on a block: accent blue (#3eb7fc, your must-see) and amber
-// (#f59e0b, your interested). The first few are the most distinct from each
-// other, since most crews will be 2-4 people.
+// (#f59e0b, your interested). All are light enough for dark text when filled
+// and readable as text on the page background. Order matters twice: the first
+// few are the most distinct, since most crews are small, and a stored
+// CrewMember.colorIndex points in here, so append and never reorder.
 export const CREW_COLORS = [
   "#fb7185", // rose
   "#34d399", // emerald
@@ -21,6 +31,13 @@ export const CREW_COLORS = [
   "#e7e5e4", // stone
   "#5eead4", // teal
   "#818cf8", // indigo
+  "#d946ef", // magenta
+  "#b08968", // brown
+  "#a3a34a", // olive
+  "#fef08a", // yellow
+  "#8fb996", // sage
+  "#65a30d", // green
+  "#94a3b8", // slate
 ] as const;
 
 export function crewColor(colorIndex: number): string {
@@ -73,11 +90,36 @@ export function nextColorIndex(taken: number[]): number | null {
   return null;
 }
 
+/**
+ * The shared name as stored: whitespace tidied, control characters gone,
+ * clamped rather than rejected. Counted in code points, which is what the
+ * VarChar(20) column counts, so an emoji can't be cut in half. Null when
+ * nothing is left, which clears the name.
+ */
+export function parseCrewName(input: string): string | null {
+  const name = input.normalize("NFC").replace(/\p{Cc}/gu, " ").replace(/\s+/g, " ").trim();
+  const clamped = Array.from(name).slice(0, CREW_NAME_MAX_LENGTH).join("").trim();
+  return clamped === "" ? null : clamped;
+}
+
+/** What a crew is called on screen: its name, or its code. */
+export function crewLabel(crew: { name: string | null; code: string }): string {
+  return crew.name ?? formatCrewCode(crew.code);
+}
+
 export interface CrewMemberRow {
+  id: string;
   visitorId: string;
   tag: string;
   colorIndex: number;
   shareNotes: boolean;
+}
+
+export interface CrewRow {
+  id: string;
+  code: string;
+  name: string | null;
+  members: CrewMemberRow[];
 }
 
 export interface CrewFavoriteRow {
@@ -87,58 +129,105 @@ export interface CrewFavoriteRow {
   note: string | null;
 }
 
-// The only way crew data reaches a browser. Three rules, all tested:
+// The only way crew data reaches a browser. `crews` is in the order the
+// caller joined them. Four rules, all tested:
 // 1. No visitorId, ever. It is the httpOnly cookie value (src/lib/visitor.ts)
 //    and the whole credential: a crewmate holding it could become you.
 // 2. Only sets with a tier. A note on an unmarked set is a scratch note, and
 //    a bubble means "I'm going", which an unmarked set doesn't say.
-// 3. A member with shareNotes off contributes tiers only.
-export function toCrewDTO(
-  code: string,
-  members: CrewMemberRow[],
-  favorites: CrewFavoriteRow[],
-  myVisitorId: string,
-): CrewDTO | null {
-  const me = members.find((m) => m.visitorId === myVisitorId);
-  if (!me) return null;
+// 3. A friend's note comes through if they share notes in any crew you're
+//    both in, since that crew can already read it.
+// 4. One person is one friend, however many crews you share with them. Their
+//    tag and colour come from the first of those crews.
+//
+// Colours are per crew, so two different people can arrive with the same tag
+// AND colour: founders always sit in seat 0, so two crews started by a "D"
+// give two rose Ds. The later one moves to the next colour free for that tag.
+export function toCrewsDTO(crews: CrewRow[], favorites: CrewFavoriteRow[], myVisitorId: string): CrewsDTO {
+  const crewDTOs: CrewDTO[] = [];
+  const friendsByVisitor = new Map<string, { friend: FriendDTO; shareNotes: boolean }>();
+  const coloursByTag = new Map<string, number[]>();
 
-  const others: CrewMemberDTO[] = members
-    .filter((m) => m.visitorId !== myVisitorId)
-    .sort((a, b) => a.colorIndex - b.colorIndex)
-    .map((member) => {
-      const marks: CrewMemberDTO["marks"] = {};
-      for (const row of favorites) {
-        if (row.visitorId !== member.visitorId || row.tier === null) continue;
-        const tier: CrewTier = row.tier === "MUST_SEE" ? "must" : "interested";
-        marks[row.performanceId] = member.shareNotes && row.note ? { tier, note: row.note } : { tier };
-      }
-      return { tag: member.tag, colorIndex: member.colorIndex, marks };
+  for (const crew of crews) {
+    const me = crew.members.find((m) => m.visitorId === myVisitorId);
+    if (!me) continue;
+
+    const others = crew.members
+      .filter((m) => m.visitorId !== myVisitorId)
+      .sort((a, b) => a.colorIndex - b.colorIndex);
+
+    crewDTOs.push({
+      id: crew.id,
+      code: crew.code,
+      name: crew.name,
+      me: { tag: me.tag, colorIndex: me.colorIndex, shareNotes: me.shareNotes },
+      members: others.map((m) => ({ tag: m.tag, colorIndex: m.colorIndex })),
     });
 
-  return {
-    code,
-    me: { tag: me.tag, colorIndex: me.colorIndex, shareNotes: me.shareNotes },
-    members: others,
-  };
+    for (const member of others) {
+      const known = friendsByVisitor.get(member.visitorId);
+      if (known) {
+        known.friend.crewIds.push(crew.id);
+        known.shareNotes ||= member.shareNotes;
+        continue;
+      }
+      const tagKey = member.tag.toUpperCase();
+      const taken = coloursByTag.get(tagKey) ?? [];
+      const colorIndex = taken.includes(member.colorIndex)
+        ? (nextColorIndex(taken) ?? member.colorIndex)
+        : member.colorIndex;
+      coloursByTag.set(tagKey, [...taken, colorIndex]);
+      friendsByVisitor.set(member.visitorId, {
+        friend: { id: member.id, tag: member.tag, colorIndex, crewIds: [crew.id], marks: {} },
+        shareNotes: member.shareNotes,
+      });
+    }
+  }
+
+  for (const row of favorites) {
+    const entry = friendsByVisitor.get(row.visitorId);
+    if (!entry || row.tier === null) continue;
+    const tier: CrewTier = row.tier === "MUST_SEE" ? "must" : "interested";
+    entry.friend.marks[row.performanceId] = entry.shareNotes && row.note ? { tier, note: row.note } : { tier };
+  }
+
+  return { crews: crewDTOs, friends: Array.from(friendsByVisitor.values(), (entry) => entry.friend) };
 }
 
 /** One friend's mark on one set, as every bubble, tooltip and sheet row reads it. */
 export interface FriendMark {
+  /** Stable per person: a tag is only unique inside one crew. */
+  id: string;
   tag: string;
   colorIndex: number;
+  crewIds: string[];
   tier: CrewTier;
   note?: string;
 }
 
+const NO_HIDDEN_CREWS: ReadonlySet<string> = new Set();
+
 // Must-see before interested, then seat order, so the same friend sits in
 // the same place on every block and the bubbles that survive a "+N" cut
-// are the strongest picks.
-export function friendsByPerformance(members: CrewMemberDTO[]): Map<string, FriendMark[]> {
+// are the strongest picks. A crew switched off in the panel takes its people
+// with it, except anyone you also share a crew that's still on with.
+export function friendsByPerformance(
+  friends: FriendDTO[],
+  hiddenCrewIds: ReadonlySet<string> = NO_HIDDEN_CREWS,
+): Map<string, FriendMark[]> {
   const byId = new Map<string, FriendMark[]>();
-  for (const member of members) {
-    for (const [performanceId, mark] of Object.entries(member.marks)) {
+  for (const friend of friends) {
+    if (friend.crewIds.every((id) => hiddenCrewIds.has(id))) continue;
+    for (const [performanceId, mark] of Object.entries(friend.marks)) {
       const list = byId.get(performanceId) ?? [];
-      list.push({ tag: member.tag, colorIndex: member.colorIndex, tier: mark.tier, ...(mark.note ? { note: mark.note } : {}) });
+      list.push({
+        id: friend.id,
+        tag: friend.tag,
+        colorIndex: friend.colorIndex,
+        crewIds: friend.crewIds,
+        tier: mark.tier,
+        ...(mark.note ? { note: mark.note } : {}),
+      });
       byId.set(performanceId, list);
     }
   }
@@ -146,6 +235,18 @@ export function friendsByPerformance(members: CrewMemberDTO[]): Map<string, Frie
     list.sort((a, b) => (a.tier === b.tier ? a.colorIndex - b.colorIndex : a.tier === "must" ? -1 : 1));
   }
   return byId;
+}
+
+// Bubbles a transposed block's clock line can hold while its time stays
+// whole. The line loses 44px to padding and the star; the time is 27px, a
+// bubble 16px, the "+N" about 13px, plus 2px gaps. Two bubbles and a "+N" need
+// 122px of block. Below that, one friend still gets their bubble (45px of
+// line, and LGW's 90px floor leaves 46px), but two or more collapse to a bare
+// "+N": a bubble and a count would leave "1…" of the time. Tapping still
+// opens the sheet with everyone in it.
+export function blockBubbleMax(extent: number, friendCount: number): 0 | 1 | 2 {
+  if (extent >= 125) return 2;
+  return friendCount === 1 ? 1 : 0;
 }
 
 export function tierWord(tier: CrewTier): string {
@@ -172,8 +273,8 @@ export function crewErrorMessage(error: CrewError, tag?: string): string {
       return tag ? `${tag} is taken in this crew, pick another tag.` : "That tag is taken in this crew.";
     case "bad-tag":
       return "Your tag must be 1 or 2 letters or digits.";
-    case "already-in-crew":
-      return "You're already in a crew. Leave it first.";
+    case "too-many-crews":
+      return `You're in ${CREW_MAX_PER_VISITOR} crews already. Leave one first.`;
     case "not-in-crew":
       return "You're not in a crew any more.";
     case "disabled":

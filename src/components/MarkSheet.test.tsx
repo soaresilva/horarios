@@ -140,8 +140,8 @@ describe("MarkSheet side programme", () => {
   it("lists each crewmate's tier and note in a Crew section", () => {
     renderSheet({
       crew: [
-        { tag: "D", colorIndex: 0, tier: "must", note: "front left, get there early" },
-        { tag: "Zs", colorIndex: 2, tier: "interested" },
+        { id: "D", tag: "D", colorIndex: 0, crewIds: ["x"], tier: "must", note: "front left, get there early" },
+        { id: "Zs", tag: "Zs", colorIndex: 2, crewIds: ["x"], tier: "interested" },
       ],
     });
     const section = screen.getByRole("region", { name: "Crew" });
@@ -182,5 +182,29 @@ describe("MarkSheet side programme", () => {
       expect(onUnhide).toHaveBeenCalledOnce();
       expect(onHide).not.toHaveBeenCalled();
     });
+  });
+
+  it("names the crew beside each friend when you're in several", () => {
+    renderSheet({
+      crew: [{ id: "m", tag: "M", colorIndex: 1, crewIds: ["x"], tier: "must", note: "meet at the bar" }],
+      crewLabelOf: () => "LGW gang",
+    });
+    expect(screen.getByRole("region", { name: "Crew" })).toHaveTextContent("LGW gang");
+  });
+
+  it("keeps a long friend list scrolling so Done stays on screen", () => {
+    renderSheet({
+      crew: Array.from({ length: 14 }, (_, i) => ({
+        id: String(i),
+        tag: String(i),
+        colorIndex: i,
+        crewIds: ["x"],
+        tier: "must" as const,
+        note: "a note",
+      })),
+    });
+    const list = screen.getByRole("region", { name: "Crew" }).querySelector("ul")!;
+    expect(list).toHaveClass("max-h-48", "overflow-y-auto");
+    expect(list.children).toHaveLength(14);
   });
 });

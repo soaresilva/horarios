@@ -8,6 +8,7 @@ import { useLongPress } from "@/hooks/useLongPress";
 import type { MarkControls } from "@/hooks/useMarks";
 import type { ArtistLinks } from "@/lib/artist-links";
 import type { ProgrammeCopy } from "@/lib/festival-copy";
+import { blockBubbleMax } from "@/lib/crew";
 import { contextLine, kindLabel } from "@/lib/programme";
 import type { Artist, Performance } from "@/lib/schedule-client";
 import { parseCancellation, type ShowOrdinal } from "@/lib/shows";
@@ -144,31 +145,40 @@ export function TransposedPerformanceBlock({
             <ThumbsUp className="ml-1 inline-block h-3 w-3 align-[-0.125em] text-accent" />
           )}
         </span>
-        <span className="truncate text-[10px] leading-tight text-zinc-400">
-          {isSide && (
-            <span className="mr-1 rounded-sm border border-dashed border-zinc-500 px-0.5 text-[8px] font-semibold text-zinc-300">
-              {programme.side.chip}
-            </span>
-          )}
-          {kind && (
-            <span className="mr-1 rounded-sm bg-zinc-600 px-0.5 text-[8px] font-semibold text-zinc-100">{kind.chip}</span>
-          )}
-          {formatClock(performance.startTime, ft)}
-          {showOrdinal && (
-            <span className="text-zinc-500">
-              {" "}
-              · #{ordinal.index}/{ordinal.total}
-            </span>
-          )}
-          {note && !showInlineNote && (
-            <span title={note} className="pointer-events-auto ml-1 inline-block align-[-0.1em] text-zinc-400">
-              <Pencil className="inline h-2.5 w-2.5" />
-            </span>
-          )}
-          {/* Friends' picks, on the clock line for the same reason the ✎
-              is: the rail has no room (see the pr-9 note above). Two
-              bubbles then "+N", which a 40-minute block at 5px/min holds. */}
-          <CrewBubbles friends={friends} max={2} onOpen={() => marks.openSheet(performance.id)} className="ml-1" />
+        {/* Friends' picks sit on the clock line for the same reason the ✎
+            does: the rail has no room (see the pr-9 note above). They're
+            outside the truncating span so the time gives way, not the
+            bubbles: on LGW's 3px/min grid a 135px block has 91px here, and
+            a clipped bubble would quietly drop a friend. */}
+        <span className="flex min-w-0 items-center gap-0.5 text-[10px] leading-tight text-zinc-400">
+          <span className="min-w-0 truncate">
+            {isSide && (
+              <span className="mr-1 rounded-sm border border-dashed border-zinc-500 px-0.5 text-[8px] font-semibold text-zinc-300">
+                {programme.side.chip}
+              </span>
+            )}
+            {kind && (
+              <span className="mr-1 rounded-sm bg-zinc-600 px-0.5 text-[8px] font-semibold text-zinc-100">{kind.chip}</span>
+            )}
+            {formatClock(performance.startTime, ft)}
+            {showOrdinal && (
+              <span className="text-zinc-500">
+                {" "}
+                · #{ordinal.index}/{ordinal.total}
+              </span>
+            )}
+            {note && !showInlineNote && (
+              <span title={note} className="pointer-events-auto ml-1 inline-block align-[-0.1em] text-zinc-400">
+                <Pencil className="inline h-2.5 w-2.5" />
+              </span>
+            )}
+          </span>
+          <CrewBubbles
+            friends={friends}
+            max={blockBubbleMax(layout.extent, friends.length)}
+            onOpen={() => marks.openSheet(performance.id)}
+            className="shrink-0"
+          />
         </span>
         {/* Third line, only present when the row grew to ROW_HEIGHT_WITH_NOTE
             (TransposedGrid.tsx) to hold it. pointer-events-auto because the

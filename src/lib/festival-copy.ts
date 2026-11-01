@@ -126,7 +126,7 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     // an already-dense grid.
     legend: false,
     // The first festival with crews (Diogo, 2026-10-20), the day before it
-    // opened. The rest follow once LOTD shows people actually use it.
+    // opened. Le Guess Who? followed.
     crews: true,
     programme: {
       side: {
@@ -166,6 +166,7 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
     ],
     // No recommends curation for this edition.
     legend: false,
+    crews: true,
     // Sets here are mostly 45-60 minutes. At LOTD's 5px/min an hour filled
     // an iPhone 13 Pro's whole grid (Diogo, 2026-10-18); at 3px/min about
     // 1.5 hours fit. 90px is the narrowest block that still shows a short

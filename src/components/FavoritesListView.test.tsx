@@ -241,9 +241,9 @@ describe("FavoritesListView", () => {
     });
     const friendsOf = (id: string) =>
       id === "theirs"
-        ? [{ tag: "M", colorIndex: 1, tier: "must" as const, note: "meet by the sound desk" }]
+        ? [{ id: "M", tag: "M", colorIndex: 1, crewIds: ["x"], tier: "must" as const, note: "meet by the sound desk" }]
         : id === "mine"
-          ? [{ tag: "Zs", colorIndex: 2, tier: "interested" as const }]
+          ? [{ id: "Zs", tag: "Zs", colorIndex: 2, crewIds: ["x"], tier: "interested" as const }]
           : [];
     const crewMarks = fakeMarks({ tierOf: tierOfMap({ mine: "must", "mine-later": "interested" }), friendsOf });
 

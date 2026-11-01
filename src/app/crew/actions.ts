@@ -5,10 +5,20 @@ import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { getOrCreateVisitorId, getVisitorId } from "@/lib/visitor";
 import { crewsEnabled } from "@/lib/festival-copy";
-import { CREW_MAX_MEMBERS, generateCrewCode, nextColorIndex, normalizeCrewCode, parseTag, toCrewDTO } from "@/lib/crew";
-import type { CrewDTO, CrewResult } from "@/types/crew";
+import {
+  CREW_MAX_MEMBERS,
+  CREW_MAX_PER_VISITOR,
+  generateCrewCode,
+  nextColorIndex,
+  normalizeCrewCode,
+  parseCrewName,
+  parseTag,
+  toCrewsDTO,
+} from "@/lib/crew";
+import type { CrewResult, CrewsDTO } from "@/types/crew";
 
-// Crews: a few visitors who can read each other's Favorite rows. The code is
+// Crews: small groups of visitors who can read each other's Favorite rows. A
+// visitor can be in several, and their marks go to all of them. The code is
 // the credential (see the Crew model in prisma/schema.prisma). Every write
 // is gated on the festival having crews switched on (src/lib/festival-copy.ts)
 // so a stale client on a festival that's off can't create data there.
@@ -18,21 +28,24 @@ import type { CrewDTO, CrewResult } from "@/types/crew";
 // is what puts its marks where crewmates can read them.
 
 const slugSchema = z.string().min(1).max(64);
-const inputSchema = z.string().max(32);
+const inputSchema = z.string().max(64);
 
 function isUniqueViolation(err: unknown): boolean {
   return typeof err === "object" && err !== null && "code" in err && err.code === "P2002";
 }
 
-async function crewFor(visitorId: string, festivalSlug: string): Promise<CrewDTO | null> {
-  const member = await prisma.crewMember.findUnique({
+async function crewsFor(visitorId: string, festivalSlug: string): Promise<CrewsDTO> {
+  const seats = await prisma.crewMember.findMany({
     where: { visitorId },
+    orderBy: [{ joinedAt: "asc" }, { id: "asc" }],
     include: { crew: { include: { members: true } } },
   });
-  if (!member) return null;
+  const crews = seats.map((seat) => seat.crew);
+  const others = Array.from(new Set(crews.flatMap((crew) => crew.members.map((m) => m.visitorId)))).filter(
+    (id) => id !== visitorId,
+  );
 
   const festival = await prisma.festival.findUnique({ where: { slug: festivalSlug }, select: { id: true } });
-  const others = member.crew.members.filter((m) => m.visitorId !== visitorId).map((m) => m.visitorId);
   const favorites =
     festival && others.length > 0
       ? await prisma.favorite.findMany({
@@ -41,48 +54,48 @@ async function crewFor(visitorId: string, festivalSlug: string): Promise<CrewDTO
         })
       : [];
 
-  return toCrewDTO(member.crew.code, member.crew.members, favorites, visitorId);
+  return toCrewsDTO(crews, favorites, visitorId);
 }
 
 async function resultFor(visitorId: string, festivalSlug: string): Promise<CrewResult> {
-  const crew = await crewFor(visitorId, festivalSlug);
-  return crew ? { crew } : { error: "not-in-crew" };
+  return { crews: await crewsFor(visitorId, festivalSlug) };
 }
 
-// The read every open timetable polls. null for anyone not in a crew (and
+async function atCrewLimit(visitorId: string): Promise<boolean> {
+  return (await prisma.crewMember.count({ where: { visitorId } })) >= CREW_MAX_PER_VISITOR;
+}
+
+// The read every open timetable polls. null for anyone in no crew (and
 // without even a DB round trip for a visitor who never opted into sync, so
 // the poll costs next to nothing for everyone else), and null on a festival
 // with crews off, so nothing leaks there from a stale client either.
-export async function getCrew(festivalSlug: string): Promise<CrewDTO | null> {
+export async function getCrews(festivalSlug: string): Promise<CrewsDTO | null> {
   const slug = slugSchema.parse(festivalSlug);
   if (!crewsEnabled(slug)) return null;
   const visitorId = await getVisitorId();
   if (!visitorId) return null;
-  return crewFor(visitorId, slug);
+  const crews = await crewsFor(visitorId, slug);
+  return crews.crews.length > 0 ? crews : null;
 }
 
-export async function createCrew(festivalSlug: string, tagInput: string): Promise<CrewResult> {
+export async function createCrew(festivalSlug: string, tagInput: string, nameInput = ""): Promise<CrewResult> {
   const slug = slugSchema.parse(festivalSlug);
   if (!crewsEnabled(slug)) return { error: "disabled" };
   const tag = parseTag(inputSchema.parse(tagInput));
   if (!tag) return { error: "bad-tag" };
+  const name = parseCrewName(inputSchema.parse(nameInput));
 
   const visitorId = await getOrCreateVisitorId();
-  if (await prisma.crewMember.findUnique({ where: { visitorId } })) return { error: "already-in-crew" };
+  if (await atCrewLimit(visitorId)) return { error: "too-many-crews" };
 
   // Same retry-on-collision loop as generatePairingCode: `code` is @unique,
-  // and a collision in 887M codes is unlikely but not impossible. A P2002
-  // here could also be this visitor racing themselves into a second crew
-  // (visitorId is @unique too), which the re-check at the top of the next
-  // attempt turns into "already-in-crew".
+  // and a collision in 887M codes is unlikely but not impossible.
   for (let attempt = 0; attempt < 5; attempt++) {
-    if (attempt > 0 && (await prisma.crewMember.findUnique({ where: { visitorId } }))) {
-      return { error: "already-in-crew" };
-    }
     try {
       await prisma.crew.create({
         data: {
           code: generateCrewCode(randomInt),
+          name,
           members: { create: { visitorId, tag: tag.tag, tagKey: tag.tagKey, colorIndex: 0 } },
         },
       });
@@ -104,11 +117,13 @@ export async function joinCrew(festivalSlug: string, codeInput: string, tagInput
   if (!tag) return { error: "bad-tag" };
 
   const visitorId = await getOrCreateVisitorId();
-  const existing = await prisma.crewMember.findUnique({ where: { visitorId }, include: { crew: true } });
-  if (existing) {
-    // Re-entering your own crew's code (a second tap, a paired phone) is a no-op, not an error.
-    return existing.crew.code === code ? resultFor(visitorId, slug) : { error: "already-in-crew" };
-  }
+
+  // Re-entering a code you're already in (a second tap, a paired phone) is a
+  // no-op, whatever tag was typed. Checked before the crew limit, so it's a
+  // no-op at the limit too.
+  const seat = await prisma.crewMember.findFirst({ where: { visitorId, crew: { code } }, select: { id: true } });
+  if (seat) return resultFor(visitorId, slug);
+  if (await atCrewLimit(visitorId)) return { error: "too-many-crews" };
 
   // Row-locks the crew so two people taking the last seat (or the same
   // colour) at the same moment queue up instead of both getting in: the
@@ -126,10 +141,13 @@ export async function joinCrew(festivalSlug: string, codeInput: string, tagInput
       await tx.crewMember.create({ data: { crewId, visitorId, tag: tag.tag, tagKey: tag.tagKey, colorIndex } });
       return "joined" as const;
     })
-    .catch((err: unknown) => {
-      // This visitor joining twice at once (visitorId is @unique).
-      if (isUniqueViolation(err)) return "already-in-crew" as const;
-      throw err;
+    .catch(async (err: unknown) => {
+      if (!isUniqueViolation(err)) throw err;
+      // Either this visitor's own double tap, and the seat is already
+      // theirs, or a crewmate took this tag with a rename, which doesn't
+      // queue on the lock.
+      const taken = await prisma.crewMember.findFirst({ where: { visitorId, crew: { code } }, select: { id: true } });
+      return taken ? ("joined" as const) : ("tag-taken" as const);
     });
 
   if (outcome !== "joined") return { error: outcome };
@@ -139,12 +157,15 @@ export async function joinCrew(festivalSlug: string, codeInput: string, tagInput
 
 const updateSchema = z.object({ tag: inputSchema.optional(), shareNotes: z.boolean().optional() });
 
+// Scoped to { crewId, visitorId }: your own seat in that crew, nobody else's.
 export async function updateMyCrewMember(
   festivalSlug: string,
+  crewIdInput: string,
   changes: { tag?: string; shareNotes?: boolean },
 ): Promise<CrewResult> {
   const slug = slugSchema.parse(festivalSlug);
   if (!crewsEnabled(slug)) return { error: "disabled" };
+  const crewId = inputSchema.parse(crewIdInput);
   const parsed = updateSchema.parse(changes);
   const visitorId = await getVisitorId();
   if (!visitorId) return { error: "not-in-crew" };
@@ -159,7 +180,7 @@ export async function updateMyCrewMember(
   if (parsed.shareNotes !== undefined) data.shareNotes = parsed.shareNotes;
 
   try {
-    const updated = await prisma.crewMember.updateMany({ where: { visitorId }, data });
+    const updated = await prisma.crewMember.updateMany({ where: { crewId, visitorId }, data });
     if (updated.count === 0) return { error: "not-in-crew" };
   } catch (err) {
     if (isUniqueViolation(err)) return { error: "tag-taken" };
@@ -168,18 +189,36 @@ export async function updateMyCrewMember(
   return resultFor(visitorId, slug);
 }
 
-// Not gated on a festival: leaving has to work from anywhere, and it only
-// ever removes data. The crew row goes with its last member, so an empty
-// crew's code stops working instead of lingering as an open door.
-export async function leaveCrew(): Promise<{ ok: true }> {
+// Any member can rename a crew, since a crew has no owner. The members
+// filter is what stops anyone else: a crew id isn't a secret once you've
+// shared a crew and left it.
+export async function renameCrew(festivalSlug: string, crewIdInput: string, nameInput: string): Promise<CrewResult> {
+  const slug = slugSchema.parse(festivalSlug);
+  if (!crewsEnabled(slug)) return { error: "disabled" };
+  const crewId = inputSchema.parse(crewIdInput);
+  const name = parseCrewName(inputSchema.parse(nameInput));
   const visitorId = await getVisitorId();
-  if (!visitorId) return { ok: true };
-  const member = await prisma.crewMember.findUnique({ where: { visitorId }, select: { crewId: true } });
-  if (!member) return { ok: true };
+  if (!visitorId) return { error: "not-in-crew" };
+
+  const updated = await prisma.crew.updateMany({ where: { id: crewId, members: { some: { visitorId } } }, data: { name } });
+  if (updated.count === 0) return { error: "not-in-crew" };
+  return resultFor(visitorId, slug);
+}
+
+// The delete isn't gated on a festival: leaving has to work from anywhere,
+// and it only ever removes data. The crew row goes with its last member, so
+// an empty crew's code stops working instead of lingering as an open door.
+// The slug only scopes the crews handed back.
+export async function leaveCrew(festivalSlug: string, crewIdInput: string): Promise<CrewsDTO | null> {
+  const slug = slugSchema.parse(festivalSlug);
+  const crewId = inputSchema.parse(crewIdInput);
+  const visitorId = await getVisitorId();
+  if (!visitorId) return null;
   await prisma.$transaction([
-    prisma.crewMember.delete({ where: { visitorId } }),
-    prisma.crew.deleteMany({ where: { id: member.crewId, members: { none: {} } } }),
+    prisma.crewMember.deleteMany({ where: { crewId, visitorId } }),
+    prisma.crew.deleteMany({ where: { id: crewId, members: { none: {} } } }),
   ]);
   console.info("[crew] left");
-  return { ok: true };
+  const crews = await crewsFor(visitorId, slug);
+  return crews.crews.length > 0 ? crews : null;
 }

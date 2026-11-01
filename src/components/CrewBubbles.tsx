@@ -32,7 +32,7 @@ export function CrewBubbles({ friends, max, onOpen, className = "" }: CrewBubble
         const color = crewColor(friend.colorIndex);
         return (
           <span
-            key={friend.tag}
+            key={friend.id}
             data-crew-tag={friend.tag}
             data-crew-tier={friend.tier}
             style={
@@ -50,7 +50,9 @@ export function CrewBubbles({ friends, max, onOpen, className = "" }: CrewBubble
     </>
   );
 
-  const shared = `inline-flex items-center gap-0.5 align-middle ${className}`;
+  // Only an uncapped cluster can outgrow its line: 14 bubbles don't fit a
+  // list row on a phone. A capped one stays on one line by design.
+  const shared = `inline-flex items-center gap-0.5 align-middle ${max === undefined ? "flex-wrap" : ""} ${className}`;
   const title = crewTooltip(friends);
   const label = crewAriaLabel(friends);
 

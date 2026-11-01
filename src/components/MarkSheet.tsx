@@ -41,6 +41,8 @@ interface MarkSheetProps {
   otherShows: OtherShow[];
   /** Crewmates' marks on this set, strongest first; the section is hidden when empty. */
   crew?: FriendMark[];
+  /** Which of your crews a friend is in; null when you're only in one, so there's nothing to tell apart. */
+  crewLabelOf?: (friend: FriendMark) => string | null;
   ft: FestivalTime;
   onSetTier: (tier: MarkTier | null) => void;
   onSetNote: (text: string) => void;
@@ -69,6 +71,7 @@ export function MarkSheet({
   note,
   otherShows,
   crew = [],
+  crewLabelOf,
   ft,
   onSetTier,
   onSetNote,
@@ -187,14 +190,22 @@ export function MarkSheet({
         {crew.length > 0 && (
           <section aria-label="Crew" className="mb-3 border-t border-zinc-800 pt-2">
             <p className="mb-1.5 text-[10px] font-semibold tracking-wide text-zinc-500 uppercase">Crew</p>
-            <ul className="flex flex-col gap-1.5">
-              {crew.map((friend) => (
-                <li key={friend.tag} className="flex items-start gap-2 text-xs">
-                  <CrewBubbles friends={[friend]} />
-                  <span className="w-16 shrink-0 text-zinc-400">{tierWord(friend.tier)}</span>
-                  {friend.note && <span className="min-w-0 text-zinc-300 italic">{friend.note}</span>}
-                </li>
-              ))}
+            {/* Scrolls past a handful of rows: 14 friends with notes would
+                otherwise push Done off a phone screen. */}
+            <ul className="flex max-h-48 flex-col gap-1.5 overflow-y-auto">
+              {crew.map((friend) => {
+                const label = crewLabelOf?.(friend);
+                return (
+                  <li key={friend.id} className="flex items-start gap-2 text-xs">
+                    <CrewBubbles friends={[friend]} />
+                    <span className="w-16 shrink-0 text-zinc-400">{tierWord(friend.tier)}</span>
+                    <span className="min-w-0">
+                      {friend.note && <span className="block text-zinc-300 italic">{friend.note}</span>}
+                      {label && <span className="block text-[10px] text-zinc-500">{label}</span>}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         )}

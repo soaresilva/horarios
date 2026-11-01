@@ -41,10 +41,10 @@ function fakeMarks(overrides: Partial<MarkControls> = {}): MarkControls {
 }
 
 const crewFriends = [
-  { tag: "D", colorIndex: 0, tier: "must" as const, note: "front left" },
-  { tag: "M", colorIndex: 1, tier: "must" as const },
-  { tag: "Zs", colorIndex: 2, tier: "interested" as const },
-  { tag: "J", colorIndex: 3, tier: "interested" as const },
+  { id: "D", tag: "D", colorIndex: 0, crewIds: ["x"], tier: "must" as const, note: "front left" },
+  { id: "M", tag: "M", colorIndex: 1, crewIds: ["x"], tier: "must" as const },
+  { id: "Zs", tag: "Zs", colorIndex: 2, crewIds: ["x"], tier: "interested" as const },
+  { id: "J", tag: "J", colorIndex: 3, crewIds: ["x"], tier: "interested" as const },
 ];
 
 describe("PerformanceBlock", () => {

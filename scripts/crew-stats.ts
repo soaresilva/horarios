@@ -35,6 +35,10 @@ async function main() {
     WHERE t.marking >= 2
     GROUP BY f.slug ORDER BY f.slug`;
 
+  const multi = await prisma.$queryRaw<{ people: number }[]>`
+    SELECT COUNT(*)::int AS people
+    FROM (SELECT "visitorId" FROM "CrewMember" GROUP BY "visitorId" HAVING COUNT(*) >= 2) t`;
+
   const hidden = await prisma.$queryRaw<{ slug: string; acts: number; visitors: number }[]>`
     SELECT f.slug, COUNT(*)::int AS acts, COUNT(DISTINCT h."visitorId")::int AS visitors
     FROM "HiddenAct" h
@@ -45,6 +49,7 @@ async function main() {
   const totalMembers = sizes.reduce((n, row) => n + row.size * row.crews, 0);
   console.log(`crews: ${totalCrews}, members: ${totalMembers}`);
   for (const row of sizes) console.log(`  ${row.size} ${row.size === 1 ? "person " : "people "}: ${row.crews}`);
+  console.log(`people in 2+ crews: ${multi[0]?.people ?? 0}`);
   console.log("crews where 2+ members marked sets:");
   if (perFestival.length === 0) console.log("  none yet");
   for (const row of perFestival) console.log(`  ${row.slug}: ${row.sharing} crews, ${row.members} members marking`);

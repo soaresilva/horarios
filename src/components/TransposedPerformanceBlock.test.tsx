@@ -60,10 +60,10 @@ function renderBlock(overrides: Partial<MarkControls> = {}, artist: Artist | und
 }
 
 const crewFriends = [
-  { tag: "D", colorIndex: 0, tier: "must" as const, note: "front left" },
-  { tag: "M", colorIndex: 1, tier: "must" as const },
-  { tag: "Zs", colorIndex: 2, tier: "interested" as const },
-  { tag: "J", colorIndex: 3, tier: "interested" as const },
+  { id: "D", tag: "D", colorIndex: 0, crewIds: ["x"], tier: "must" as const, note: "front left" },
+  { id: "M", tag: "M", colorIndex: 1, crewIds: ["x"], tier: "must" as const },
+  { id: "Zs", tag: "Zs", colorIndex: 2, crewIds: ["x"], tier: "interested" as const },
+  { id: "J", tag: "J", colorIndex: 3, crewIds: ["x"], tier: "interested" as const },
 ];
 
 describe("TransposedPerformanceBlock", () => {
@@ -246,5 +246,38 @@ describe("TransposedPerformanceBlock on Le Guess Who?", () => {
   it("leaves an ordinary set undimmed", () => {
     const { container } = renderBlock();
     expect(container.querySelector("[data-performance-id]")).not.toHaveAttribute("data-hidden");
+  });
+
+  // LGW draws at 3px/min, so a 30-minute set is a 90px block: any bubble
+  // next to a "+N" would push its time out of the clock line.
+  it("collapses to a bare +N on a narrow block, which still opens the sheet", async () => {
+    const openSheet = vi.fn();
+    const user = userEvent.setup();
+    const { container } = render(
+      <TransposedPerformanceBlock
+        performance={performance()}
+        artist={undefined}
+        layout={{ offset: 0, extent: 90 }}
+        links={{}}
+        marks={fakeMarks({ friendsOf: () => crewFriends, openSheet })}
+        showRecommendation={false}
+        ordinal={undefined}
+        isOrigin={false}
+        programme={programmeCopy("lgw26")}
+        ft={ft}
+        onSelectOrigin={() => {}}
+      />,
+    );
+    expect(container.querySelectorAll("[data-crew-tag]")).toHaveLength(0);
+    expect(screen.getByText("+4")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /^Crew:/ }));
+    expect(openSheet).toHaveBeenCalledWith("p1");
+  });
+
+  it("keeps the bubbles outside the truncating part of the clock line", () => {
+    const { container } = renderBlock({ friendsOf: () => crewFriends });
+    const bubble = container.querySelector('[data-crew-tag="D"]')!;
+    expect(bubble.closest(".truncate")).toBeNull();
+    expect(screen.getByRole("button", { name: /^Crew:/ })).toHaveClass("shrink-0");
   });
 });

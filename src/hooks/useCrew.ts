@@ -1,14 +1,63 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useSyncExternalStore } from "react";
-import { createCrew, getCrew, joinCrew, leaveCrew, updateMyCrewMember } from "@/app/crew/actions";
-import { friendsByPerformance, type FriendMark } from "@/lib/crew";
-import type { CrewDTO, CrewResult } from "@/types/crew";
+import { createCrew, getCrews, joinCrew, leaveCrew, renameCrew, updateMyCrewMember } from "@/app/crew/actions";
+import { crewLabel, friendsByPerformance, type FriendMark } from "@/lib/crew";
+import type { CrewDTO, CrewResult, CrewsDTO, FriendDTO } from "@/types/crew";
 import { useCrewMember, writeCrewMember } from "@/hooks/crewMembership";
 
 // Same cadence as useSchedule's poll: a friend's new pick shows up within a
 // minute while the tab is visible, and a backgrounded tab costs nothing.
 const POLL_INTERVAL_MS = 60_000;
+
+// ---------------------------------------------------------------------------
+// Crews switched off in the panel. A display choice for this device, across
+// festivals: you stay in the crew and your marks keep going to it, so it's
+// plain localStorage and the server never hears about it.
+// ---------------------------------------------------------------------------
+
+const HIDDEN_KEY = "crew:hiddenCrews";
+const NO_HIDDEN_CREWS: ReadonlySet<string> = new Set();
+const hiddenListeners = new Set<() => void>();
+let hiddenCache: { raw: string | null; value: ReadonlySet<string> } = { raw: null, value: NO_HIDDEN_CREWS };
+
+function readHiddenCrews(): ReadonlySet<string> {
+  let raw: string | null;
+  try {
+    raw = window.localStorage.getItem(HIDDEN_KEY);
+  } catch {
+    return hiddenCache.value;
+  }
+  if (raw === hiddenCache.raw) return hiddenCache.value;
+  let ids: string[] = [];
+  try {
+    const parsed: unknown = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(parsed)) ids = parsed.filter((id): id is string => typeof id === "string");
+  } catch {
+    // unreadable: nothing hidden
+  }
+  hiddenCache = { raw, value: ids.length > 0 ? new Set(ids) : NO_HIDDEN_CREWS };
+  return hiddenCache.value;
+}
+
+function writeHiddenCrews(ids: ReadonlySet<string>) {
+  const raw = ids.size > 0 ? JSON.stringify(Array.from(ids)) : null;
+  try {
+    if (raw) window.localStorage.setItem(HIDDEN_KEY, raw);
+    else window.localStorage.removeItem(HIDDEN_KEY);
+  } catch {
+    // Storage blocked: hidden for this session only.
+  }
+  hiddenCache = { raw, value: ids.size > 0 ? new Set(ids) : NO_HIDDEN_CREWS };
+  for (const listener of hiddenListeners) listener();
+}
+
+function subscribeHidden(onChange: () => void) {
+  hiddenListeners.add(onChange);
+  return () => {
+    hiddenListeners.delete(onChange);
+  };
+}
 
 // ---------------------------------------------------------------------------
 // The last crew snapshot per festival, in localStorage so bubbles survive a
@@ -17,13 +66,16 @@ const POLL_INTERVAL_MS = 60_000;
 // ---------------------------------------------------------------------------
 
 export interface CrewSnapshot {
-  crew: CrewDTO | null;
+  crews: CrewsDTO | null;
   /** ISO time of the last successful fetch, or null before the first one. */
   fetchedAt: string | null;
 }
 
-const EMPTY_SNAPSHOT: CrewSnapshot = { crew: null, fetchedAt: null };
-const snapshotKey = (slug: string) => `${slug}:crew`;
+const EMPTY_SNAPSHOT: CrewSnapshot = { crews: null, fetchedAt: null };
+const snapshotKey = (slug: string) => `${slug}:crews`;
+// The one-crew shape, from before a visitor could be in several. Nothing
+// reads it; the first write clears it.
+const legacySnapshotKey = (slug: string) => `${slug}:crew`;
 const snapshotListeners = new Map<string, Set<() => void>>();
 const snapshotCache = new Map<string, { raw: string | null; value: CrewSnapshot }>();
 
@@ -58,16 +110,17 @@ function readSnapshot(slug: string): CrewSnapshot {
   return value;
 }
 
-function writeSnapshot(slug: string, fresh: CrewDTO | null) {
-  // Every poll moves fetchedAt, but when the crew itself is unchanged the
-  // old object is kept, so friendsOf keeps its identity and the grid's
+function writeSnapshot(slug: string, fresh: CrewsDTO | null) {
+  // Every poll moves fetchedAt, but when the crews themselves are unchanged
+  // the old object is kept, so friendsOf keeps its identity and the grid's
   // blocks don't all re-render once a minute for nothing.
-  const previous = readSnapshot(slug).crew;
-  const crew = previous && fresh && JSON.stringify(previous) === JSON.stringify(fresh) ? previous : fresh;
-  const value: CrewSnapshot = { crew, fetchedAt: new Date().toISOString() };
+  const previous = readSnapshot(slug).crews;
+  const crews = previous && fresh && JSON.stringify(previous) === JSON.stringify(fresh) ? previous : fresh;
+  const value: CrewSnapshot = { crews, fetchedAt: new Date().toISOString() };
   const raw = JSON.stringify(value);
   try {
     window.localStorage.setItem(snapshotKey(slug), raw);
+    window.localStorage.removeItem(legacySnapshotKey(slug));
   } catch {
     // in-memory only for this session
   }
@@ -84,17 +137,27 @@ function isSyncedHere(slug: string): boolean {
 }
 
 export interface UseCrewResult {
-  crew: CrewDTO | null;
+  /** Your crews, in the order you joined them. */
+  crews: CrewDTO[];
+  /** Everyone you share a crew with, hidden crews included. */
+  friends: FriendDTO[];
   fetchedAt: string | null;
   /** Friends' marks on one set, strongest first; empty when there are none (or crews are off). */
   friendsOf: (performanceId: string) => FriendMark[];
-  create: (tag: string) => Promise<CrewResult>;
+  /** Which of your crews a friend is in, for the sheet; null when you're in only one. */
+  crewLabelOf: (friend: FriendMark) => string | null;
+  hiddenCrewIds: ReadonlySet<string>;
+  toggleCrewHidden: (crewId: string) => void;
+  create: (tag: string, name: string) => Promise<CrewResult>;
   join: (code: string, tag: string) => Promise<CrewResult>;
-  update: (changes: { tag?: string; shareNotes?: boolean }) => Promise<CrewResult>;
-  leave: () => Promise<void>;
+  update: (crewId: string, changes: { tag?: string; shareNotes?: boolean }) => Promise<CrewResult>;
+  rename: (crewId: string, name: string) => Promise<CrewResult>;
+  leave: (crewId: string) => Promise<void>;
 }
 
-const NO_FRIENDS: FriendMark[] = [];
+const NO_CREWS: CrewDTO[] = [];
+const NO_FRIENDS: FriendDTO[] = [];
+const NO_MARKS: FriendMark[] = [];
 
 export function useCrew(festivalSlug: string, enabled: boolean): UseCrewResult {
   const subscribe = useCallback(
@@ -109,21 +172,29 @@ export function useCrew(festivalSlug: string, enabled: boolean): UseCrewResult {
   );
   const getSnapshot = useCallback(() => readSnapshot(festivalSlug), [festivalSlug]);
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, () => EMPTY_SNAPSHOT);
+  const hiddenCrewIds = useSyncExternalStore(subscribeHidden, readHiddenCrews, () => NO_HIDDEN_CREWS);
   const member = useCrewMember();
 
-  const crew = enabled ? snapshot.crew : null;
+  const crews = (enabled ? snapshot.crews?.crews : null) ?? NO_CREWS;
+  const friends = (enabled ? snapshot.crews?.friends : null) ?? NO_FRIENDS;
+
+  const store = useCallback(
+    (fresh: CrewsDTO | null) => {
+      writeSnapshot(festivalSlug, fresh);
+      writeCrewMember(fresh !== null);
+    },
+    [festivalSlug],
+  );
 
   const refresh = useCallback(async () => {
     try {
-      const fresh = await getCrew(festivalSlug);
-      writeSnapshot(festivalSlug, fresh);
       // The server is the source of truth for membership: a crew joined on
       // a paired phone shows up here, and one left elsewhere goes away.
-      writeCrewMember(fresh !== null);
+      store(await getCrews(festivalSlug));
     } catch {
       // Offline or the request failed: keep showing the last snapshot.
     }
-  }, [festivalSlug]);
+  }, [festivalSlug, store]);
 
   // Poll only while in a crew. On mount, also check once if this device has
   // a sync cookie for this festival: its paired phone may have joined a crew.
@@ -148,22 +219,19 @@ export function useCrew(festivalSlug: string, enabled: boolean): UseCrewResult {
     };
   }, [enabled, member, festivalSlug, refresh]);
 
+  // "not-in-crew" only says the seat in question is gone (left on a paired
+  // phone, say), not that every crew is, so it re-reads rather than clearing.
   const applyResult = useCallback(
     (result: CrewResult): CrewResult => {
-      if ("crew" in result) {
-        writeSnapshot(festivalSlug, result.crew);
-        writeCrewMember(true);
-      } else if (result.error === "not-in-crew") {
-        writeSnapshot(festivalSlug, null);
-        writeCrewMember(false);
-      }
+      if ("crews" in result) store(result.crews.crews.length > 0 ? result.crews : null);
+      else if (result.error === "not-in-crew") void refresh();
       return result;
     },
-    [festivalSlug],
+    [store, refresh],
   );
 
   const create = useCallback(
-    async (tag: string) => applyResult(await createCrew(festivalSlug, tag)),
+    async (tag: string, name: string) => applyResult(await createCrew(festivalSlug, tag, name)),
     [festivalSlug, applyResult],
   );
   const join = useCallback(
@@ -171,17 +239,55 @@ export function useCrew(festivalSlug: string, enabled: boolean): UseCrewResult {
     [festivalSlug, applyResult],
   );
   const update = useCallback(
-    async (changes: { tag?: string; shareNotes?: boolean }) => applyResult(await updateMyCrewMember(festivalSlug, changes)),
+    async (crewId: string, changes: { tag?: string; shareNotes?: boolean }) =>
+      applyResult(await updateMyCrewMember(festivalSlug, crewId, changes)),
     [festivalSlug, applyResult],
   );
-  const leave = useCallback(async () => {
-    await leaveCrew();
-    writeSnapshot(festivalSlug, null);
-    writeCrewMember(false);
-  }, [festivalSlug]);
+  const rename = useCallback(
+    async (crewId: string, name: string) => applyResult(await renameCrew(festivalSlug, crewId, name)),
+    [festivalSlug, applyResult],
+  );
+  const leave = useCallback(
+    async (crewId: string) => {
+      store(await leaveCrew(festivalSlug, crewId));
+      const hidden = readHiddenCrews();
+      if (hidden.has(crewId)) writeHiddenCrews(new Set(Array.from(hidden).filter((id) => id !== crewId)));
+    },
+    [festivalSlug, store],
+  );
 
-  const byPerformance = useMemo(() => friendsByPerformance(crew?.members ?? []), [crew]);
-  const friendsOf = useCallback((id: string) => byPerformance.get(id) ?? NO_FRIENDS, [byPerformance]);
+  const toggleCrewHidden = useCallback((crewId: string) => {
+    const next = new Set(readHiddenCrews());
+    if (!next.delete(crewId)) next.add(crewId);
+    writeHiddenCrews(next);
+  }, []);
 
-  return { crew, fetchedAt: enabled ? snapshot.fetchedAt : null, friendsOf, create, join, update, leave };
+  const byPerformance = useMemo(() => friendsByPerformance(friends, hiddenCrewIds), [friends, hiddenCrewIds]);
+  const friendsOf = useCallback((id: string) => byPerformance.get(id) ?? NO_MARKS, [byPerformance]);
+
+  const crewLabelOf = useCallback(
+    (friend: FriendMark) => {
+      if (crews.length < 2) return null;
+      return crews
+        .filter((crew) => friend.crewIds.includes(crew.id))
+        .map(crewLabel)
+        .join(", ");
+    },
+    [crews],
+  );
+
+  return {
+    crews,
+    friends,
+    fetchedAt: enabled ? snapshot.fetchedAt : null,
+    friendsOf,
+    crewLabelOf,
+    hiddenCrewIds,
+    toggleCrewHidden,
+    create,
+    join,
+    update,
+    rename,
+    leave,
+  };
 }

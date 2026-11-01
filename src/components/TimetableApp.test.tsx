@@ -32,12 +32,17 @@ vi.mock("@/hooks/useFavoritesSync", async () => {
 // here; the button is a marker so its per-festival gating is observable.
 vi.mock("@/hooks/useCrew", () => ({
   useCrew: () => ({
-    crew: null,
+    crews: [],
+    friends: [],
     fetchedAt: null,
     friendsOf: () => [],
+    crewLabelOf: () => null,
+    hiddenCrewIds: new Set(),
+    toggleCrewHidden: () => {},
     create: async () => ({ error: "invalid" as const }),
     join: async () => ({ error: "invalid" as const }),
     update: async () => ({ error: "invalid" as const }),
+    rename: async () => ({ error: "invalid" as const }),
     leave: async () => {},
   }),
 }));
@@ -408,12 +413,12 @@ describe("TimetableApp crews", () => {
     mockUseSchedule.mockReturnValue({ schedule, loading: false, error: null, reload: vi.fn() });
   });
 
-  it("shows the crew button on Left of the Dial", () => {
-    render(<TimetableApp festivalSlug="lotd26" ft={ft} layout="TRANSPOSED" />);
+  it.each(["lotd26", "lgw26"])("shows the crew button on %s", (slug) => {
+    render(<TimetableApp festivalSlug={slug} ft={ft} layout="TRANSPOSED" />);
     expect(screen.getByText("CREW BUTTON")).toBeInTheDocument();
   });
 
-  it.each(["pdc26", "lc26oct", "lgw26"])("has no crew button on %s, where crews are off", (slug) => {
+  it.each(["pdc26", "lc26oct"])("has no crew button on %s, where crews are off", (slug) => {
     render(<TimetableApp festivalSlug={slug} ft={ft} layout="VERTICAL" />);
     expect(screen.queryByText("CREW BUTTON")).toBeNull();
   });

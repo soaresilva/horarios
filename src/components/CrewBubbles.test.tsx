@@ -5,10 +5,10 @@ import { CrewBubbles } from "./CrewBubbles";
 import type { FriendMark } from "@/lib/crew";
 
 const friends: FriendMark[] = [
-  { tag: "D", colorIndex: 0, tier: "must", note: "front left" },
-  { tag: "M", colorIndex: 1, tier: "must" },
-  { tag: "Zs", colorIndex: 2, tier: "interested" },
-  { tag: "J", colorIndex: 3, tier: "interested" },
+  { id: "D", tag: "D", colorIndex: 0, crewIds: ["x"], tier: "must", note: "front left" },
+  { id: "M", tag: "M", colorIndex: 1, crewIds: ["x"], tier: "must" },
+  { id: "Zs", tag: "Zs", colorIndex: 2, crewIds: ["x"], tier: "interested" },
+  { id: "J", tag: "J", colorIndex: 3, crewIds: ["x"], tier: "interested" },
 ];
 
 describe("CrewBubbles", () => {
@@ -53,5 +53,27 @@ describe("CrewBubbles", () => {
     await user.click(screen.getByRole("button", { name: /^Crew:/ }));
     expect(onOpen).toHaveBeenCalledTimes(1);
     expect(onBlock).not.toHaveBeenCalled();
+  });
+
+  it("renders two different people with the same tag without a React key clash", () => {
+    const error = vi.spyOn(console, "error").mockImplementation(() => {});
+    const { container } = render(
+      <CrewBubbles
+        friends={[
+          { id: "a", tag: "D", colorIndex: 0, crewIds: ["x"], tier: "must" },
+          { id: "b", tag: "D", colorIndex: 1, crewIds: ["y"], tier: "must" },
+        ]}
+      />,
+    );
+    expect(container.querySelectorAll('[data-crew-tag="D"]')).toHaveLength(2);
+    expect(error).not.toHaveBeenCalled();
+    error.mockRestore();
+  });
+
+  it("wraps only when uncapped", () => {
+    const { container, rerender } = render(<CrewBubbles friends={friends} />);
+    expect(container.firstElementChild).toHaveClass("flex-wrap");
+    rerender(<CrewBubbles friends={friends} max={2} />);
+    expect(container.firstElementChild).not.toHaveClass("flex-wrap");
   });
 });

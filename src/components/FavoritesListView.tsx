@@ -193,7 +193,7 @@ export function FavoritesListView({
                     behind a hover tooltip. Friends' notes follow yours. */}
                 {note && <span className="mt-0.5 block text-[10px] leading-snug text-zinc-500 italic">{note}</span>}
                 {friendNotes.map((friend) => (
-                  <span key={friend.tag} className="mt-0.5 block text-[10px] leading-snug text-zinc-500 italic">
+                  <span key={friend.id} className="mt-0.5 block text-[10px] leading-snug text-zinc-500 italic">
                     <span className="font-semibold not-italic" style={{ color: crewColor(friend.colorIndex) }}>
                       {friend.tag}:
                     </span>{" "}
