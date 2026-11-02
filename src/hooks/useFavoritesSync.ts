@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { getMarks, replaceAllMarks, useMarks, type MarkView } from "@/hooks/useMarks";
-import { useCrewMember } from "@/hooks/crewMembership";
+import { useCrewMember, writeCrewMember } from "@/hooks/crewMembership";
 import { crewsEnabled } from "@/lib/festival-copy";
 import {
   generatePairingCode,
@@ -258,6 +258,9 @@ export function useFavoritesSync(festivalSlug: string): UseFavoritesSyncResult {
       replaceAllMarks(festivalSlug, result);
       writeSynced(festivalSlug, true);
       writeDirty(festivalSlug, false);
+      // This device may have just gained crews from the other one: this is
+      // what makes useCrew start reading them, on every festival with crews.
+      writeCrewMember(result.inCrew);
       return { ok: true };
     },
     [festivalSlug],

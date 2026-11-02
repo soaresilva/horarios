@@ -263,3 +263,13 @@ describe("useCrew with several crews", () => {
     expect(window.localStorage.getItem("lotd26:crew")).toBeNull();
   });
 });
+
+describe("useCrew on a paired device", () => {
+  it("finds crews on a festival this device never synced, if it synced anywhere", async () => {
+    window.localStorage.setItem("pdc26:synced", "true");
+    actions.getCrews.mockResolvedValue(crews);
+    const { result } = renderHook(() => useCrew("lgw26", true));
+    await waitFor(() => expect(result.current.crews).toHaveLength(2));
+    expect(window.localStorage.getItem("crew:member")).toBe("true");
+  });
+});

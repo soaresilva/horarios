@@ -339,3 +339,126 @@ test("several crews on Le Guess Who?: one bubble per person, a per-crew switch, 
     if (seededCrewCodes.length > 0) await prisma.crew.deleteMany({ where: { code: { in: seededCrewCodes } } });
   }
 });
+
+test("pairing carries crews and picks over, whichever device enters the code, and removes no crew", async ({ browser }) => {
+  test.setTimeout(90_000);
+
+  const festival = await prisma.festival.findUniqueOrThrow({ where: { slug: "lgw26" } });
+  const set = await prisma.performance.findFirstOrThrow({
+    where: { stage: { festivalId: festival.id }, date: new Date("2026-11-06"), series: null, kind: "CONCERT" },
+    orderBy: [{ startTime: "desc" }, { id: "asc" }],
+  });
+
+  const contexts = await Promise.all(Array.from({ length: 5 }, () => browser.newContext()));
+  const [phone, friend, laptop, tablet, second] = await Promise.all(contexts.map((context) => context.newPage()));
+  const visitorIds = new Set<string>();
+
+  const syncButton = (page: Page) => page.getByRole("button", { name: /^(sync favorites|synced)$/ });
+
+  async function openGrid(page: Page) {
+    await page.goto("/lgw26");
+    await page.getByRole("tab", { name: /06/ }).click();
+    await expect(page.locator(`[data-performance-id="${set.id}"]`)).toBeAttached();
+  }
+  async function showCode(page: Page): Promise<string> {
+    await syncButton(page).click();
+    await page.getByRole("button", { name: "Show a code for this device" }).click();
+    const code = await page.locator("p.text-xl").innerText();
+    await page.getByRole("button", { name: "Close" }).click();
+    return code;
+  }
+  async function enterCode(page: Page, code: string) {
+    await syncButton(page).click();
+    await page.getByRole("button", { name: "Enter a code from another device" }).click();
+    await page.getByPlaceholder("123456").fill(code);
+    await page.getByRole("button", { name: "Sync", exact: true }).click();
+    await expect(page.getByText(/synced! your favorites now match/i)).toBeVisible();
+    await page.getByRole("button", { name: "Close" }).click();
+  }
+  async function crewStart(page: Page, tag: string): Promise<string> {
+    await page.getByRole("button", { name: "crew", exact: true }).click();
+    await page.getByLabel("Your tag").fill(tag);
+    await page.getByRole("button", { name: "Start a crew" }).click();
+    const code = await page.locator("[data-crew-code]").innerText();
+    await page.getByRole("button", { name: "Close" }).click();
+    return code;
+  }
+  async function crewJoin(page: Page, code: string, tag: string) {
+    await page.getByRole("button", { name: "crew", exact: true }).click();
+    await page.getByLabel("Your tag").fill(tag);
+    await page.getByLabel("Crew code").fill(code);
+    await page.getByRole("button", { name: "Join" }).click();
+    await expect(page.locator("[data-crew-code]")).toHaveCount(1);
+    await page.getByRole("button", { name: "Close" }).click();
+  }
+
+  try {
+    // The phone is in a crew with a friend, and has marked a set.
+    await openGrid(phone);
+    const code = await crewStart(phone, "D");
+    const phoneId = await visitorIdOf(phone);
+    visitorIds.add(phoneId);
+    await openGrid(friend);
+    await crewJoin(friend, code, "M");
+    visitorIds.add(await visitorIdOf(friend));
+    await expect.poll(() => phone.evaluate(() => window.localStorage.getItem("lgw26:synced"))).toBe("true");
+    await phone.bringToFront();
+    await phone.locator(`[data-performance-id="${set.id}"] button[aria-label^="Mark"]`).evaluate((el: HTMLElement) => el.click());
+    await expect.poll(() => prisma.favorite.count({ where: { visitorId: phoneId, performanceId: set.id } })).toBe(1);
+    const crew = await prisma.crew.findUniqueOrThrow({ where: { code: code.replace("-", "") } });
+
+    // The direction that used to lose crews: a new device shows the code, and
+    // the device WITH the crew enters it, adopting the new device's identity.
+    await openGrid(laptop);
+    const laptopCode = await showCode(laptop);
+    const laptopId = await visitorIdOf(laptop);
+    visitorIds.add(laptopId);
+    await phone.bringToFront();
+    await enterCode(phone, laptopCode);
+    await expect.poll(() => visitorIdOf(phone)).toBe(laptopId);
+
+    expect(await prisma.crewMember.count({ where: { visitorId: phoneId } })).toBe(0);
+    expect(await prisma.crewMember.count({ where: { visitorId: laptopId, crewId: crew.id } })).toBe(1);
+    expect(await prisma.crewMember.count({ where: { crewId: crew.id } })).toBe(2);
+    expect(await prisma.favorite.count({ where: { visitorId: laptopId, performanceId: set.id } })).toBe(1);
+
+    // Both devices are in it, and the friend still sees the pick.
+    await openGrid(phone);
+    await expect(phone.getByRole("button", { name: "crew (2)" })).toBeVisible();
+    await openGrid(laptop);
+    await expect(laptop.getByRole("button", { name: "crew (2)" })).toBeVisible();
+    await refreshCrew(friend);
+    await expect(friend.locator(`[data-performance-id="${set.id}"] [data-crew-tag="D"]`)).toHaveCount(1);
+
+    // Paired on a festival with crews off: the crew is there on Le Guess Who?.
+    await laptop.bringToFront();
+    const tabletCode = await showCode(laptop);
+    await tablet.goto("/pdc26");
+    await expect(tablet.getByRole("tab").first()).toBeVisible();
+    await enterCode(tablet, tabletCode);
+    await openGrid(tablet);
+    await expect(tablet.getByRole("button", { name: "crew (2)" })).toBeVisible();
+
+    // Both identities in the same crew: they become one seat, and the crew stays.
+    await openGrid(second);
+    await crewJoin(second, code, "Z");
+    visitorIds.add(await visitorIdOf(second));
+    expect(await prisma.crewMember.count({ where: { crewId: crew.id } })).toBe(3);
+    await laptop.bringToFront();
+    const secondCode = await showCode(laptop);
+    await second.bringToFront();
+    await enterCode(second, secondCode);
+    await expect.poll(() => prisma.crewMember.count({ where: { crewId: crew.id } })).toBe(2);
+    await expect(prisma.crew.findUnique({ where: { id: crew.id } })).resolves.not.toBeNull();
+    await openGrid(second);
+    await expect(second.getByRole("button", { name: "crew (2)" })).toBeVisible();
+  } finally {
+    await Promise.all(contexts.map((context) => context.close()));
+    const ids = Array.from(visitorIds);
+    if (ids.length > 0) {
+      const seats = await prisma.crewMember.findMany({ where: { visitorId: { in: ids } }, select: { crewId: true } });
+      if (seats.length > 0) await prisma.crew.deleteMany({ where: { id: { in: seats.map((seat) => seat.crewId) } } });
+      await prisma.favorite.deleteMany({ where: { visitorId: { in: ids } } });
+    }
+  }
+});

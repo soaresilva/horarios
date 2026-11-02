@@ -229,11 +229,43 @@ export async function generatePairingCode(): Promise<{ code: string; expiresAt: 
   return { error: "Could not generate a code, try again." };
 }
 
+// Pairing swaps this device's visitorId for the other device's, and crew
+// seats and marks are stored against the visitorId. Without this, whichever
+// device enters the code walks away from its crews: the seats stay in the
+// database with no cookie left that can reach them. Either direction of
+// pairing has to end with both devices in every crew either was in.
+//
+// Moves rather than copies, because one person with two seats in a crew would
+// show up as their own friend. For the same reason, if both identities sit in
+// the same crew, the redeeming device's seat goes and the other one stays: the
+// crew always keeps this person. Crews themselves are never touched, and the
+// crew limit doesn't apply, since pairing must not cost anyone a crew.
+//
+// Marks move for every festival, not only the one being redeemed on, so
+// crewmates keep seeing them. A set both identities marked keeps the merged
+// row written above, or the target's own on other festivals.
+async function carryOverToVisitor(fromVisitorId: string, toVisitorId: string): Promise<void> {
+  const [targetSeats, targetFavorites] = await Promise.all([
+    prisma.crewMember.findMany({ where: { visitorId: toVisitorId }, select: { crewId: true } }),
+    prisma.favorite.findMany({ where: { visitorId: toVisitorId }, select: { performanceId: true } }),
+  ]);
+  const sharedCrewIds = targetSeats.map((seat) => seat.crewId);
+
+  await prisma.$transaction([
+    prisma.crewMember.deleteMany({ where: { visitorId: fromVisitorId, crewId: { in: sharedCrewIds } } }),
+    prisma.crewMember.updateMany({ where: { visitorId: fromVisitorId }, data: { visitorId: toVisitorId } }),
+    prisma.favorite.updateMany({
+      where: { visitorId: fromVisitorId, performanceId: { notIn: targetFavorites.map((f) => f.performanceId) } },
+      data: { visitorId: toVisitorId },
+    }),
+  ]);
+}
+
 export async function redeemPairingCode(
   code: string,
   festivalSlug: string,
   localMarks: IncomingMarksPayload,
-): Promise<MarksPayload | { error: "invalid" | "expired" }> {
+): Promise<(MarksPayload & { inCrew: boolean }) | { error: "invalid" | "expired" }> {
   const parsed = clampMarksPayload(marksPayloadSchema.parse(localMarks));
   const festival = await requireFestival(festivalSlug);
   const record = await prisma.pairingCode.findUnique({ where: { code } });
@@ -275,10 +307,16 @@ export async function redeemPairingCode(
     });
   }
 
+  const previousVisitorId = await getVisitorId();
+  if (previousVisitorId && previousVisitorId !== targetVisitorId) {
+    await carryOverToVisitor(previousVisitorId, targetVisitorId);
+  }
+
   // The redeeming device adopts the generating device's identity — pairing
   // is symmetric and permanent (no "unpair"), see the plan doc for why this
   // was chosen over a separate Visitor group table.
   await setVisitorId(targetVisitorId);
 
-  return merged;
+  const inCrew = (await prisma.crewMember.count({ where: { visitorId: targetVisitorId } })) > 0;
+  return { ...merged, inCrew };
 }

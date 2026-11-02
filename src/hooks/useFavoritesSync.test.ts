@@ -285,3 +285,25 @@ describe("useFavoritesSync — crew membership", () => {
     expect(window.localStorage.getItem("lotd26:synced")).toBeNull();
   });
 });
+
+describe("useFavoritesSync — pairing and crews", () => {
+  const marks = { mustSee: [], interested: [], notes: {}, hidden: [] };
+
+  it("redeeming a code marks this device as in a crew when the visitor now is, on any festival", async () => {
+    actions.redeemPairingCode.mockResolvedValue({ ...marks, inCrew: true });
+    const { result } = renderHook(() => useFavoritesSync("pdc26"));
+    await act(async () => {
+      await result.current.redeemCode("123456");
+    });
+    expect(window.localStorage.getItem("crew:member")).toBe("true");
+  });
+
+  it("leaves the flag off when neither device is in a crew", async () => {
+    actions.redeemPairingCode.mockResolvedValue({ ...marks, inCrew: false });
+    const { result } = renderHook(() => useFavoritesSync("pdc26"));
+    await act(async () => {
+      await result.current.redeemCode("123456");
+    });
+    expect(window.localStorage.getItem("crew:member")).toBeNull();
+  });
+});

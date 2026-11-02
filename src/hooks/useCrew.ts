@@ -128,9 +128,17 @@ function writeSnapshot(slug: string, fresh: CrewsDTO | null) {
   for (const listener of snapshotListenersFor(slug)) listener();
 }
 
-function isSyncedHere(slug: string): boolean {
+// Sync flags are per festival but the visitor cookie (httpOnly, so not
+// readable here) is global: a device paired on a festival with crews off, or
+// paired before the other device joined a crew, is in those crews without
+// ever having synced this festival. Any flag means there's a cookie worth asking about.
+function isSyncedAnywhere(): boolean {
   try {
-    return window.localStorage.getItem(`${slug}:synced`) === "true";
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key?.endsWith(":synced") && window.localStorage.getItem(key) === "true") return true;
+    }
+    return false;
   } catch {
     return false;
   }
@@ -197,11 +205,11 @@ export function useCrew(festivalSlug: string, enabled: boolean): UseCrewResult {
   }, [festivalSlug, store]);
 
   // Poll only while in a crew. On mount, also check once if this device has
-  // a sync cookie for this festival: its paired phone may have joined a crew.
-  // Everyone else (no crew, never synced) makes no crew requests at all.
+  // ever synced: its paired phone may have joined a crew. Everyone else (no
+  // crew, never synced) makes no crew requests at all.
   useEffect(() => {
     if (!enabled) return;
-    if (member || isSyncedHere(festivalSlug)) void refresh();
+    if (member || isSyncedAnywhere()) void refresh();
     if (!member) return;
 
     const refreshIfVisible = () => {
