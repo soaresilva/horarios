@@ -6,10 +6,12 @@
 // every stage and time in scripts/data/ps27.json is predicted from the poster
 // and the PS24/PS26 grids. POSTER_ACTS below is the one part that is fact.
 import { zoneOffset } from "../../src/lib/time";
-import { findOverlaps } from "../touo/plan";
+import { findOverlaps, nameKey } from "../touo/plan";
 
 export const PS_FESTIVAL_ID = "ps27";
 export const PS_ID_PREFIX = "ps27-p-";
+export const PS_ARTIST_PREFIX = "ps27-a-";
+export const PS_SITE = "https://www.primaverasound.com";
 const TIMEZONE = "Europe/Madrid";
 
 export type PsDay = "WED" | "THU" | "FRI" | "SAT" | "SUN";
@@ -116,6 +118,16 @@ export const POSTER_ACTS: Record<PsDay, readonly (readonly string[])[]> = {
   SUN: [["Richie Hawtin x Four Tet x Dixon"]],
 };
 
+/**
+ * Plenitude is a DJ stage: PS24 and PS26 both ran it as one. These are the
+ * poster's bands and live acts that sat there in the first draft; the check
+ * keeps them off it. Extend it when an act turns out not to be a DJ.
+ */
+export const NOT_ON_PLENITUDE: readonly string[] = [
+  "Al·lèrgiques al Pol·len", "Napa", "TTSSFU", "Alex vs Alex",
+  "El Buen Hijo", "Perfecto Miserable", "Irenegarry", "Gazella",
+];
+
 /** "Closing*set" on the poster: nothing on the two main stages may end after it. */
 export const CLOSING_SET = "Skrillex b2b Ninajirachi";
 
@@ -128,6 +140,14 @@ export interface PsSet {
   end: string;
   /** Why this act got this slot, for reviewing the guess as a diff. */
   why: string;
+  /** primaverasound.com/en/artist/<slug>. Absent only on Sunday's three-way block. */
+  artistSlug?: string;
+}
+
+export interface PsArtist {
+  slug: string;
+  name: string;
+  sourceUrl: string;
 }
 
 export interface PsSnapshot {
@@ -135,10 +155,13 @@ export interface PsSnapshot {
   notes: string;
   generatedAt: string;
   sets: PsSet[];
+  /** Filled by `import:ps -- --fetch-artists`. */
+  artists: PsArtist[];
 }
 
 export interface PlannedPs {
   id: string;
+  artistId: string | null;
   artistName: string;
   stageSlug: string;
   date: string;
@@ -181,10 +204,12 @@ export function clockMinutes(clock: string): number {
 }
 
 export function planPs(snapshot: PsSnapshot): PlannedPs[] {
+  const artistSlugs = new Set(snapshot.artists.map((a) => a.slug));
   return snapshot.sets.map((set) => {
     const date = DAY_DATES[set.day];
     return {
       id: performanceId(set),
+      artistId: set.artistSlug && artistSlugs.has(set.artistSlug) ? `${PS_ARTIST_PREFIX}${set.artistSlug}` : null,
       artistName: set.name,
       stageSlug: set.stage,
       date,
@@ -192,6 +217,60 @@ export function planPs(snapshot: PsSnapshot): PlannedPs[] {
       endTime: instantAt(date, set.end),
     };
   });
+}
+
+/**
+ * The link goes through ?e=, which is what the site's own lineup uses to open
+ * the artist as part of this edition rather than their latest one.
+ */
+export function artistUrl(slug: string): string {
+  return `${PS_SITE}/en/artist/${slug}?e=primavera-sound-2027-barcelona`;
+}
+
+/** Slugs the site doesn't derive from the name the poster uses. */
+const SLUG_OVERRIDES: Record<string, string> = {
+  "Fontaines D.C.": "fontaines-dc",
+  "Al·lèrgiques al Pol·len": "allergiques-al-pollen",
+  "@": "at",
+  "Irenegarry": "irene-garry",
+  "Mushka": "mushkaa",
+  "DJ Stingray 313 Live": "stingray-313",
+};
+
+/** Slugs to try for an act, most likely first. The page's own title decides which is right. */
+export function artistSlugCandidates(name: string): string[] {
+  const override = SLUG_OVERRIDES[name];
+  if (override) return [override];
+  // The site spells "&" out and drops the poster's "Live" tag.
+  const base = slugify(name.replace(/&/g, " and "));
+  return [...new Set([base, base.replace(/-live(-av)?$/, "")])];
+}
+
+/** The page <title> reads "CHVRCHES (GB)": the act plus a country, or for a collective "S.A.S.S (Saoirse, Moxie)". */
+export function pageTitleAct(html: string): string | null {
+  const title = /<title>([^<]*)<\/title>/.exec(html)?.[1];
+  return title ? decodeEntities(title).replace(/\s*\([^)]*\)\s*$/, "").trim() : null;
+}
+
+/** Poster and page agree on "&" versus "and" and on the "Live" tag. */
+const actKey = (name: string) =>
+  nameKey(name.replace(/&/g, " and ").replace(/\s*\(?\blive(\s+a\/?v)?\)?$/i, ""));
+
+/** "@" is the act's whole name, which nameKey would reduce to nothing. */
+export function sameAct(pageName: string, posterName: string): boolean {
+  const key = actKey(posterName);
+  return actKey(pageName) === key && (key !== "" || pageName === posterName);
+}
+
+/** Page titles arrive HTML-escaped ("Haute &amp; Freddy"). */
+export function decodeEntities(text: string): string {
+  return text
+    .replace(/&#(\d+);/g, (_, n: string) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n: string) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
 }
 
 /** 1 for the biggest line on the poster, undefined for a name not on that day. */
@@ -241,6 +320,10 @@ export function validatePsSnapshot(snapshot: PsSnapshot): string[] {
       errors.push(`${label}: ends (${s.end}) before it starts (${s.start}).`);
     }
 
+    if (s.stage === "plenitude" && NOT_ON_PLENITUDE.includes(s.name)) {
+      errors.push(`${label}: Plenitude is a DJ stage.`);
+    }
+
     if (!includes(REGULAR_DAYS, s.day)) continue;
     const tier = posterTier(s.day, s.name);
     if (tier === undefined) continue; // Already reported above.
@@ -282,6 +365,22 @@ export function validatePsSnapshot(snapshot: PsSnapshot): string[] {
         .map((p) => ({ ...p, stageKey: `${p.stageKey.slice(0, 10)} main stages` })),
     ),
   );
+
+  // Only once --fetch-artists has run: every act but Sunday's three-way block
+  // resolves to a page whose title is the same act. Catches a wrong slug (a
+  // similarly named act) before it links the wrong one.
+  if (snapshot.artists.length > 0) {
+    const bySlug = new Map(snapshot.artists.map((a) => [a.slug, a]));
+    for (const s of sets) {
+      if (!s.artistSlug) {
+        if (s.day !== "SUN") errors.push(`${s.name}: no artist page.`);
+        continue;
+      }
+      const artist = bySlug.get(s.artistSlug);
+      if (!artist) errors.push(`${s.name}: no fetched artist for slug "${s.artistSlug}".`);
+      else if (!sameAct(artist.name, s.name)) errors.push(`${s.name}: slug "${s.artistSlug}" is the page for "${artist.name}".`);
+    }
+  }
 
   const closing = sets.find((s) => s.name === CLOSING_SET);
   if (closing && !includes(MAIN_STAGES, closing.stage)) errors.push(`${CLOSING_SET} is the closing set: main stage only.`);

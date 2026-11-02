@@ -9,7 +9,8 @@
       "name": "Fades",
       "start": "17:45",
       "end": "18:25",
-      "why": "Smallest name on the night and local, so it opens: PS26's Wednesday opener slot."
+      "why": "Smallest name on the night and local, so it opens: PS26's Wednesday opener slot.",
+      "artistSlug": "fades"
     },
     {
       "day": "WED",
@@ -17,7 +18,8 @@
       "name": "Mushka",
       "start": "18:55",
       "end": "19:45",
-      "why": "Local rap-pop name, second up as Wednesdays build from local to international."
+      "why": "Local rap-pop name, second up as Wednesdays build from local to international.",
+      "artistSlug": "mushkaa"
     },
     {
       "day": "WED",
@@ -25,7 +27,8 @@
       "name": "CHVRCHES",
       "start": "20:15",
       "end": "21:15",
-      "why": "Sunset slot before the headliner; PS26 gave it to Guitarricadelafuente."
+      "why": "Sunset slot before the headliner; PS26 gave it to Guitarricadelafuente.",
+      "artistSlug": "chvrches"
     },
     {
       "day": "WED",
@@ -33,7 +36,8 @@
       "name": "Underworld",
       "start": "21:55",
       "end": "23:05",
-      "why": "Top of the free day. PS26's Wet Leg and PS24's Phoenix both closed around 23:05."
+      "why": "Top of the free day. PS26's Wet Leg and PS24's Phoenix both closed around 23:05.",
+      "artistSlug": "underworld"
     },
     {
       "day": "THU",
@@ -41,7 +45,8 @@
       "name": "Guillem Gisbert",
       "start": "17:30",
       "end": "18:15",
-      "why": "Catalan singer of Manel. The Estrella opener is a local act most years (Aiko el Grupo, Mujeres, Ferran Palau)."
+      "why": "Catalan singer of Manel. The Estrella opener is a local act most years (Aiko el Grupo, Mujeres, Ferran Palau).",
+      "artistSlug": "guillem-gisbert"
     },
     {
       "day": "THU",
@@ -49,7 +54,8 @@
       "name": "Wallows",
       "start": "18:20",
       "end": "19:20",
-      "why": "Line-3 guitar pop with a young crowd: the first Revolut hour, like Blood Orange in PS26."
+      "why": "Line-3 guitar pop with a young crowd: the first Revolut hour, like Blood Orange in PS26.",
+      "artistSlug": "wallows"
     },
     {
       "day": "THU",
@@ -57,7 +63,8 @@
       "name": "Turnstile",
       "start": "19:35",
       "end": "20:35",
-      "why": "Line 2, but the hardcore act of the five: an hour at dusk leaves the night to the dance and pop names."
+      "why": "Line 2, but the hardcore act of the five: an hour at dusk leaves the night to the dance and pop names.",
+      "artistSlug": "turnstile"
     },
     {
       "day": "THU",
@@ -65,7 +72,8 @@
       "name": "Robyn",
       "start": "20:50",
       "end": "21:50",
-      "why": "Sunset pop slot (Alex G in PS26, Little Simz on Saturday); she takes a singalong hour before the big two."
+      "why": "Sunset pop slot (Alex G in PS26, Little Simz on Saturday); she takes a singalong hour before the big two.",
+      "artistSlug": "robyn"
     },
     {
       "day": "THU",
@@ -73,7 +81,8 @@
       "name": "Massive Attack",
       "start": "21:55",
       "end": "23:25",
-      "why": "Darkness-dependent visuals, so first full-dark Estrella slot. Same slot they had in PS26."
+      "why": "Darkness-dependent visuals, so first full-dark Estrella slot. Same slot they had in PS26.",
+      "artistSlug": "massive-attack"
     },
     {
       "day": "THU",
@@ -81,7 +90,8 @@
       "name": "Fontaines D.C.",
       "start": "23:35",
       "end": "01:15",
-      "why": "Top of the bill: the 23:35 Revolut slot is the longest on the day (Doja Cat, PS26)."
+      "why": "Top of the bill: the 23:35 Revolut slot is the longest on the day (Doja Cat, PS26).",
+      "artistSlug": "fontaines-dc"
     },
     {
       "day": "THU",
@@ -89,7 +99,8 @@
       "name": "Bad Gyal",
       "start": "01:20",
       "end": "02:50",
-      "why": "Local pop star, late main stage. Same slot as PS26."
+      "why": "Local pop star, late main stage. Same slot as PS26.",
+      "artistSlug": "bad-gyal"
     },
     {
       "day": "THU",
@@ -97,7 +108,8 @@
       "name": "Viva Belgrado",
       "start": "18:00",
       "end": "18:45",
-      "why": "Spanish post-hardcore: Occident's first slot goes to a local band (Raly, Somos la Herencia)."
+      "why": "Spanish post-hardcore: Occident's first slot goes to a local band (Raly, Somos la Herencia).",
+      "artistSlug": "viva-belgrado"
     },
     {
       "day": "THU",
@@ -105,7 +117,8 @@
       "name": "Underscores",
       "start": "19:45",
       "end": "20:45",
-      "why": "Line 3, online pop with a large young draw: Geese's PS26 slot."
+      "why": "Line 3, online pop with a large young draw: Geese's PS26 slot.",
+      "artistSlug": "underscores"
     },
     {
       "day": "THU",
@@ -113,7 +126,8 @@
       "name": "Pavement",
       "start": "21:55",
       "end": "22:55",
-      "why": "Biggest Line-3 name and a Primavera institution, so the prime hour on the mid stage. Mac DeMarco's PS26 slot."
+      "why": "Biggest Line-3 name and a Primavera institution, so the prime hour on the mid stage. Mac DeMarco's PS26 slot.",
+      "artistSlug": "pavement"
     },
     {
       "day": "THU",
@@ -121,7 +135,8 @@
       "name": "Kim Petras",
       "start": "00:30",
       "end": "01:30",
-      "why": "Late pop on Occident once Fontaines ends, the TV Girl and Jade slot."
+      "why": "Late pop on Occident once Fontaines ends, the TV Girl and Jade slot.",
+      "artistSlug": "kim-petras"
     },
     {
       "day": "THU",
@@ -129,7 +144,8 @@
       "name": "Brutalismus 3000 b2b Isoxo",
       "start": "03:00",
       "end": "04:00",
-      "why": "Hard club crossover for the 03:00 Occident slot (Overmono, Viagra Boys)."
+      "why": "Hard club crossover for the 03:00 Occident slot (Overmono, Viagra Boys).",
+      "artistSlug": "brutalismus-3000-b2b-isoxo"
     },
     {
       "day": "THU",
@@ -137,7 +153,8 @@
       "name": "Jersey",
       "start": "17:15",
       "end": "17:55",
-      "why": "Line 4, couldn't identify the act: the first Cupra slot is the low-risk place for it."
+      "why": "Line 4, couldn't identify the act: the first Cupra slot is the low-risk place for it.",
+      "artistSlug": "jersey"
     },
     {
       "day": "THU",
@@ -145,7 +162,8 @@
       "name": "Greg Freeman",
       "start": "18:50",
       "end": "19:40",
-      "why": "US indie rock suits the early Cupra slot Men I Trust had."
+      "why": "US indie rock suits the early Cupra slot Men I Trust had.",
+      "artistSlug": "greg-freeman"
     },
     {
       "day": "THU",
@@ -153,7 +171,8 @@
       "name": "Metrika",
       "start": "20:50",
       "end": "21:50",
-      "why": "Spanish trap, Sónar-tested and billed on Line 3: Cupra's 20:50 usually goes to a Spanish rising act (Ralphie Choo, rusowsky)."
+      "why": "Spanish trap, Sónar-tested and billed on Line 3: Cupra's 20:50 usually goes to a Spanish rising act (Ralphie Choo, rusowsky).",
+      "artistSlug": "metrika"
     },
     {
       "day": "THU",
@@ -161,7 +180,8 @@
       "name": "Metronomy",
       "start": "23:00",
       "end": "00:20",
-      "why": "Long Cupra set after Massive Attack. Father John Misty's slot."
+      "why": "Long Cupra set after Massive Attack. Father John Misty's slot.",
+      "artistSlug": "metronomy"
     },
     {
       "day": "THU",
@@ -169,7 +189,8 @@
       "name": "Snow Strippers",
       "start": "01:35",
       "end": "02:35",
-      "why": "Detroit electronic duo for the crowd leaving Fontaines. Runs alongside Bad Gyal, a different audience."
+      "why": "Detroit electronic duo for the crowd leaving Fontaines. Runs alongside Bad Gyal, a different audience.",
+      "artistSlug": "snow-strippers"
     },
     {
       "day": "THU",
@@ -177,7 +198,8 @@
       "name": "Joy Orbison",
       "start": "04:30",
       "end": "06:00",
-      "why": "DJ closer: Cupra's 04:30-06:00 always goes to a selector."
+      "why": "DJ closer: Cupra's 04:30-06:00 always goes to a selector.",
+      "artistSlug": "joy-orbison"
     },
     {
       "day": "THU",
@@ -185,7 +207,8 @@
       "name": "Axolotes Mexicanos",
       "start": "16:30",
       "end": "17:10",
-      "why": "Spanish indie pop opening the smallest open-air stage, the slot for domestic small-print names."
+      "why": "Spanish indie pop opening the smallest open-air stage, the slot for domestic small-print names.",
+      "artistSlug": "axolotes-mexicanos"
     },
     {
       "day": "THU",
@@ -193,7 +216,8 @@
       "name": "Alemeda",
       "start": "18:05",
       "end": "18:50",
-      "why": "US R&B and rap, early evening."
+      "why": "US R&B and rap, early evening.",
+      "artistSlug": "alemeda"
     },
     {
       "day": "THU",
@@ -201,7 +225,8 @@
       "name": "Haute & Freddy",
       "start": "19:55",
       "end": "20:50",
-      "why": "Pop duo with a fanbase but a Line-4 billing."
+      "why": "Pop duo with a fanbase but a Line-4 billing.",
+      "artistSlug": "haute-and-freddy"
     },
     {
       "day": "THU",
@@ -209,7 +234,8 @@
       "name": "Sophia Stel",
       "start": "21:55",
       "end": "22:55",
-      "why": "British pop songwriter opposite Massive Attack and Pavement, for those not going to either."
+      "why": "British pop songwriter opposite Massive Attack and Pavement, for those not going to either.",
+      "artistSlug": "sophia-stel"
     },
     {
       "day": "THU",
@@ -217,7 +243,8 @@
       "name": "Gilla Band",
       "start": "00:25",
       "end": "01:25",
-      "why": "Noise rock late, in the Schwarzkopf slot after midnight."
+      "why": "Noise rock late, in the Schwarzkopf slot after midnight.",
+      "artistSlug": "gilla-band"
     },
     {
       "day": "THU",
@@ -225,7 +252,8 @@
       "name": "Castle Rat",
       "start": "02:40",
       "end": "03:35",
-      "why": "Doom-heavy spectacle, the late heavy slot (Kylesa, Fcukers)."
+      "why": "Doom-heavy spectacle, the late heavy slot (Kylesa, Fcukers).",
+      "artistSlug": "castle-rat"
     },
     {
       "day": "THU",
@@ -233,7 +261,8 @@
       "name": "Blaya",
       "start": "04:35",
       "end": "05:35",
-      "why": "Club-pop for the last Schwarzkopf hour."
+      "why": "Club-pop for the last Schwarzkopf hour.",
+      "artistSlug": "blaya"
     },
     {
       "day": "THU",
@@ -241,7 +270,8 @@
       "name": "Tristán!",
       "start": "17:15",
       "end": "18:00",
-      "why": "Spanish band, opener on Port like Paus and Las Petunias."
+      "why": "Spanish band, opener on Port like Paus and Las Petunias.",
+      "artistSlug": "tristan"
     },
     {
       "day": "THU",
@@ -249,7 +279,8 @@
       "name": "Friko",
       "start": "18:55",
       "end": "19:45",
-      "why": "Chicago indie rock, Port's early-evening guitar slot."
+      "why": "Chicago indie rock, Port's early-evening guitar slot.",
+      "artistSlug": "friko"
     },
     {
       "day": "THU",
@@ -257,7 +288,8 @@
       "name": "Westside Cowboy",
       "start": "20:55",
       "end": "21:50",
-      "why": "British indie on the sea stage at sunset."
+      "why": "British indie on the sea stage at sunset.",
+      "artistSlug": "westside-cowboy"
     },
     {
       "day": "THU",
@@ -265,7 +297,8 @@
       "name": "EAR",
       "start": "23:00",
       "end": "00:00",
-      "why": "Line 4, couldn't identify the act, but it's on Porto's bill too, so a fair draw: Port's prime slot."
+      "why": "Line 4, couldn't identify the act, but it's on Porto's bill too, so a fair draw: Port's prime slot.",
+      "artistSlug": "ear"
     },
     {
       "day": "THU",
@@ -273,7 +306,8 @@
       "name": "Blackhaine",
       "start": "01:30",
       "end": "02:30",
-      "why": "Bleak spoken grime and dance theatre suits the Port after 01:00 (Melt-Banana)."
+      "why": "Bleak spoken grime and dance theatre suits the Port after 01:00 (Melt-Banana).",
+      "artistSlug": "blackhaine"
     },
     {
       "day": "THU",
@@ -281,7 +315,8 @@
       "name": "Dame Area",
       "start": "03:40",
       "end": "04:30",
-      "why": "Barcelona's industrial dance duo, a home-crowd closer."
+      "why": "Barcelona's industrial dance duo, a home-crowd closer.",
+      "artistSlug": "dame-area"
     },
     {
       "day": "THU",
@@ -289,7 +324,8 @@
       "name": "Madra Salach",
       "start": "17:00",
       "end": "18:00",
-      "why": "Irish traditional drone, seated. They played PS26's CCCB stage, so a step up."
+      "why": "Irish traditional drone, seated. They played PS26's CCCB stage, so a step up.",
+      "artistSlug": "madra-salach"
     },
     {
       "day": "THU",
@@ -297,7 +333,8 @@
       "name": "Juana Molina",
       "start": "19:00",
       "end": "20:00",
-      "why": "Art-folk that wants a quiet room, as Lucrecia Dalt did."
+      "why": "Art-folk that wants a quiet room, as Lucrecia Dalt did.",
+      "artistSlug": "juana-molina"
     },
     {
       "day": "THU",
@@ -305,7 +342,8 @@
       "name": "Carmen Villain",
       "start": "20:30",
       "end": "21:30",
-      "why": "Ambient, a sit-down hour before Atlas Sound."
+      "why": "Ambient, a sit-down hour before Atlas Sound.",
+      "artistSlug": "carmen-villain"
     },
     {
       "day": "THU",
@@ -313,39 +351,44 @@
       "name": "Atlas Sound",
       "start": "22:00",
       "end": "23:00",
-      "why": "Bradford Cox alone, the rare Auditori headliner slot Panda Bear had."
+      "why": "Bradford Cox alone, the rare Auditori headliner slot Panda Bear had.",
+      "artistSlug": "atlas-sound"
     },
     {
       "day": "THU",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "Al·lèrgiques al Pol·len",
       "start": "18:00",
       "end": "18:45",
-      "why": "Catalan band, small print: Plenitude's early hours run as a band stage."
+      "why": "Catalan band, so not Plenitude (a DJ stage): Pulse hosts live acts too (Bb Trickz, Kaidara in PS26), and its early hours are free.",
+      "artistSlug": "allergiques-al-pollen"
     },
     {
       "day": "THU",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "Napa",
       "start": "19:15",
       "end": "20:00",
-      "why": "Portuguese indie band, early on the band half of Plenitude."
+      "why": "Indie band, so off the DJ stage. Pulse early evening, as the live acts of PS26.",
+      "artistSlug": "napa"
     },
     {
       "day": "THU",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "TTSSFU",
       "start": "20:30",
       "end": "21:15",
-      "why": "Shoegaze-pop, last of the early bands."
+      "why": "Shoegaze-pop band, off Plenitude. Last of the early live acts on Pulse.",
+      "artistSlug": "ttssfu"
     },
     {
       "day": "THU",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "Alex vs Alex",
       "start": "21:45",
       "end": "22:30",
-      "why": "Played PS26's CCCB stage: a step onto the Fòrum."
+      "why": "Played PS26's CCCB stage: a step onto the Fòrum, on Pulse rather than the DJ stage.",
+      "artistSlug": "alex-vs-alex"
     },
     {
       "day": "THU",
@@ -353,7 +396,8 @@
       "name": "Tatyana Jane",
       "start": "23:00",
       "end": "00:30",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Couldn't identify this act. Small print, so a generic slot.",
+      "artistSlug": "tatyana-jane"
     },
     {
       "day": "THU",
@@ -361,7 +405,8 @@
       "name": "DJ Fra",
       "start": "00:30",
       "end": "02:00",
-      "why": "Veteran Spanish techno DJ, peak hours on the club stage."
+      "why": "Veteran Spanish techno DJ, peak hours on the club stage.",
+      "artistSlug": "dj-fra"
     },
     {
       "day": "THU",
@@ -369,7 +414,8 @@
       "name": "Pole 1 2 3",
       "start": "22:00",
       "end": "23:15",
-      "why": "Dub-techno live show, the indoor Warehouse's listening-club start."
+      "why": "Dub-techno live show, the indoor Warehouse's listening-club start.",
+      "artistSlug": "pole-1-2-3"
     },
     {
       "day": "THU",
@@ -377,55 +423,62 @@
       "name": "Decoder",
       "start": "23:20",
       "end": "00:35",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Couldn't identify this act. Small print, so a generic slot.",
+      "artistSlug": "decoder"
     },
     {
       "day": "THU",
-      "stage": "levis-warehouse",
+      "stage": "plenitude",
       "name": "Eden Aurelius",
-      "start": "00:40",
-      "end": "01:55",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "21:00",
+      "end": "23:00",
+      "why": "Selector, bridging into Plenitude's club hours.",
+      "artistSlug": "eden-aurelius"
     },
     {
       "day": "THU",
       "stage": "levis-warehouse",
       "name": "Headache",
-      "start": "02:00",
-      "end": "03:15",
-      "why": "Late and strange, suits the room."
+      "start": "00:40",
+      "end": "01:55",
+      "why": "Late and strange, suits the room. Moved up to fill the hour Eden Aurelius left.",
+      "artistSlug": "headache"
     },
     {
       "day": "THU",
-      "stage": "cupra-pulse",
+      "stage": "plenitude",
       "name": "Trickpony",
-      "start": "21:00",
-      "end": "22:30",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "18:00",
+      "end": "19:30",
+      "why": "DJ: opens Plenitude, a DJ stage since PS24.",
+      "artistSlug": "trickpony"
     },
     {
       "day": "THU",
-      "stage": "cupra-pulse",
+      "stage": "plenitude",
       "name": "Tracey",
-      "start": "22:30",
-      "end": "00:00",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "19:30",
+      "end": "21:00",
+      "why": "DJ, second on the early Plenitude run.",
+      "artistSlug": "tracey"
     },
     {
       "day": "THU",
       "stage": "cupra-pulse",
       "name": "Ibrahim Alfa Jnr",
-      "start": "00:00",
-      "end": "01:30",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "22:30",
+      "end": "00:00",
+      "why": "Club set; Pulse switches to DJs once the live acts finish.",
+      "artistSlug": "ibrahim-alfa-jnr"
     },
     {
       "day": "THU",
       "stage": "cupra-pulse",
       "name": "Verushka b2b Acidheaven",
-      "start": "01:30",
-      "end": "03:30",
-      "why": "B2Bs run long on Pulse."
+      "start": "00:00",
+      "end": "02:00",
+      "why": "B2Bs run long on Pulse.",
+      "artistSlug": "verushka-b2b-acidheaven"
     },
     {
       "day": "FRI",
@@ -433,7 +486,8 @@
       "name": "Pablopablo",
       "start": "17:30",
       "end": "18:15",
-      "why": "Spanish pop-R&B on Line 3, the local Estrella opener."
+      "why": "Spanish pop-R&B on Line 3, the local Estrella opener.",
+      "artistSlug": "pablopablo"
     },
     {
       "day": "FRI",
@@ -441,7 +495,8 @@
       "name": "Julien Baker",
       "start": "18:20",
       "end": "19:15",
-      "why": "Songwriter in the first Revolut hour, Slowdive's PS26 slot."
+      "why": "Songwriter in the first Revolut hour, Slowdive's PS26 slot.",
+      "artistSlug": "julien-baker"
     },
     {
       "day": "FRI",
@@ -449,7 +504,8 @@
       "name": "Bleachers",
       "start": "19:30",
       "end": "20:30",
-      "why": "Line 3's biggest pop-rock band, Ethel Cain's PS26 slot."
+      "why": "Line 3's biggest pop-rock band, Ethel Cain's PS26 slot.",
+      "artistSlug": "bleachers"
     },
     {
       "day": "FRI",
@@ -457,7 +513,8 @@
       "name": "Tinashe",
       "start": "20:40",
       "end": "21:40",
-      "why": "Smallest of the Line 1-2 names, gets the sunset pop slot (Addison Rae)."
+      "why": "Smallest of the Line 1-2 names, gets the sunset pop slot (Addison Rae).",
+      "artistSlug": "tinashe"
     },
     {
       "day": "FRI",
@@ -465,7 +522,8 @@
       "name": "Phoebe Bridgers",
       "start": "21:50",
       "end": "23:20",
-      "why": "Top of the bill. Same arc as The Cure and Lana Del Rey: Estrella at nightfall."
+      "why": "Top of the bill. Same arc as The Cure and Lana Del Rey: Estrella at nightfall.",
+      "artistSlug": "phoebe-bridgers"
     },
     {
       "day": "FRI",
@@ -473,7 +531,8 @@
       "name": "FKA twigs",
       "start": "23:30",
       "end": "01:05",
-      "why": "Staged show, needs full dark, follows Phoebe across the field."
+      "why": "Staged show, needs full dark, follows Phoebe across the field.",
+      "artistSlug": "fka-twigs"
     },
     {
       "day": "FRI",
@@ -481,7 +540,8 @@
       "name": "The Chemical Brothers",
       "start": "01:15",
       "end": "02:45",
-      "why": "Dance headliner in the late Estrella slot (Disclosure, Justice)."
+      "why": "Dance headliner in the late Estrella slot (Disclosure, Justice).",
+      "artistSlug": "the-chemical-brothers"
     },
     {
       "day": "FRI",
@@ -489,7 +549,8 @@
       "name": "Los Punsetes",
       "start": "18:00",
       "end": "18:45",
-      "why": "Madrid indie veterans, the local Occident opener."
+      "why": "Madrid indie veterans, the local Occident opener.",
+      "artistSlug": "los-punsetes"
     },
     {
       "day": "FRI",
@@ -497,7 +558,8 @@
       "name": "Converge",
       "start": "19:50",
       "end": "20:50",
-      "why": "Big enough for Occident at dusk: a hardcore change of pace."
+      "why": "Big enough for Occident at dusk: a hardcore change of pace.",
+      "artistSlug": "converge"
     },
     {
       "day": "FRI",
@@ -505,7 +567,8 @@
       "name": "Isaiah Rashad",
       "start": "22:00",
       "end": "23:15",
-      "why": "Rap in the prime mid stage slot, as Role Model and Clipse had."
+      "why": "Rap in the prime mid stage slot, as Role Model and Clipse had.",
+      "artistSlug": "isaiah-rashad"
     },
     {
       "day": "FRI",
@@ -513,7 +576,8 @@
       "name": "JT",
       "start": "00:30",
       "end": "01:30",
-      "why": "Rap after midnight, Jade's PS26 slot."
+      "why": "Rap after midnight, Jade's PS26 slot.",
+      "artistSlug": "jt"
     },
     {
       "day": "FRI",
@@ -521,7 +585,8 @@
       "name": "Bicep Live",
       "start": "02:55",
       "end": "04:05",
-      "why": "The Friday 02:55 Occident slot; live dance for the post-Chems crowd."
+      "why": "The Friday 02:55 Occident slot; live dance for the post-Chems crowd.",
+      "artistSlug": "bicep-live"
     },
     {
       "day": "FRI",
@@ -529,7 +594,8 @@
       "name": "Mishima",
       "start": "17:15",
       "end": "17:55",
-      "why": "Catalan indie, Cupra's local opener."
+      "why": "Catalan indie, Cupra's local opener.",
+      "artistSlug": "mishima"
     },
     {
       "day": "FRI",
@@ -537,7 +603,8 @@
       "name": "English Teacher",
       "start": "18:50",
       "end": "19:45",
-      "why": "Mercury winners, early-evening Cupra."
+      "why": "Mercury winners, early-evening Cupra.",
+      "artistSlug": "english-teacher"
     },
     {
       "day": "FRI",
@@ -545,7 +612,8 @@
       "name": "Weyes Blood",
       "start": "20:55",
       "end": "21:55",
-      "why": "Dusk, sits well before Phoebe."
+      "why": "Dusk, sits well before Phoebe.",
+      "artistSlug": "weyes-blood"
     },
     {
       "day": "FRI",
@@ -553,7 +621,8 @@
       "name": "Angine de Poitrine",
       "start": "23:20",
       "end": "00:20",
-      "why": "Line 3 cult live draw, Amaarae's slot."
+      "why": "Line 3 cult live draw, Amaarae's slot.",
+      "artistSlug": "angine-de-poitrine"
     },
     {
       "day": "FRI",
@@ -561,7 +630,8 @@
       "name": "Boy Harsher",
       "start": "01:45",
       "end": "02:35",
-      "why": "Dark-wave at 01:45 suits the slot."
+      "why": "Dark-wave at 01:45 suits the slot.",
+      "artistSlug": "boy-harsher"
     },
     {
       "day": "FRI",
@@ -569,7 +639,8 @@
       "name": "John Talabot",
       "start": "04:10",
       "end": "06:00",
-      "why": "Barcelona DJ, the home closer. PS26's Friday closer started at 04:10."
+      "why": "Barcelona DJ, the home closer. PS26's Friday closer started at 04:10.",
+      "artistSlug": "john-talabot"
     },
     {
       "day": "FRI",
@@ -577,7 +648,8 @@
       "name": "Carlos de Jacoba & Ciutat",
       "start": "16:35",
       "end": "17:15",
-      "why": "Local rumba-electronic pairing, afternoon."
+      "why": "Local rumba-electronic pairing, afternoon.",
+      "artistSlug": "carlos-de-jacoba-and-ciutat"
     },
     {
       "day": "FRI",
@@ -585,7 +657,8 @@
       "name": "@",
       "start": "18:05",
       "end": "18:50",
-      "why": "Delicate folk duo, early slot."
+      "why": "Delicate folk duo, early slot.",
+      "artistSlug": "at"
     },
     {
       "day": "FRI",
@@ -593,7 +666,8 @@
       "name": "Lip Critic",
       "start": "19:50",
       "end": "20:50",
-      "why": "Hyper punk at sunset."
+      "why": "Hyper punk at sunset.",
+      "artistSlug": "lip-critic"
     },
     {
       "day": "FRI",
@@ -601,7 +675,8 @@
       "name": "Akriila",
       "start": "22:05",
       "end": "23:05",
-      "why": "Chilean urbano, last Line-3 name, hot enough to get a prime Schwarzkopf hour."
+      "why": "Chilean urbano, last Line-3 name, hot enough to get a prime Schwarzkopf hour.",
+      "artistSlug": "akriila"
     },
     {
       "day": "FRI",
@@ -609,7 +684,8 @@
       "name": "Full of Hell",
       "start": "00:25",
       "end": "01:25",
-      "why": "Grind in the midnight slot."
+      "why": "Grind in the midnight slot.",
+      "artistSlug": "full-of-hell"
     },
     {
       "day": "FRI",
@@ -617,7 +693,8 @@
       "name": "Mark Fell & RP Boo Live",
       "start": "02:30",
       "end": "03:10",
-      "why": "Footwork and rhythm research, a late curio (Nick León's slot)."
+      "why": "Footwork and rhythm research, a late curio (Nick León's slot).",
+      "artistSlug": "mark-fell-and-rp-boo"
     },
     {
       "day": "FRI",
@@ -625,7 +702,8 @@
       "name": "S.A.S.S.",
       "start": "04:05",
       "end": "05:20",
-      "why": "DJ supergroup, the Schwarzkopf closer."
+      "why": "DJ supergroup, the Schwarzkopf closer.",
+      "artistSlug": "s-a-s-s"
     },
     {
       "day": "FRI",
@@ -633,7 +711,8 @@
       "name": "Aeronave Adolescente",
       "start": "17:20",
       "end": "18:00",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Couldn't identify this act. Small print, so a generic slot.",
+      "artistSlug": "aeronave-adolescente"
     },
     {
       "day": "FRI",
@@ -641,7 +720,8 @@
       "name": "Racing Mount Pleasant",
       "start": "19:00",
       "end": "19:45",
-      "why": "Chamber indie at golden hour."
+      "why": "Chamber indie at golden hour.",
+      "artistSlug": "racing-mount-pleasant"
     },
     {
       "day": "FRI",
@@ -649,7 +729,8 @@
       "name": "Don Caballero",
       "start": "21:00",
       "end": "21:50",
-      "why": "Math-rock veterans, the Port dusk slot."
+      "why": "Math-rock veterans, the Port dusk slot.",
+      "artistSlug": "don-caballero"
     },
     {
       "day": "FRI",
@@ -657,7 +738,8 @@
       "name": "Have a Nice Life",
       "start": "23:15",
       "end": "00:10",
-      "why": "Cult doomgaze rarely on stage, the Port prime slot."
+      "why": "Cult doomgaze rarely on stage, the Port prime slot.",
+      "artistSlug": "have-a-nice-life"
     },
     {
       "day": "FRI",
@@ -665,15 +747,17 @@
       "name": "Piss",
       "start": "01:35",
       "end": "02:25",
-      "why": "Also on Porto's bill, the biggest of the small print: a late Port slot."
+      "why": "Also on Porto's bill, the biggest of the small print: a late Port slot.",
+      "artistSlug": "piss"
     },
     {
       "day": "FRI",
-      "stage": "port",
+      "stage": "plenitude",
       "name": "Carré",
-      "start": "03:15",
-      "end": "04:00",
-      "why": "Bass DJ for the last Port hour."
+      "start": "23:00",
+      "end": "01:00",
+      "why": "Bass DJ, a Plenitude peak-hour slot instead of the last Port hour.",
+      "artistSlug": "carre"
     },
     {
       "day": "FRI",
@@ -681,7 +765,8 @@
       "name": "Kelsey Lu",
       "start": "16:30",
       "end": "17:30",
-      "why": "Cello and voice, a seated afternoon."
+      "why": "Cello and voice, a seated afternoon.",
+      "artistSlug": "kelsey-lu"
     },
     {
       "day": "FRI",
@@ -689,7 +774,8 @@
       "name": "Mabe Fratti",
       "start": "18:00",
       "end": "19:00",
-      "why": "Mexico City avant cello: built for this room."
+      "why": "Mexico City avant cello: built for this room.",
+      "artistSlug": "mabe-fratti"
     },
     {
       "day": "FRI",
@@ -697,7 +783,8 @@
       "name": "Vashti Bunyan",
       "start": "19:30",
       "end": "20:30",
-      "why": "Legend, seated, and would be lost outdoors."
+      "why": "Legend, seated, and would be lost outdoors.",
+      "artistSlug": "vashti-bunyan"
     },
     {
       "day": "FRI",
@@ -705,47 +792,53 @@
       "name": "Anohni",
       "start": "21:00",
       "end": "22:00",
-      "why": "Bigger than the room, but her shows need the hush. Einstürzende Neubauten's kind of prestige slot."
+      "why": "Bigger than the room, but her shows need the hush. Einstürzende Neubauten's kind of prestige slot.",
+      "artistSlug": "anohni"
     },
     {
       "day": "FRI",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "El Buen Hijo",
       "start": "18:00",
       "end": "18:45",
-      "why": "Band, on the early band half."
+      "why": "Band, so not Plenitude (a DJ stage): Pulse hosts live acts early.",
+      "artistSlug": "el-buen-hijo"
     },
     {
       "day": "FRI",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "Perfecto Miserable",
       "start": "19:15",
       "end": "20:00",
-      "why": "Played PS26's Aperol Island, moves up a stage."
+      "why": "Played PS26's Aperol Island; band, so Pulse rather than the DJ stage.",
+      "artistSlug": "perfecto-miserable"
     },
     {
       "day": "FRI",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "Irenegarry",
       "start": "20:30",
       "end": "21:15",
-      "why": "Spanish singer, last of the early set."
+      "why": "Spanish singer, last of the early live acts on Pulse.",
+      "artistSlug": "irene-garry"
     },
     {
       "day": "FRI",
       "stage": "plenitude",
       "name": "Lux Lisbon",
-      "start": "21:45",
-      "end": "23:15",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "18:00",
+      "end": "19:30",
+      "why": "DJ: opens Plenitude, a DJ stage since PS24.",
+      "artistSlug": "lux-lisbon"
     },
     {
       "day": "FRI",
       "stage": "plenitude",
       "name": "Naone",
-      "start": "23:15",
-      "end": "00:45",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "19:30",
+      "end": "21:00",
+      "why": "DJ, second on the early Plenitude run.",
+      "artistSlug": "naone"
     },
     {
       "day": "FRI",
@@ -753,7 +846,8 @@
       "name": "Malibu",
       "start": "22:00",
       "end": "23:00",
-      "why": "She opened the Warehouse in PS26, so the same."
+      "why": "She opened the Warehouse in PS26, so the same.",
+      "artistSlug": "malibu"
     },
     {
       "day": "FRI",
@@ -761,7 +855,8 @@
       "name": "Klara Lewis",
       "start": "23:10",
       "end": "00:10",
-      "why": "Sound-art noise, indoor."
+      "why": "Sound-art noise, indoor.",
+      "artistSlug": "klara-lewis"
     },
     {
       "day": "FRI",
@@ -769,7 +864,8 @@
       "name": "Sky H1 Live",
       "start": "00:20",
       "end": "01:20",
-      "why": "Atmospheric live set for the Warehouse."
+      "why": "Atmospheric live set for the Warehouse.",
+      "artistSlug": "sky-h1"
     },
     {
       "day": "FRI",
@@ -777,7 +873,8 @@
       "name": "Oceanic (Live AV)",
       "start": "01:30",
       "end": "02:30",
-      "why": "Needs a room with screens."
+      "why": "Needs a room with screens.",
+      "artistSlug": "oceanic"
     },
     {
       "day": "FRI",
@@ -785,15 +882,17 @@
       "name": "Roly Porter",
       "start": "02:40",
       "end": "03:40",
-      "why": "Sub-bass cinema, heavy late room."
+      "why": "Sub-bass cinema, heavy late room.",
+      "artistSlug": "roly-porter"
     },
     {
       "day": "FRI",
       "stage": "cupra-pulse",
       "name": "Memory Palace",
-      "start": "21:00",
+      "start": "21:30",
       "end": "22:30",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Pulse's first set after the early live acts.",
+      "artistSlug": "memory-palace"
     },
     {
       "day": "FRI",
@@ -801,7 +900,8 @@
       "name": "Picture Live",
       "start": "22:30",
       "end": "00:00",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Couldn't identify this act. Small print, so a generic slot.",
+      "artistSlug": "picture"
     },
     {
       "day": "FRI",
@@ -809,15 +909,17 @@
       "name": "Polygonia Live",
       "start": "00:00",
       "end": "01:30",
-      "why": "Live techno at the peak of Pulse."
+      "why": "Live techno at the peak of Pulse.",
+      "artistSlug": "polygonia"
     },
     {
       "day": "FRI",
-      "stage": "cupra-pulse",
+      "stage": "plenitude",
       "name": "Mad Miran b2b DJ Zero",
-      "start": "01:30",
-      "end": "03:30",
-      "why": "B2Bs run long on Pulse."
+      "start": "21:00",
+      "end": "23:00",
+      "why": "DJ b2b: club hours on the DJ stage.",
+      "artistSlug": "mad-miran-b2b-dj-zero"
     },
     {
       "day": "SAT",
@@ -825,7 +927,8 @@
       "name": "Santiago Motorizado",
       "start": "17:30",
       "end": "18:15",
-      "why": "El Mató's singer, a Spanish-language favourite who played PS26's La Nau: the Estrella opener."
+      "why": "El Mató's singer, a Spanish-language favourite who played PS26's La Nau: the Estrella opener.",
+      "artistSlug": "santiago-motorizado"
     },
     {
       "day": "SAT",
@@ -833,7 +936,8 @@
       "name": "Dinosaur Jr.",
       "start": "18:30",
       "end": "19:30",
-      "why": "Heritage guitars early, the Baxter Dury slot."
+      "why": "Heritage guitars early, the Baxter Dury slot.",
+      "artistSlug": "dinosaur-jr"
     },
     {
       "day": "SAT",
@@ -841,7 +945,8 @@
       "name": "Lola Young",
       "start": "19:40",
       "end": "20:40",
-      "why": "Line 2, big daytime singalong: Big Thief's slot."
+      "why": "Line 2, big daytime singalong: Big Thief's slot.",
+      "artistSlug": "lola-young"
     },
     {
       "day": "SAT",
@@ -849,7 +954,8 @@
       "name": "Adéla",
       "start": "20:50",
       "end": "21:50",
-      "why": "Line 2 pop at sunset, the Little Simz slot."
+      "why": "Line 2 pop at sunset, the Little Simz slot.",
+      "artistSlug": "adela"
     },
     {
       "day": "SAT",
@@ -857,7 +963,8 @@
       "name": "Hayley Williams",
       "start": "22:05",
       "end": "23:35",
-      "why": "Second name on the poster. PS26 gave My Bloody Valentine this slot."
+      "why": "Second name on the poster. PS26 gave My Bloody Valentine this slot.",
+      "artistSlug": "hayley-williams"
     },
     {
       "day": "SAT",
@@ -865,7 +972,8 @@
       "name": "Doechii",
       "start": "23:40",
       "end": "01:10",
-      "why": "Top of the bill: the 23:40 Revolut slot The xx had."
+      "why": "Top of the bill: the 23:40 Revolut slot The xx had.",
+      "artistSlug": "doechii"
     },
     {
       "day": "SAT",
@@ -873,7 +981,8 @@
       "name": "Prospa",
       "start": "01:15",
       "end": "02:45",
-      "why": "Rave duo after Doechii, Gorillaz's PS26 slot given to a dance name."
+      "why": "Rave duo after Doechii, Gorillaz's PS26 slot given to a dance name.",
+      "artistSlug": "prospa"
     },
     {
       "day": "SAT",
@@ -881,7 +990,8 @@
       "name": "Skrillex b2b Ninajirachi",
       "start": "03:00",
       "end": "05:00",
-      "why": "Poster says closing set, so the main stages finish on it. Later than any main in PS24 or PS26."
+      "why": "Poster says closing set, so the main stages finish on it. Later than any main in PS24 or PS26.",
+      "artistSlug": "skrillex-b2b-ninajirachi"
     },
     {
       "day": "SAT",
@@ -889,7 +999,8 @@
       "name": "Alcalá Norte",
       "start": "18:00",
       "end": "18:45",
-      "why": "Madrid rock band, local Occident opener."
+      "why": "Madrid rock band, local Occident opener.",
+      "artistSlug": "alcala-norte"
     },
     {
       "day": "SAT",
@@ -897,7 +1008,8 @@
       "name": "King Gizzard and the Lizard Wizard",
       "start": "19:45",
       "end": "20:45",
-      "why": "Biggest guitar name on Line 3, Occident before dark."
+      "why": "Biggest guitar name on Line 3, Occident before dark.",
+      "artistSlug": "king-gizzard-and-the-lizard-wizard"
     },
     {
       "day": "SAT",
@@ -905,7 +1017,8 @@
       "name": "Caroline Polachek",
       "start": "22:00",
       "end": "23:15",
-      "why": "Line 3's first name, the prime mid stage slot (Clipse, Role Model)."
+      "why": "Line 3's first name, the prime mid stage slot (Clipse, Role Model).",
+      "artistSlug": "caroline-polachek"
     },
     {
       "day": "SAT",
@@ -913,7 +1026,8 @@
       "name": "Shygirl",
       "start": "00:40",
       "end": "01:40",
-      "why": "Marina's PS26 slot: pop-club after Doechii's opening hour."
+      "why": "Marina's PS26 slot: pop-club after Doechii's opening hour.",
+      "artistSlug": "shygirl"
     },
     {
       "day": "SAT",
@@ -921,7 +1035,8 @@
       "name": "Arca",
       "start": "03:00",
       "end": "04:15",
-      "why": "Barcelona resident, the late Occident slot she had in PS24."
+      "why": "Barcelona resident, the late Occident slot she had in PS24.",
+      "artistSlug": "arca"
     },
     {
       "day": "SAT",
@@ -929,7 +1044,8 @@
       "name": "Abhir",
       "start": "17:10",
       "end": "17:50",
-      "why": "Press lists them with the local acts, Line 4: Cupra's local opener."
+      "why": "Press lists them with the local acts, Line 4: Cupra's local opener.",
+      "artistSlug": "abhir"
     },
     {
       "day": "SAT",
@@ -937,7 +1053,8 @@
       "name": "Hearts2Hearts",
       "start": "18:50",
       "end": "19:45",
-      "why": "K-pop act, a daylight Cupra show, as ATARASHII GAKKO!!! was a Cupra draw."
+      "why": "K-pop act, a daylight Cupra show, as ATARASHII GAKKO!!! was a Cupra draw.",
+      "artistSlug": "hearts2hearts"
     },
     {
       "day": "SAT",
@@ -945,7 +1062,8 @@
       "name": "Muna",
       "start": "20:55",
       "end": "21:55",
-      "why": "Pop trio, dusk."
+      "why": "Pop trio, dusk.",
+      "artistSlug": "muna"
     },
     {
       "day": "SAT",
@@ -953,7 +1071,8 @@
       "name": "DIIV",
       "start": "23:05",
       "end": "00:05",
-      "why": "Shoegaze set on the Cupra's prime slot, opposite Doechii's first half."
+      "why": "Shoegaze set on the Cupra's prime slot, opposite Doechii's first half.",
+      "artistSlug": "diiv"
     },
     {
       "day": "SAT",
@@ -961,7 +1080,8 @@
       "name": "Esdeekid",
       "start": "01:50",
       "end": "02:50",
-      "why": "UK rap with a young crowd after 01:00."
+      "why": "UK rap with a young crowd after 01:00.",
+      "artistSlug": "esdeekid"
     },
     {
       "day": "SAT",
@@ -969,7 +1089,8 @@
       "name": "Simian Mobile Disco",
       "start": "04:30",
       "end": "06:00",
-      "why": "Dance veterans, the Saturday Cupra closer."
+      "why": "Dance veterans, the Saturday Cupra closer.",
+      "artistSlug": "simian-mobile-disco"
     },
     {
       "day": "SAT",
@@ -977,7 +1098,8 @@
       "name": "Mori",
       "start": "16:35",
       "end": "17:15",
-      "why": "Press lists them with the local acts, small stage opener."
+      "why": "Press lists them with the local acts, small stage opener.",
+      "artistSlug": "mori"
     },
     {
       "day": "SAT",
@@ -985,7 +1107,8 @@
       "name": "Rebe",
       "start": "18:00",
       "end": "18:45",
-      "why": "Press lists them with the local acts, Line 4, early evening."
+      "why": "Press lists them with the local acts, Line 4, early evening.",
+      "artistSlug": "rebe"
     },
     {
       "day": "SAT",
@@ -993,7 +1116,8 @@
       "name": "Erin LeCount",
       "start": "19:45",
       "end": "20:45",
-      "why": "British pop, sunset hour."
+      "why": "British pop, sunset hour.",
+      "artistSlug": "erin-lecount"
     },
     {
       "day": "SAT",
@@ -1001,7 +1125,8 @@
       "name": "Dove Ellis",
       "start": "22:00",
       "end": "23:00",
-      "why": "Irish songwriter, in prime Schwarzkopf opposite Hayley Williams."
+      "why": "Irish songwriter, in prime Schwarzkopf opposite Hayley Williams.",
+      "artistSlug": "dove-ellis"
     },
     {
       "day": "SAT",
@@ -1009,7 +1134,8 @@
       "name": "Theodora",
       "start": "00:25",
       "end": "01:25",
-      "why": "French rap-pop, Line 3, midnight Schwarzkopf: Rojuu and fakemink got this slot."
+      "why": "French rap-pop, Line 3, midnight Schwarzkopf: Rojuu and fakemink got this slot.",
+      "artistSlug": "theodora"
     },
     {
       "day": "SAT",
@@ -1017,15 +1143,17 @@
       "name": "B0yg1rl",
       "start": "02:50",
       "end": "03:35",
-      "why": "Experimental dance duo, late."
+      "why": "Experimental dance duo, late.",
+      "artistSlug": "b0yg1rl"
     },
     {
       "day": "SAT",
-      "stage": "schwarzkopf",
+      "stage": "plenitude",
       "name": "DJ Stingray 313 Live",
-      "start": "04:35",
-      "end": "05:35",
-      "why": "Detroit electro for the last hour."
+      "start": "23:00",
+      "end": "00:45",
+      "why": "Detroit electro, a Plenitude peak slot instead of the last Schwarzkopf hour.",
+      "artistSlug": "stingray-313"
     },
     {
       "day": "SAT",
@@ -1033,7 +1161,8 @@
       "name": "Blanco Palamera",
       "start": "17:15",
       "end": "18:00",
-      "why": "Spanish small print, Port's opener."
+      "why": "Spanish small print, Port's opener.",
+      "artistSlug": "blanco-palamera"
     },
     {
       "day": "SAT",
@@ -1041,7 +1170,8 @@
       "name": "Twisted Teens",
       "start": "18:50",
       "end": "19:35",
-      "why": "New Orleans punk, short early set."
+      "why": "New Orleans punk, short early set.",
+      "artistSlug": "twisted-teens"
     },
     {
       "day": "SAT",
@@ -1049,7 +1179,8 @@
       "name": "Prostitute",
       "start": "20:55",
       "end": "21:55",
-      "why": "Abrasive post-punk at dusk, the sea stage's weird slot."
+      "why": "Abrasive post-punk at dusk, the sea stage's weird slot.",
+      "artistSlug": "prostitute"
     },
     {
       "day": "SAT",
@@ -1057,7 +1188,8 @@
       "name": "Tirzah",
       "start": "23:10",
       "end": "00:05",
-      "why": "Hazy late songs, the Port prime hour."
+      "why": "Hazy late songs, the Port prime hour.",
+      "artistSlug": "tirzah"
     },
     {
       "day": "SAT",
@@ -1065,15 +1197,17 @@
       "name": "Jesu",
       "start": "01:30",
       "end": "02:30",
-      "why": "Justin Broadrick's heavy shoegaze, Kylesa's late slot."
+      "why": "Justin Broadrick's heavy shoegaze, Kylesa's late slot.",
+      "artistSlug": "jesu"
     },
     {
       "day": "SAT",
-      "stage": "port",
+      "stage": "plenitude",
       "name": "Bashkka b2b Mike Servito",
-      "start": "03:40",
-      "end": "04:30",
-      "why": "Club closer for Port."
+      "start": "00:45",
+      "end": "03:00",
+      "why": "Club b2b, the late Plenitude run instead of the last Port slot.",
+      "artistSlug": "bashkka-b2b-mike-servito"
     },
     {
       "day": "SAT",
@@ -1081,7 +1215,8 @@
       "name": "Marta Salogni Live",
       "start": "16:30",
       "end": "17:30",
-      "why": "Tape-loop live set, seated."
+      "why": "Tape-loop live set, seated.",
+      "artistSlug": "marta-salogni"
     },
     {
       "day": "SAT",
@@ -1089,7 +1224,8 @@
       "name": "Jump Source Live",
       "start": "18:00",
       "end": "19:00",
-      "why": "Electronic live set, seated."
+      "why": "Electronic live set, seated.",
+      "artistSlug": "jump-source"
     },
     {
       "day": "SAT",
@@ -1097,7 +1233,8 @@
       "name": "Dani Dicostas",
       "start": "19:30",
       "end": "20:30",
-      "why": "Played PS26's Aperol Island, moves indoors."
+      "why": "Played PS26's Aperol Island, moves indoors.",
+      "artistSlug": "dani-dicostas"
     },
     {
       "day": "SAT",
@@ -1105,39 +1242,44 @@
       "name": "Bonnie \"Prince\" Billy",
       "start": "21:00",
       "end": "22:00",
-      "why": "Quiet legend, the Auditori's headline slot."
+      "why": "Quiet legend, the Auditori's headline slot.",
+      "artistSlug": "bonnie-prince-billy"
     },
     {
       "day": "SAT",
-      "stage": "plenitude",
+      "stage": "cupra-pulse",
       "name": "Gazella",
-      "start": "18:00",
-      "end": "18:45",
-      "why": "Valencian kraut and noise band, on the early band half."
+      "start": "20:00",
+      "end": "20:45",
+      "why": "Valencian band, so not Plenitude (a DJ stage): one live set before Pulse turns to DJs.",
+      "artistSlug": "gazella"
     },
     {
       "day": "SAT",
       "stage": "plenitude",
       "name": "Victoryland",
-      "start": "19:15",
-      "end": "20:00",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "18:00",
+      "end": "19:30",
+      "why": "Early set, opens Plenitude.",
+      "artistSlug": "victoryland"
     },
     {
       "day": "SAT",
       "stage": "plenitude",
       "name": "Warning",
-      "start": "20:30",
-      "end": "21:15",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "start": "19:30",
+      "end": "21:00",
+      "why": "Early set, second on Plenitude.",
+      "artistSlug": "warning"
     },
     {
       "day": "SAT",
       "stage": "plenitude",
       "name": "Dulce",
-      "start": "21:45",
-      "end": "23:15",
-      "why": "DJ, Plenitude's club half starts."
+      "start": "21:00",
+      "end": "23:00",
+      "why": "DJ, Plenitude's club half starts.",
+      "artistSlug": "dulce"
     },
     {
       "day": "SAT",
@@ -1145,7 +1287,8 @@
       "name": "Loradeniz",
       "start": "22:00",
       "end": "23:10",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Couldn't identify this act. Small print, so a generic slot.",
+      "artistSlug": "loradeniz"
     },
     {
       "day": "SAT",
@@ -1153,7 +1296,8 @@
       "name": "Plo Man",
       "start": "23:20",
       "end": "00:35",
-      "why": "DJ for the Warehouse."
+      "why": "DJ for the Warehouse.",
+      "artistSlug": "plo-man"
     },
     {
       "day": "SAT",
@@ -1161,7 +1305,8 @@
       "name": "Andy Stott",
       "start": "00:40",
       "end": "02:00",
-      "why": "Modern Love heavyweight, peak of the dark room."
+      "why": "Modern Love heavyweight, peak of the dark room.",
+      "artistSlug": "andy-stott"
     },
     {
       "day": "SAT",
@@ -1169,7 +1314,8 @@
       "name": "Sonido Underground: Dngdngdng & Phran",
       "start": "02:05",
       "end": "03:30",
-      "why": "Latin club session, long peak."
+      "why": "Latin club session, long peak.",
+      "artistSlug": "sonido-underground-dngdngdng-and-phran"
     },
     {
       "day": "SAT",
@@ -1177,7 +1323,8 @@
       "name": "DJ /rupture",
       "start": "21:00",
       "end": "22:30",
-      "why": "Pulse's early set."
+      "why": "Pulse's early set.",
+      "artistSlug": "dj-rupture"
     },
     {
       "day": "SAT",
@@ -1185,7 +1332,8 @@
       "name": "Bae Bae",
       "start": "22:30",
       "end": "00:00",
-      "why": "Couldn't identify this act. Small print, so a generic slot."
+      "why": "Couldn't identify this act. Small print, so a generic slot.",
+      "artistSlug": "bae-bae"
     },
     {
       "day": "SAT",
@@ -1193,7 +1341,8 @@
       "name": "Livwutang b2b Konduku",
       "start": "00:00",
       "end": "02:00",
-      "why": "B2Bs run long on Pulse."
+      "why": "B2Bs run long on Pulse.",
+      "artistSlug": "livwutang-b2b-konduku"
     },
     {
       "day": "SUN",
@@ -1202,6 +1351,753 @@
       "start": "15:00",
       "end": "23:00",
       "why": "Press: an eight-hour marathon of alternating sets, so one block. Same 15:00-23:00 window as PS26's closing day."
+    }
+  ],
+  "artists": [
+    {
+      "slug": "fades",
+      "name": "FADES",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/fades?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "mushkaa",
+      "name": "Mushka",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/mushkaa?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "chvrches",
+      "name": "CHVRCHES",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/chvrches?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "underworld",
+      "name": "Underworld",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/underworld?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "guillem-gisbert",
+      "name": "Guillem Gisbert",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/guillem-gisbert?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "wallows",
+      "name": "Wallows",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/wallows?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "turnstile",
+      "name": "TURNSTILE",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/turnstile?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "robyn",
+      "name": "Robyn",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/robyn?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "massive-attack",
+      "name": "Massive Attack",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/massive-attack?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "fontaines-dc",
+      "name": "Fontaines D.C.",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/fontaines-dc?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "bad-gyal",
+      "name": "Bad Gyal",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/bad-gyal?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "viva-belgrado",
+      "name": "Viva Belgrado",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/viva-belgrado?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "underscores",
+      "name": "underscores",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/underscores?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "pavement",
+      "name": "Pavement",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/pavement?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "kim-petras",
+      "name": "Kim Petras",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/kim-petras?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "brutalismus-3000-b2b-isoxo",
+      "name": "Brutalismus 3000 b2b ISOxo",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/brutalismus-3000-b2b-isoxo?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "jersey",
+      "name": "Jersey",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/jersey?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "greg-freeman",
+      "name": "Greg Freeman",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/greg-freeman?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "metrika",
+      "name": "Metrika",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/metrika?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "metronomy",
+      "name": "Metronomy",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/metronomy?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "snow-strippers",
+      "name": "Snow Strippers",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/snow-strippers?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "joy-orbison",
+      "name": "Joy Orbison",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/joy-orbison?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "axolotes-mexicanos",
+      "name": "Axolotes Mexicanos",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/axolotes-mexicanos?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "alemeda",
+      "name": "Alemeda",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/alemeda?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "haute-and-freddy",
+      "name": "Haute & Freddy",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/haute-and-freddy?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "sophia-stel",
+      "name": "Sophia Stel",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/sophia-stel?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "gilla-band",
+      "name": "Gilla Band",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/gilla-band?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "castle-rat",
+      "name": "Castle Rat",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/castle-rat?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "blaya",
+      "name": "BLAYA",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/blaya?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "tristan",
+      "name": "TRISTÁN!",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/tristan?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "friko",
+      "name": "Friko",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/friko?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "westside-cowboy",
+      "name": "Westside Cowboy",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/westside-cowboy?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "ear",
+      "name": "ear",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/ear?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "blackhaine",
+      "name": "Blackhaine",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/blackhaine?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dame-area",
+      "name": "Dame Area",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dame-area?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "madra-salach",
+      "name": "Madra Salach",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/madra-salach?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "juana-molina",
+      "name": "Juana Molina",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/juana-molina?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "carmen-villain",
+      "name": "Carmen Villain live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/carmen-villain?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "atlas-sound",
+      "name": "Atlas Sound",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/atlas-sound?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "allergiques-al-pollen",
+      "name": "Al·lèrgiques al pol·len",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/allergiques-al-pollen?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "napa",
+      "name": "NAPA",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/napa?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "ttssfu",
+      "name": "TTSSFU",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/ttssfu?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "alex-vs-alex",
+      "name": "aLex vs aLex",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/alex-vs-alex?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "tatyana-jane",
+      "name": "Tatyana Jane",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/tatyana-jane?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dj-fra",
+      "name": "DJ Fra",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dj-fra?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "pole-1-2-3",
+      "name": "Pole 1 2 3",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/pole-1-2-3?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "decoder",
+      "name": "Decoder",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/decoder?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "eden-aurelius",
+      "name": "Eden Aurelius",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/eden-aurelius?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "headache",
+      "name": "Headache",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/headache?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "trickpony",
+      "name": "trickpony",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/trickpony?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "tracey",
+      "name": "Tracey",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/tracey?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "ibrahim-alfa-jnr",
+      "name": "Ibrahim Alfa Jnr",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/ibrahim-alfa-jnr?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "verushka-b2b-acidheaven",
+      "name": "Verushka b2b Acidheaven",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/verushka-b2b-acidheaven?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "pablopablo",
+      "name": "pablopablo",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/pablopablo?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "julien-baker",
+      "name": "Julien Baker",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/julien-baker?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "bleachers",
+      "name": "Bleachers",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/bleachers?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "tinashe",
+      "name": "Tinashe",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/tinashe?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "phoebe-bridgers",
+      "name": "Phoebe Bridgers",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/phoebe-bridgers?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "fka-twigs",
+      "name": "FKA twigs",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/fka-twigs?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "the-chemical-brothers",
+      "name": "The Chemical Brothers",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/the-chemical-brothers?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "los-punsetes",
+      "name": "Los Punsetes",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/los-punsetes?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "converge",
+      "name": "Converge",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/converge?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "isaiah-rashad",
+      "name": "Isaiah Rashad",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/isaiah-rashad?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "jt",
+      "name": "JT",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/jt?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "bicep-live",
+      "name": "BICEP live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/bicep-live?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "mishima",
+      "name": "Mishima",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/mishima?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "english-teacher",
+      "name": "English Teacher",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/english-teacher?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "weyes-blood",
+      "name": "Weyes Blood",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/weyes-blood?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "angine-de-poitrine",
+      "name": "Angine de Poitrine",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/angine-de-poitrine?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "boy-harsher",
+      "name": "Boy Harsher",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/boy-harsher?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "john-talabot",
+      "name": "John Talabot",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/john-talabot?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "carlos-de-jacoba-and-ciutat",
+      "name": "Carlos de Jacoba & Ciutat",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/carlos-de-jacoba-and-ciutat?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "at",
+      "name": "@",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/at?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "lip-critic",
+      "name": "Lip Critic",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/lip-critic?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "akriila",
+      "name": "AKRIILA",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/akriila?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "full-of-hell",
+      "name": "Full Of Hell",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/full-of-hell?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "mark-fell-and-rp-boo",
+      "name": "Mark Fell and RP Boo live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/mark-fell-and-rp-boo?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "s-a-s-s",
+      "name": "S.A.S.S",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/s-a-s-s?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "aeronave-adolescente",
+      "name": "Aeronave Adolescente",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/aeronave-adolescente?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "racing-mount-pleasant",
+      "name": "Racing Mount Pleasant",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/racing-mount-pleasant?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "don-caballero",
+      "name": "Don Caballero",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/don-caballero?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "have-a-nice-life",
+      "name": "Have A Nice Life",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/have-a-nice-life?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "piss",
+      "name": "PISS",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/piss?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "carre",
+      "name": "Carré",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/carre?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "kelsey-lu",
+      "name": "Kelsey Lu",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/kelsey-lu?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "mabe-fratti",
+      "name": "Mabe Fratti",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/mabe-fratti?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "vashti-bunyan",
+      "name": "Vashti Bunyan",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/vashti-bunyan?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "anohni",
+      "name": "ANOHNI",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/anohni?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "el-buen-hijo",
+      "name": "El Buen Hijo",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/el-buen-hijo?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "perfecto-miserable",
+      "name": "Perfecto Miserable",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/perfecto-miserable?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "irene-garry",
+      "name": "Irenegarry",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/irene-garry?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "lux-lisbon",
+      "name": "Lux Lisbon",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/lux-lisbon?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "naone",
+      "name": "Naone",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/naone?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "malibu",
+      "name": "Malibu",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/malibu?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "klara-lewis",
+      "name": "Klara Lewis",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/klara-lewis?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "sky-h1",
+      "name": "Sky H1 live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/sky-h1?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "oceanic",
+      "name": "Oceanic live A/V",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/oceanic?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "roly-porter",
+      "name": "Roly Porter",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/roly-porter?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "memory-palace",
+      "name": "Memory Palace",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/memory-palace?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "picture",
+      "name": "Picture live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/picture?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "polygonia",
+      "name": "Polygonia live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/polygonia?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "mad-miran-b2b-dj-zero",
+      "name": "mad miran b2b DJ Zero",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/mad-miran-b2b-dj-zero?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "santiago-motorizado",
+      "name": "Santiago Motorizado",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/santiago-motorizado?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dinosaur-jr",
+      "name": "Dinosaur Jr.",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dinosaur-jr?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "lola-young",
+      "name": "Lola Young",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/lola-young?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "adela",
+      "name": "ADÉLA",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/adela?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "hayley-williams",
+      "name": "Hayley Williams",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/hayley-williams?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "doechii",
+      "name": "Doechii",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/doechii?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "prospa",
+      "name": "Prospa",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/prospa?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "skrillex-b2b-ninajirachi",
+      "name": "Skrillex b2b Ninajirachi",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/skrillex-b2b-ninajirachi?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "alcala-norte",
+      "name": "Alcalá Norte",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/alcala-norte?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "king-gizzard-and-the-lizard-wizard",
+      "name": "King Gizzard & The Lizard Wizard",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/king-gizzard-and-the-lizard-wizard?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "caroline-polachek",
+      "name": "Caroline Polachek",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/caroline-polachek?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "shygirl",
+      "name": "Shygirl",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/shygirl?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "arca",
+      "name": "Arca",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/arca?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "abhir",
+      "name": "ABHIR",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/abhir?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "hearts2hearts",
+      "name": "Hearts2Hearts",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/hearts2hearts?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "muna",
+      "name": "MUNA",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/muna?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "diiv",
+      "name": "DIIV",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/diiv?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "esdeekid",
+      "name": "EsDeeKid",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/esdeekid?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "simian-mobile-disco",
+      "name": "Simian Mobile Disco",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/simian-mobile-disco?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "mori",
+      "name": "Mori",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/mori?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "rebe",
+      "name": "Rebe",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/rebe?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "erin-lecount",
+      "name": "Erin LeCount",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/erin-lecount?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dove-ellis",
+      "name": "Dove Ellis",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dove-ellis?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "theodora",
+      "name": "Theodora",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/theodora?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "b0yg1rl",
+      "name": "B0YG1RL",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/b0yg1rl?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "stingray-313",
+      "name": "DJ Stingray 313 live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/stingray-313?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "blanco-palamera",
+      "name": "Blanco Palamera",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/blanco-palamera?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "twisted-teens",
+      "name": "Twisted Teens",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/twisted-teens?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "prostitute",
+      "name": "Prostitute",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/prostitute?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "tirzah",
+      "name": "Tirzah",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/tirzah?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "jesu",
+      "name": "Jesu",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/jesu?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "bashkka-b2b-mike-servito",
+      "name": "BASHKKA b2b Mike Servito",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/bashkka-b2b-mike-servito?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "marta-salogni",
+      "name": "Marta Salogni live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/marta-salogni?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "jump-source",
+      "name": "Jump Source live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/jump-source?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dani-dicostas",
+      "name": "dani dicostas",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dani-dicostas?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "bonnie-prince-billy",
+      "name": "Bonnie \"Prince\" Billy",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/bonnie-prince-billy?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "gazella",
+      "name": "Gazella",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/gazella?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "victoryland",
+      "name": "Victoryland",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/victoryland?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "warning",
+      "name": "Warning",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/warning?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dulce",
+      "name": "Dulce",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dulce?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "loradeniz",
+      "name": "Loradeniz",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/loradeniz?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "plo-man",
+      "name": "PLO Man",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/plo-man?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "andy-stott",
+      "name": "Andy Stott live",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/andy-stott?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "sonido-underground-dngdngdng-and-phran",
+      "name": "Sonido Underground: DNGDNGDNG & Phran",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/sonido-underground-dngdngdng-and-phran?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "dj-rupture",
+      "name": "DJ /rupture",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/dj-rupture?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "bae-bae",
+      "name": "BAE BAE",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/bae-bae?e=primavera-sound-2027-barcelona"
+    },
+    {
+      "slug": "livwutang-b2b-konduku",
+      "name": "livwutang b2b Konduku",
+      "sourceUrl": "https://www.primaverasound.com/en/artist/livwutang-b2b-konduku?e=primavera-sound-2027-barcelona"
     }
   ]
 }

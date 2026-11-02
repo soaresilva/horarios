@@ -42,6 +42,12 @@ test.describe("admin", () => {
     await expect(page.locator("[data-performance-id]")).toHaveCount(49);
     await expect(page.locator('[data-performance-id="ps27-p-thu-fontaines-d-c"]')).toBeAttached();
 
+    // Artist pages open as part of this edition, not the artist's latest.
+    await expect(page.getByRole("link", { name: "Massive Attack", exact: true })).toHaveAttribute(
+      "href",
+      "https://www.primaverasound.com/en/artist/massive-attack?e=primavera-sound-2027-barcelona",
+    );
+
     await page.getByRole("tab", { name: /^SUN/ }).click();
     await expect(page.locator("[data-performance-id]")).toHaveCount(1);
   });

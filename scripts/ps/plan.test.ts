@@ -2,14 +2,19 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
+  artistSlugCandidates,
+  artistUrl,
   clockMinutes,
   CLOSING_SET,
   CORE_STAGES,
   instantAt,
+  NOT_ON_PLENITUDE,
+  pageTitleAct,
   performanceId,
   planPs,
   POSTER_ACTS,
   posterTier,
+  sameAct,
   STAGES_BY_DAY,
   validatePsSnapshot,
   type PsDay,
@@ -58,6 +63,92 @@ describe("the committed snapshot", () => {
     const mains = snapshot.sets.filter((s) => s.day === "SAT" && ["estrella-damm", "revolut"].includes(s.stage));
     const last = mains.reduce((a, b) => (clockMinutes(a.end) > clockMinutes(b.end) ? a : b));
     expect(last.name).toBe(CLOSING_SET);
+  });
+});
+
+describe("Plenitude", () => {
+  it("only has DJs: none of the bands and live acts that sat there in the first draft", () => {
+    const onPlenitude = snapshot.sets.filter((s) => s.stage === "plenitude").map((s) => s.name);
+    expect(onPlenitude.length).toBeGreaterThanOrEqual(12);
+    expect(onPlenitude.filter((name) => NOT_ON_PLENITUDE.includes(name))).toEqual([]);
+    expect(NOT_ON_PLENITUDE.every((name) => snapshot.sets.some((s) => s.name === name))).toBe(true);
+  });
+
+  it("runs from the early evening, so it isn't left empty where the bands were", () => {
+    for (const day of ["THU", "FRI", "SAT"] as const) {
+      const starts = snapshot.sets.filter((s) => s.day === day && s.stage === "plenitude").map((s) => s.start);
+      expect(starts).toContain("18:00");
+    }
+  });
+});
+
+describe("artist links", () => {
+  const link = (name: string) => snapshot.artists.find((a) => a.slug === find(name).artistSlug)!;
+
+  it("gives every act but Sunday's three-way block a page, opened as part of this edition", () => {
+    expect(snapshot.sets.filter((s) => !s.artistSlug).map((s) => s.name)).toEqual(["Richie Hawtin x Four Tet x Dixon"]);
+    expect(link("CHVRCHES").sourceUrl).toBe(
+      "https://www.primaverasound.com/en/artist/chvrches?e=primavera-sound-2027-barcelona",
+    );
+  });
+
+  it("links the acts whose slug the site doesn't derive from the poster", () => {
+    expect(find("Fontaines D.C.").artistSlug).toBe("fontaines-dc");
+    expect(find("Mushka").artistSlug).toBe("mushkaa");
+    expect(find("@").artistSlug).toBe("at");
+    expect(find("Haute & Freddy").artistSlug).toBe("haute-and-freddy");
+  });
+
+  it("plans each performance against its artist row", () => {
+    const planned = planPs(snapshot).find((p) => p.id === performanceId(find("CHVRCHES")))!;
+    expect(planned.artistId).toBe("ps27-a-chvrches");
+  });
+
+  it("fails a link to the wrong act", () => {
+    const errors = validatePsSnapshot({
+      ...snapshot,
+      artists: snapshot.artists.map((a) => (a.slug === "napa" ? { ...a, name: "Napalm Death" } : a)),
+    });
+    expect(errors).toContainEqual(expect.stringContaining('slug "napa" is the page for "Napalm Death"'));
+  });
+
+  it("fails an act with no page once pages have been fetched", () => {
+    expect(editing("Napa", { artistSlug: undefined })).toContainEqual("Napa: no artist page.");
+  });
+
+  it("needs no pages before they've been fetched", () => {
+    const bare = { ...snapshot, artists: [], sets: snapshot.sets.map((s) => ({ ...s, artistSlug: undefined })) };
+    expect(validatePsSnapshot(bare)).toEqual([]);
+  });
+});
+
+describe("artist slugs", () => {
+  it("spells & out and tries the name without the Live tag", () => {
+    expect(artistSlugCandidates("Mark Fell & RP Boo Live")).toEqual(["mark-fell-and-rp-boo-live", "mark-fell-and-rp-boo"]);
+    expect(artistSlugCandidates("Oceanic (Live AV)")).toEqual(["oceanic-live-av", "oceanic"]);
+  });
+
+  it("builds the edition link", () => {
+    expect(artistUrl("doechii")).toBe("https://www.primaverasound.com/en/artist/doechii?e=primavera-sound-2027-barcelona");
+  });
+
+  it("reads the act out of the page title, whatever follows it", () => {
+    const title = (t: string) => pageTitleAct(`<head><title>${t}</title></head>`);
+    expect(title("CHVRCHES (GB)")).toBe("CHVRCHES");
+    expect(title("Brutalismus 3000 b2b ISOxo (DE-US)")).toBe("Brutalismus 3000 b2b ISOxo");
+    expect(title("S.A.S.S (Saoirse, Moxie, Peach, Shanti Celeste)")).toBe("S.A.S.S");
+    expect(title("Haute &amp; Freddy (ES)")).toBe("Haute & Freddy");
+    expect(title("Primavera Sound - Error 404")).toBe("Primavera Sound - Error 404");
+  });
+
+  it("matches the poster's name to the page's, and nothing similar", () => {
+    expect(sameAct("King Gizzard & The Lizard Wizard", "King Gizzard and the Lizard Wizard")).toBe(true);
+    expect(sameAct("Oceanic live A/V", "Oceanic (Live AV)")).toBe(true);
+    expect(sameAct("aLex vs aLex", "Alex vs Alex")).toBe(true);
+    expect(sameAct("Napalm Death", "Napa")).toBe(false);
+    expect(sameAct("Mushkaa", "Mushka")).toBe(false);
+    expect(sameAct("@", "@")).toBe(true);
+    expect(sameAct("!", "@")).toBe(false);
   });
 });
 
@@ -148,6 +239,12 @@ describe("a bad snapshot fails", () => {
 
   it("leaves a set unexplained", () => {
     expect(editing("Piss", { why: " " })).toContainEqual(expect.stringContaining("no reasoning"));
+  });
+
+  it("puts a band on Plenitude", () => {
+    expect(editing("Napa", { stage: "plenitude", start: "12:00", end: "12:30" })).toContainEqual(
+      expect.stringContaining("Plenitude is a DJ stage"),
+    );
   });
 
   it("puts a headliner off the mains", () => {

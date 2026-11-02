@@ -301,8 +301,13 @@ updates the row and keeps visitors' marks on it.
 
 The festival is unpublished: `Festival.published = false`, so `/ps27` and its schedule API answer 404 unless the request has an admin session, and it's left out of `/` and `/archive`. **Publish** / **Unpublish** on `/admin` flips it. An unpublished festival can't be featured, and unpublishing clears `featured`, otherwise `/` would redirect the public into a 404. `public/sw.js` must not list an unpublished festival: anonymous installs would hit its 404 and `cache.addAll` would fail.
 
+Plenitude is a DJ stage (PS24 and PS26 ran it as one), so bands and live acts go to Cupra Pulse, which hosted live sets too. `NOT_ON_PLENITUDE` in `scripts/ps/plan.ts` enforces it; extend it when an act turns out not to be a DJ.
+
+Artist boxes link to `primaverasound.com/en/artist/<slug>?e=primavera-sound-2027-barcelona`. The site's artist sitemap lags the lineup, so `--fetch-artists` asks each page and accepts a slug only if its `<title>` names the same act; slugs the site doesn't derive from the poster name live in `SLUG_OVERRIDES`.
+
 ```bash
 npm run import:ps -- --check            # every poster act once, tiers, overlaps; no network, no DB
+npm run import:ps -- --fetch-artists    # primaverasound.com -> snapshot artist pages (~1 min, sequential)
 npm run import:ps -- --apply --dry-run  # report what would change
 npm run import:ps -- --apply            # snapshot -> Postgres
 npm run import:ps -- --apply --prune    # also remove sets that left the snapshot
