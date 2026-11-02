@@ -192,6 +192,15 @@ export const FESTIVAL_COPY: Record<string, FestivalCopy> = {
       hubName: "TivoliVredenburg",
     },
   },
+  ps27: {
+    disclaimer:
+      "This is a guess. Primavera Sound has only published which day each act plays: every stage and time here is predicted from the poster's font sizes and the 2024 and 2026 timetables. Wednesday is free with a reservation; Sunday's Primavera Bits has its own ticket.",
+    links: [{ label: "primaverasound.com", href: "https://www.primaverasound.com/en/barcelona/lineup" }],
+    legend: false,
+    // Same density as Le Guess Who?, for the same 45-60 minute sets. The
+    // 16:30-06:00 night makes for a long grid, which scrolls.
+    horizontalScale: { pxPerMinute: 3, minExtent: 90, tickMinutes: 15 },
+  },
 };
 
 export function festivalCopy(slug: string): FestivalCopy | undefined {

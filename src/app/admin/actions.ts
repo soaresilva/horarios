@@ -190,9 +190,30 @@ export async function setFeaturedFestivalAction(formData: FormData): Promise<voi
   await requireSession();
   const slug = String(formData.get("slug") ?? "");
   await prisma.$transaction(async (tx) => {
+    // Checked first, so a refused pick leaves the current one in place. The
+    // radio is disabled for these; this covers a stale /admin tab.
+    if (slug && !(await tx.festival.findUnique({ where: { slug } }))?.published) {
+      throw new Error(`Can't feature an unpublished festival: ${slug}`);
+    }
     await tx.festival.updateMany({ where: { featured: true }, data: { featured: false } });
     if (slug) await tx.festival.update({ where: { slug }, data: { featured: true } });
   });
   revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+// Opens a festival to the public, or takes it back to admin-only. Unpublishing
+// also clears `featured`, which would otherwise send `/` into a 404.
+export async function setFestivalPublishedAction(formData: FormData): Promise<void> {
+  await requireSession();
+  const slug = String(formData.get("slug") ?? "");
+  const published = formData.get("published") === "true";
+  await prisma.festival.update({
+    where: { slug },
+    data: published ? { published } : { published, featured: false },
+  });
+  revalidatePath("/");
+  revalidatePath("/archive");
+  revalidatePath(`/${slug}`);
   revalidatePath("/admin");
 }

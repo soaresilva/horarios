@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { logoutAction, setFeaturedFestivalAction } from "@/app/admin/actions";
+import { logoutAction, setFeaturedFestivalAction, setFestivalPublishedAction } from "@/app/admin/actions";
 import { prisma } from "@/lib/prisma";
 import { requireSession } from "@/lib/session";
 
@@ -37,7 +37,13 @@ export default async function AdminPage() {
           </label>
           {festivals.map((festival) => (
             <label key={festival.id} className="flex items-center gap-2">
-              <input type="radio" name="slug" value={festival.slug} defaultChecked={festival.featured} />
+              <input
+                type="radio"
+                name="slug"
+                value={festival.slug}
+                defaultChecked={festival.featured}
+                disabled={!festival.published}
+              />
               {festival.name}
             </label>
           ))}
@@ -52,14 +58,30 @@ export default async function AdminPage() {
           <p className="text-sm text-zinc-500">No festivals yet.</p>
         ) : (
           festivals.map((festival) => (
-            <Link
-              key={festival.id}
-              href={`/admin/${festival.slug}`}
-              className="flex items-center justify-between rounded-md border border-zinc-800 px-4 py-3 text-sm transition-colors hover:border-accent hover:bg-zinc-900"
-            >
-              <span>{festival.name}</span>
-              <span className="text-xs text-zinc-600">{festival.slug}</span>
-            </Link>
+            <div key={festival.id} className="flex items-center gap-2">
+              <Link
+                href={`/admin/${festival.slug}`}
+                className="flex min-w-0 flex-1 items-center justify-between gap-2 rounded-md border border-zinc-800 px-4 py-3 text-sm transition-colors hover:border-accent hover:bg-zinc-900"
+              >
+                <span className="truncate">{festival.name}</span>
+                {!festival.published && (
+                  <span className="rounded bg-zinc-800 px-1.5 py-0.5 text-xs text-zinc-300">Unpublished</span>
+                )}
+                <span className="text-xs text-zinc-600">{festival.slug}</span>
+              </Link>
+              {!festival.published && (
+                <Link href={`/${festival.slug}`} className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm">
+                  View
+                </Link>
+              )}
+              <form action={setFestivalPublishedAction}>
+                <input type="hidden" name="slug" value={festival.slug} />
+                <input type="hidden" name="published" value={String(!festival.published)} />
+                <button type="submit" className="rounded-md bg-zinc-800 px-3 py-1.5 text-sm">
+                  {festival.published ? "Unpublish" : "Publish"}
+                </button>
+              </form>
+            </div>
           ))
         )}
       </div>

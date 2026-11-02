@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { isFestivalVisible } from "@/lib/festival";
 import { prisma } from "@/lib/prisma";
+import { hasAdminSession } from "@/lib/session";
 import type {
   ArtistDTO,
   PerformanceDTO,
@@ -22,7 +24,7 @@ export async function GET(_request: Request, { params }: Params) {
   const { slug } = await params;
 
   const festival = await prisma.festival.findUnique({ where: { slug } });
-  if (!festival) {
+  if (!festival || !isFestivalVisible(festival, await hasAdminSession())) {
     return NextResponse.json({ error: "Festival not found" }, { status: 404 });
   }
 

@@ -23,6 +23,13 @@ export function formatFestivalDateRange(startDate: Date, endDate: Date): string 
   return `${day(startDate)} ${month(startDate)} – ${day(endDate)} ${month(endDate)} ${year(endDate)}`;
 }
 
+// Whether a request may see this festival at all. Everything public that
+// resolves a slug goes through this, so an unpublished festival is
+// indistinguishable from a slug that doesn't exist.
+export function isFestivalVisible(festival: { published: boolean }, isAdmin: boolean): boolean {
+  return festival.published || isAdmin;
+}
+
 // The festival `/` redirects to, or undefined when none is featured and the
 // archive list should render instead. The DB allows only one, but if data
 // ever disagrees the most recent edition wins (input order is startDate desc).

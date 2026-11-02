@@ -65,6 +65,12 @@ model Festival {
   // and the partial unique index in the add_featured_festival migration
   // enforces it. When none is featured, `/` shows the archive list.
   featured   Boolean         @default(false)
+  // False means admin-only: /<slug> and its schedule API answer 404 unless
+  // the request carries an admin session, and it's left out of `/` and
+  // /archive (isFestivalVisible in src/lib/festival.ts). Flipped from /admin.
+  // An unpublished festival can't be featured: `/` would redirect the public
+  // into a 404.
+  published  Boolean         @default(true)
   stages     Stage[]
   zones      Zone[]
   artists    Artist[]

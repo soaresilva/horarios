@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatFestivalDateRange, isFestivalOver, pickFeatured } from "./festival";
+import { formatFestivalDateRange, isFestivalOver, isFestivalVisible, pickFeatured } from "./festival";
 
 describe("isFestivalOver", () => {
   it("is false while the festival's end date is still today or in the future", () => {
@@ -51,5 +51,17 @@ describe("pickFeatured", () => {
   });
   it("takes the first (most recent) if data ever has two", () => {
     expect(pickFeatured([{ slug: "new", featured: true }, { slug: "old", featured: true }])?.slug).toBe("new");
+  });
+});
+
+describe("isFestivalVisible", () => {
+  it("shows a published festival to everyone", () => {
+    expect(isFestivalVisible({ published: true }, false)).toBe(true);
+    expect(isFestivalVisible({ published: true }, true)).toBe(true);
+  });
+
+  it("shows an unpublished festival to admins only", () => {
+    expect(isFestivalVisible({ published: false }, false)).toBe(false);
+    expect(isFestivalVisible({ published: false }, true)).toBe(true);
   });
 });

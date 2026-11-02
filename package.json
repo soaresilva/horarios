@@ -17,6 +17,8 @@
     "import:touo": "tsx scripts/import-touo.ts",
     "import:lc": "tsx scripts/import-lc.ts",
     "import:lgw": "tsx scripts/import-lgw.ts",
+    "import:ps": "tsx scripts/import-ps.ts",
+    "eval:ps27": "tsx scripts/eval-ps.ts",
     "stats:crews": "tsx scripts/crew-stats.ts"
   },
   "dependencies": {

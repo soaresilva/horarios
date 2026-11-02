@@ -112,4 +112,16 @@ describe("Home (archive index)", () => {
     expect(redirect).not.toHaveBeenCalled();
     expect(screen.getByRole("link", { name: /Left of the Dial/ })).toHaveAttribute("href", "/lotd26");
   });
+
+  // The DB stub returns whatever it's told, so what keeps an unpublished
+  // festival off these pages is this filter on the query.
+  it.each([
+    ["/", Home],
+    ["/archive", ArchivePage],
+  ])("%s only queries published festivals", async (_path, Page) => {
+    mockFindMany.mockClear();
+    mockFindMany.mockResolvedValue([]);
+    await Page();
+    expect(mockFindMany).toHaveBeenCalledWith(expect.objectContaining({ where: { published: true } }));
+  });
 });

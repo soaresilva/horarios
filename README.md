@@ -295,6 +295,26 @@ The finer points:
 Rows are `lgw26-p-<show_id>` / `lgw26-a-<name slug>`, so a rename or time change
 updates the row and keeps visitors' marks on it.
 
+## Primavera Sound 2027: an unpublished guess
+
+`/ps27` (Parc del Fòrum, 2 to 6 June 2027) is a prediction. Primavera has published which day each act plays and nothing else, so every stage and time in `scripts/data/ps27.json` is guessed from the poster's font sizes and the PS24 and PS26 grids. Each set carries a `why`; acts that couldn't be identified say so.
+
+The festival is unpublished: `Festival.published = false`, so `/ps27` and its schedule API answer 404 unless the request has an admin session, and it's left out of `/` and `/archive`. **Publish** / **Unpublish** on `/admin` flips it. An unpublished festival can't be featured, and unpublishing clears `featured`, otherwise `/` would redirect the public into a 404. `public/sw.js` must not list an unpublished festival: anonymous installs would hit its 404 and `cache.addAll` would fail.
+
+```bash
+npm run import:ps -- --check            # every poster act once, tiers, overlaps; no network, no DB
+npm run import:ps -- --apply --dry-run  # report what would change
+npm run import:ps -- --apply            # snapshot -> Postgres
+npm run import:ps -- --apply --prune    # also remove sets that left the snapshot
+
+npm run eval:ps27                       # pattern fit against PS24 and PS26
+npm run eval:ps27 -- --score real.json  # how close the guess came, once the real timetable exists
+```
+
+`POSTER_ACTS` in `scripts/ps/plan.ts` is the one part that's fact: update it from the poster, never from the snapshot. Pattern fit only shows the guess looks like a Primavera timetable, not that it's right, because the slots came from those same grids; `--score` is the real test. `clashfinder.com/m/ps25/` is left out of the history because it carries 2024's acts under 2025 dates.
+
+Closing sets end at 06:00, so the importer builds instants itself (anything before noon is the next morning) instead of using `fromFestivalDayTime`. Editing one of those rows in `/admin` hits "end time must be after start time", like Dupplo.
+
 ## Crews (friends' picks)
 
 A crew is a group of friends (up to 15) who see each other's marks. Each person picks a

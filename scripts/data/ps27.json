@@ -1,0 +1,1207 @@
+{
+  "source": "https://www.primaverasound.com/en/barcelona/lineup",
+  "notes": "GUESS. Primavera has published the day split only. Stages and times are predicted from the poster's font sizes and the PS24 and PS26 grids (scripts/data/ps-history.json). Wednesday and Sunday's stage is unknown, so they sit on a single Parc del Fòrum stage. Replace with the real timetable when it lands.",
+  "generatedAt": "2026-11-02",
+  "sets": [
+    {
+      "day": "WED",
+      "stage": "parc-del-forum",
+      "name": "Fades",
+      "start": "17:45",
+      "end": "18:25",
+      "why": "Smallest name on the night and local, so it opens: PS26's Wednesday opener slot."
+    },
+    {
+      "day": "WED",
+      "stage": "parc-del-forum",
+      "name": "Mushka",
+      "start": "18:55",
+      "end": "19:45",
+      "why": "Local rap-pop name, second up as Wednesdays build from local to international."
+    },
+    {
+      "day": "WED",
+      "stage": "parc-del-forum",
+      "name": "CHVRCHES",
+      "start": "20:15",
+      "end": "21:15",
+      "why": "Sunset slot before the headliner; PS26 gave it to Guitarricadelafuente."
+    },
+    {
+      "day": "WED",
+      "stage": "parc-del-forum",
+      "name": "Underworld",
+      "start": "21:55",
+      "end": "23:05",
+      "why": "Top of the free day. PS26's Wet Leg and PS24's Phoenix both closed around 23:05."
+    },
+    {
+      "day": "THU",
+      "stage": "estrella-damm",
+      "name": "Guillem Gisbert",
+      "start": "17:30",
+      "end": "18:15",
+      "why": "Catalan singer of Manel. The Estrella opener is a local act most years (Aiko el Grupo, Mujeres, Ferran Palau)."
+    },
+    {
+      "day": "THU",
+      "stage": "revolut",
+      "name": "Wallows",
+      "start": "18:20",
+      "end": "19:20",
+      "why": "Line-3 guitar pop with a young crowd: the first Revolut hour, like Blood Orange in PS26."
+    },
+    {
+      "day": "THU",
+      "stage": "estrella-damm",
+      "name": "Turnstile",
+      "start": "19:35",
+      "end": "20:35",
+      "why": "Line 2, but the hardcore act of the five: an hour at dusk leaves the night to the dance and pop names."
+    },
+    {
+      "day": "THU",
+      "stage": "revolut",
+      "name": "Robyn",
+      "start": "20:50",
+      "end": "21:50",
+      "why": "Sunset pop slot (Alex G in PS26, Little Simz on Saturday); she takes a singalong hour before the big two."
+    },
+    {
+      "day": "THU",
+      "stage": "estrella-damm",
+      "name": "Massive Attack",
+      "start": "21:55",
+      "end": "23:25",
+      "why": "Darkness-dependent visuals, so first full-dark Estrella slot. Same slot they had in PS26."
+    },
+    {
+      "day": "THU",
+      "stage": "revolut",
+      "name": "Fontaines D.C.",
+      "start": "23:35",
+      "end": "01:15",
+      "why": "Top of the bill: the 23:35 Revolut slot is the longest on the day (Doja Cat, PS26)."
+    },
+    {
+      "day": "THU",
+      "stage": "estrella-damm",
+      "name": "Bad Gyal",
+      "start": "01:20",
+      "end": "02:50",
+      "why": "Local pop star, late main stage. Same slot as PS26."
+    },
+    {
+      "day": "THU",
+      "stage": "occident",
+      "name": "Viva Belgrado",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Spanish post-hardcore: Occident's first slot goes to a local band (Raly, Somos la Herencia)."
+    },
+    {
+      "day": "THU",
+      "stage": "occident",
+      "name": "Underscores",
+      "start": "19:45",
+      "end": "20:45",
+      "why": "Line 3, online pop with a large young draw: Geese's PS26 slot."
+    },
+    {
+      "day": "THU",
+      "stage": "occident",
+      "name": "Pavement",
+      "start": "21:55",
+      "end": "22:55",
+      "why": "Biggest Line-3 name and a Primavera institution, so the prime hour on the mid stage. Mac DeMarco's PS26 slot."
+    },
+    {
+      "day": "THU",
+      "stage": "occident",
+      "name": "Kim Petras",
+      "start": "00:30",
+      "end": "01:30",
+      "why": "Late pop on Occident once Fontaines ends, the TV Girl and Jade slot."
+    },
+    {
+      "day": "THU",
+      "stage": "occident",
+      "name": "Brutalismus 3000 b2b Isoxo",
+      "start": "03:00",
+      "end": "04:00",
+      "why": "Hard club crossover for the 03:00 Occident slot (Overmono, Viagra Boys)."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra",
+      "name": "Jersey",
+      "start": "17:15",
+      "end": "17:55",
+      "why": "Line 4, couldn't identify the act: the first Cupra slot is the low-risk place for it."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra",
+      "name": "Greg Freeman",
+      "start": "18:50",
+      "end": "19:40",
+      "why": "US indie rock suits the early Cupra slot Men I Trust had."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra",
+      "name": "Metrika",
+      "start": "20:50",
+      "end": "21:50",
+      "why": "Spanish trap, Sónar-tested and billed on Line 3: Cupra's 20:50 usually goes to a Spanish rising act (Ralphie Choo, rusowsky)."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra",
+      "name": "Metronomy",
+      "start": "23:00",
+      "end": "00:20",
+      "why": "Long Cupra set after Massive Attack. Father John Misty's slot."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra",
+      "name": "Snow Strippers",
+      "start": "01:35",
+      "end": "02:35",
+      "why": "Detroit electronic duo for the crowd leaving Fontaines. Runs alongside Bad Gyal, a different audience."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra",
+      "name": "Joy Orbison",
+      "start": "04:30",
+      "end": "06:00",
+      "why": "DJ closer: Cupra's 04:30-06:00 always goes to a selector."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Axolotes Mexicanos",
+      "start": "16:30",
+      "end": "17:10",
+      "why": "Spanish indie pop opening the smallest open-air stage, the slot for domestic small-print names."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Alemeda",
+      "start": "18:05",
+      "end": "18:50",
+      "why": "US R&B and rap, early evening."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Haute & Freddy",
+      "start": "19:55",
+      "end": "20:50",
+      "why": "Pop duo with a fanbase but a Line-4 billing."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Sophia Stel",
+      "start": "21:55",
+      "end": "22:55",
+      "why": "British pop songwriter opposite Massive Attack and Pavement, for those not going to either."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Gilla Band",
+      "start": "00:25",
+      "end": "01:25",
+      "why": "Noise rock late, in the Schwarzkopf slot after midnight."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Castle Rat",
+      "start": "02:40",
+      "end": "03:35",
+      "why": "Doom-heavy spectacle, the late heavy slot (Kylesa, Fcukers)."
+    },
+    {
+      "day": "THU",
+      "stage": "schwarzkopf",
+      "name": "Blaya",
+      "start": "04:35",
+      "end": "05:35",
+      "why": "Club-pop for the last Schwarzkopf hour."
+    },
+    {
+      "day": "THU",
+      "stage": "port",
+      "name": "Tristán!",
+      "start": "17:15",
+      "end": "18:00",
+      "why": "Spanish band, opener on Port like Paus and Las Petunias."
+    },
+    {
+      "day": "THU",
+      "stage": "port",
+      "name": "Friko",
+      "start": "18:55",
+      "end": "19:45",
+      "why": "Chicago indie rock, Port's early-evening guitar slot."
+    },
+    {
+      "day": "THU",
+      "stage": "port",
+      "name": "Westside Cowboy",
+      "start": "20:55",
+      "end": "21:50",
+      "why": "British indie on the sea stage at sunset."
+    },
+    {
+      "day": "THU",
+      "stage": "port",
+      "name": "EAR",
+      "start": "23:00",
+      "end": "00:00",
+      "why": "Line 4, couldn't identify the act, but it's on Porto's bill too, so a fair draw: Port's prime slot."
+    },
+    {
+      "day": "THU",
+      "stage": "port",
+      "name": "Blackhaine",
+      "start": "01:30",
+      "end": "02:30",
+      "why": "Bleak spoken grime and dance theatre suits the Port after 01:00 (Melt-Banana)."
+    },
+    {
+      "day": "THU",
+      "stage": "port",
+      "name": "Dame Area",
+      "start": "03:40",
+      "end": "04:30",
+      "why": "Barcelona's industrial dance duo, a home-crowd closer."
+    },
+    {
+      "day": "THU",
+      "stage": "auditori-rockdelux",
+      "name": "Madra Salach",
+      "start": "17:00",
+      "end": "18:00",
+      "why": "Irish traditional drone, seated. They played PS26's CCCB stage, so a step up."
+    },
+    {
+      "day": "THU",
+      "stage": "auditori-rockdelux",
+      "name": "Juana Molina",
+      "start": "19:00",
+      "end": "20:00",
+      "why": "Art-folk that wants a quiet room, as Lucrecia Dalt did."
+    },
+    {
+      "day": "THU",
+      "stage": "auditori-rockdelux",
+      "name": "Carmen Villain",
+      "start": "20:30",
+      "end": "21:30",
+      "why": "Ambient, a sit-down hour before Atlas Sound."
+    },
+    {
+      "day": "THU",
+      "stage": "auditori-rockdelux",
+      "name": "Atlas Sound",
+      "start": "22:00",
+      "end": "23:00",
+      "why": "Bradford Cox alone, the rare Auditori headliner slot Panda Bear had."
+    },
+    {
+      "day": "THU",
+      "stage": "plenitude",
+      "name": "Al·lèrgiques al Pol·len",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Catalan band, small print: Plenitude's early hours run as a band stage."
+    },
+    {
+      "day": "THU",
+      "stage": "plenitude",
+      "name": "Napa",
+      "start": "19:15",
+      "end": "20:00",
+      "why": "Portuguese indie band, early on the band half of Plenitude."
+    },
+    {
+      "day": "THU",
+      "stage": "plenitude",
+      "name": "TTSSFU",
+      "start": "20:30",
+      "end": "21:15",
+      "why": "Shoegaze-pop, last of the early bands."
+    },
+    {
+      "day": "THU",
+      "stage": "plenitude",
+      "name": "Alex vs Alex",
+      "start": "21:45",
+      "end": "22:30",
+      "why": "Played PS26's CCCB stage: a step onto the Fòrum."
+    },
+    {
+      "day": "THU",
+      "stage": "plenitude",
+      "name": "Tatyana Jane",
+      "start": "23:00",
+      "end": "00:30",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "THU",
+      "stage": "plenitude",
+      "name": "DJ Fra",
+      "start": "00:30",
+      "end": "02:00",
+      "why": "Veteran Spanish techno DJ, peak hours on the club stage."
+    },
+    {
+      "day": "THU",
+      "stage": "levis-warehouse",
+      "name": "Pole 1 2 3",
+      "start": "22:00",
+      "end": "23:15",
+      "why": "Dub-techno live show, the indoor Warehouse's listening-club start."
+    },
+    {
+      "day": "THU",
+      "stage": "levis-warehouse",
+      "name": "Decoder",
+      "start": "23:20",
+      "end": "00:35",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "THU",
+      "stage": "levis-warehouse",
+      "name": "Eden Aurelius",
+      "start": "00:40",
+      "end": "01:55",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "THU",
+      "stage": "levis-warehouse",
+      "name": "Headache",
+      "start": "02:00",
+      "end": "03:15",
+      "why": "Late and strange, suits the room."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra-pulse",
+      "name": "Trickpony",
+      "start": "21:00",
+      "end": "22:30",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra-pulse",
+      "name": "Tracey",
+      "start": "22:30",
+      "end": "00:00",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra-pulse",
+      "name": "Ibrahim Alfa Jnr",
+      "start": "00:00",
+      "end": "01:30",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "THU",
+      "stage": "cupra-pulse",
+      "name": "Verushka b2b Acidheaven",
+      "start": "01:30",
+      "end": "03:30",
+      "why": "B2Bs run long on Pulse."
+    },
+    {
+      "day": "FRI",
+      "stage": "estrella-damm",
+      "name": "Pablopablo",
+      "start": "17:30",
+      "end": "18:15",
+      "why": "Spanish pop-R&B on Line 3, the local Estrella opener."
+    },
+    {
+      "day": "FRI",
+      "stage": "revolut",
+      "name": "Julien Baker",
+      "start": "18:20",
+      "end": "19:15",
+      "why": "Songwriter in the first Revolut hour, Slowdive's PS26 slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "estrella-damm",
+      "name": "Bleachers",
+      "start": "19:30",
+      "end": "20:30",
+      "why": "Line 3's biggest pop-rock band, Ethel Cain's PS26 slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "revolut",
+      "name": "Tinashe",
+      "start": "20:40",
+      "end": "21:40",
+      "why": "Smallest of the Line 1-2 names, gets the sunset pop slot (Addison Rae)."
+    },
+    {
+      "day": "FRI",
+      "stage": "estrella-damm",
+      "name": "Phoebe Bridgers",
+      "start": "21:50",
+      "end": "23:20",
+      "why": "Top of the bill. Same arc as The Cure and Lana Del Rey: Estrella at nightfall."
+    },
+    {
+      "day": "FRI",
+      "stage": "revolut",
+      "name": "FKA twigs",
+      "start": "23:30",
+      "end": "01:05",
+      "why": "Staged show, needs full dark, follows Phoebe across the field."
+    },
+    {
+      "day": "FRI",
+      "stage": "estrella-damm",
+      "name": "The Chemical Brothers",
+      "start": "01:15",
+      "end": "02:45",
+      "why": "Dance headliner in the late Estrella slot (Disclosure, Justice)."
+    },
+    {
+      "day": "FRI",
+      "stage": "occident",
+      "name": "Los Punsetes",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Madrid indie veterans, the local Occident opener."
+    },
+    {
+      "day": "FRI",
+      "stage": "occident",
+      "name": "Converge",
+      "start": "19:50",
+      "end": "20:50",
+      "why": "Big enough for Occident at dusk: a hardcore change of pace."
+    },
+    {
+      "day": "FRI",
+      "stage": "occident",
+      "name": "Isaiah Rashad",
+      "start": "22:00",
+      "end": "23:15",
+      "why": "Rap in the prime mid stage slot, as Role Model and Clipse had."
+    },
+    {
+      "day": "FRI",
+      "stage": "occident",
+      "name": "JT",
+      "start": "00:30",
+      "end": "01:30",
+      "why": "Rap after midnight, Jade's PS26 slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "occident",
+      "name": "Bicep Live",
+      "start": "02:55",
+      "end": "04:05",
+      "why": "The Friday 02:55 Occident slot; live dance for the post-Chems crowd."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra",
+      "name": "Mishima",
+      "start": "17:15",
+      "end": "17:55",
+      "why": "Catalan indie, Cupra's local opener."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra",
+      "name": "English Teacher",
+      "start": "18:50",
+      "end": "19:45",
+      "why": "Mercury winners, early-evening Cupra."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra",
+      "name": "Weyes Blood",
+      "start": "20:55",
+      "end": "21:55",
+      "why": "Dusk, sits well before Phoebe."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra",
+      "name": "Angine de Poitrine",
+      "start": "23:20",
+      "end": "00:20",
+      "why": "Line 3 cult live draw, Amaarae's slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra",
+      "name": "Boy Harsher",
+      "start": "01:45",
+      "end": "02:35",
+      "why": "Dark-wave at 01:45 suits the slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra",
+      "name": "John Talabot",
+      "start": "04:10",
+      "end": "06:00",
+      "why": "Barcelona DJ, the home closer. PS26's Friday closer started at 04:10."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "Carlos de Jacoba & Ciutat",
+      "start": "16:35",
+      "end": "17:15",
+      "why": "Local rumba-electronic pairing, afternoon."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "@",
+      "start": "18:05",
+      "end": "18:50",
+      "why": "Delicate folk duo, early slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "Lip Critic",
+      "start": "19:50",
+      "end": "20:50",
+      "why": "Hyper punk at sunset."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "Akriila",
+      "start": "22:05",
+      "end": "23:05",
+      "why": "Chilean urbano, last Line-3 name, hot enough to get a prime Schwarzkopf hour."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "Full of Hell",
+      "start": "00:25",
+      "end": "01:25",
+      "why": "Grind in the midnight slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "Mark Fell & RP Boo Live",
+      "start": "02:30",
+      "end": "03:10",
+      "why": "Footwork and rhythm research, a late curio (Nick León's slot)."
+    },
+    {
+      "day": "FRI",
+      "stage": "schwarzkopf",
+      "name": "S.A.S.S.",
+      "start": "04:05",
+      "end": "05:20",
+      "why": "DJ supergroup, the Schwarzkopf closer."
+    },
+    {
+      "day": "FRI",
+      "stage": "port",
+      "name": "Aeronave Adolescente",
+      "start": "17:20",
+      "end": "18:00",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "port",
+      "name": "Racing Mount Pleasant",
+      "start": "19:00",
+      "end": "19:45",
+      "why": "Chamber indie at golden hour."
+    },
+    {
+      "day": "FRI",
+      "stage": "port",
+      "name": "Don Caballero",
+      "start": "21:00",
+      "end": "21:50",
+      "why": "Math-rock veterans, the Port dusk slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "port",
+      "name": "Have a Nice Life",
+      "start": "23:15",
+      "end": "00:10",
+      "why": "Cult doomgaze rarely on stage, the Port prime slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "port",
+      "name": "Piss",
+      "start": "01:35",
+      "end": "02:25",
+      "why": "Also on Porto's bill, the biggest of the small print: a late Port slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "port",
+      "name": "Carré",
+      "start": "03:15",
+      "end": "04:00",
+      "why": "Bass DJ for the last Port hour."
+    },
+    {
+      "day": "FRI",
+      "stage": "auditori-rockdelux",
+      "name": "Kelsey Lu",
+      "start": "16:30",
+      "end": "17:30",
+      "why": "Cello and voice, a seated afternoon."
+    },
+    {
+      "day": "FRI",
+      "stage": "auditori-rockdelux",
+      "name": "Mabe Fratti",
+      "start": "18:00",
+      "end": "19:00",
+      "why": "Mexico City avant cello: built for this room."
+    },
+    {
+      "day": "FRI",
+      "stage": "auditori-rockdelux",
+      "name": "Vashti Bunyan",
+      "start": "19:30",
+      "end": "20:30",
+      "why": "Legend, seated, and would be lost outdoors."
+    },
+    {
+      "day": "FRI",
+      "stage": "auditori-rockdelux",
+      "name": "Anohni",
+      "start": "21:00",
+      "end": "22:00",
+      "why": "Bigger than the room, but her shows need the hush. Einstürzende Neubauten's kind of prestige slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "plenitude",
+      "name": "El Buen Hijo",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Band, on the early band half."
+    },
+    {
+      "day": "FRI",
+      "stage": "plenitude",
+      "name": "Perfecto Miserable",
+      "start": "19:15",
+      "end": "20:00",
+      "why": "Played PS26's Aperol Island, moves up a stage."
+    },
+    {
+      "day": "FRI",
+      "stage": "plenitude",
+      "name": "Irenegarry",
+      "start": "20:30",
+      "end": "21:15",
+      "why": "Spanish singer, last of the early set."
+    },
+    {
+      "day": "FRI",
+      "stage": "plenitude",
+      "name": "Lux Lisbon",
+      "start": "21:45",
+      "end": "23:15",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "plenitude",
+      "name": "Naone",
+      "start": "23:15",
+      "end": "00:45",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "levis-warehouse",
+      "name": "Malibu",
+      "start": "22:00",
+      "end": "23:00",
+      "why": "She opened the Warehouse in PS26, so the same."
+    },
+    {
+      "day": "FRI",
+      "stage": "levis-warehouse",
+      "name": "Klara Lewis",
+      "start": "23:10",
+      "end": "00:10",
+      "why": "Sound-art noise, indoor."
+    },
+    {
+      "day": "FRI",
+      "stage": "levis-warehouse",
+      "name": "Sky H1 Live",
+      "start": "00:20",
+      "end": "01:20",
+      "why": "Atmospheric live set for the Warehouse."
+    },
+    {
+      "day": "FRI",
+      "stage": "levis-warehouse",
+      "name": "Oceanic (Live AV)",
+      "start": "01:30",
+      "end": "02:30",
+      "why": "Needs a room with screens."
+    },
+    {
+      "day": "FRI",
+      "stage": "levis-warehouse",
+      "name": "Roly Porter",
+      "start": "02:40",
+      "end": "03:40",
+      "why": "Sub-bass cinema, heavy late room."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra-pulse",
+      "name": "Memory Palace",
+      "start": "21:00",
+      "end": "22:30",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra-pulse",
+      "name": "Picture Live",
+      "start": "22:30",
+      "end": "00:00",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra-pulse",
+      "name": "Polygonia Live",
+      "start": "00:00",
+      "end": "01:30",
+      "why": "Live techno at the peak of Pulse."
+    },
+    {
+      "day": "FRI",
+      "stage": "cupra-pulse",
+      "name": "Mad Miran b2b DJ Zero",
+      "start": "01:30",
+      "end": "03:30",
+      "why": "B2Bs run long on Pulse."
+    },
+    {
+      "day": "SAT",
+      "stage": "estrella-damm",
+      "name": "Santiago Motorizado",
+      "start": "17:30",
+      "end": "18:15",
+      "why": "El Mató's singer, a Spanish-language favourite who played PS26's La Nau: the Estrella opener."
+    },
+    {
+      "day": "SAT",
+      "stage": "revolut",
+      "name": "Dinosaur Jr.",
+      "start": "18:30",
+      "end": "19:30",
+      "why": "Heritage guitars early, the Baxter Dury slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "estrella-damm",
+      "name": "Lola Young",
+      "start": "19:40",
+      "end": "20:40",
+      "why": "Line 2, big daytime singalong: Big Thief's slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "revolut",
+      "name": "Adéla",
+      "start": "20:50",
+      "end": "21:50",
+      "why": "Line 2 pop at sunset, the Little Simz slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "estrella-damm",
+      "name": "Hayley Williams",
+      "start": "22:05",
+      "end": "23:35",
+      "why": "Second name on the poster. PS26 gave My Bloody Valentine this slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "revolut",
+      "name": "Doechii",
+      "start": "23:40",
+      "end": "01:10",
+      "why": "Top of the bill: the 23:40 Revolut slot The xx had."
+    },
+    {
+      "day": "SAT",
+      "stage": "estrella-damm",
+      "name": "Prospa",
+      "start": "01:15",
+      "end": "02:45",
+      "why": "Rave duo after Doechii, Gorillaz's PS26 slot given to a dance name."
+    },
+    {
+      "day": "SAT",
+      "stage": "revolut",
+      "name": "Skrillex b2b Ninajirachi",
+      "start": "03:00",
+      "end": "05:00",
+      "why": "Poster says closing set, so the main stages finish on it. Later than any main in PS24 or PS26."
+    },
+    {
+      "day": "SAT",
+      "stage": "occident",
+      "name": "Alcalá Norte",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Madrid rock band, local Occident opener."
+    },
+    {
+      "day": "SAT",
+      "stage": "occident",
+      "name": "King Gizzard and the Lizard Wizard",
+      "start": "19:45",
+      "end": "20:45",
+      "why": "Biggest guitar name on Line 3, Occident before dark."
+    },
+    {
+      "day": "SAT",
+      "stage": "occident",
+      "name": "Caroline Polachek",
+      "start": "22:00",
+      "end": "23:15",
+      "why": "Line 3's first name, the prime mid stage slot (Clipse, Role Model)."
+    },
+    {
+      "day": "SAT",
+      "stage": "occident",
+      "name": "Shygirl",
+      "start": "00:40",
+      "end": "01:40",
+      "why": "Marina's PS26 slot: pop-club after Doechii's opening hour."
+    },
+    {
+      "day": "SAT",
+      "stage": "occident",
+      "name": "Arca",
+      "start": "03:00",
+      "end": "04:15",
+      "why": "Barcelona resident, the late Occident slot she had in PS24."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra",
+      "name": "Abhir",
+      "start": "17:10",
+      "end": "17:50",
+      "why": "Press lists them with the local acts, Line 4: Cupra's local opener."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra",
+      "name": "Hearts2Hearts",
+      "start": "18:50",
+      "end": "19:45",
+      "why": "K-pop act, a daylight Cupra show, as ATARASHII GAKKO!!! was a Cupra draw."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra",
+      "name": "Muna",
+      "start": "20:55",
+      "end": "21:55",
+      "why": "Pop trio, dusk."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra",
+      "name": "DIIV",
+      "start": "23:05",
+      "end": "00:05",
+      "why": "Shoegaze set on the Cupra's prime slot, opposite Doechii's first half."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra",
+      "name": "Esdeekid",
+      "start": "01:50",
+      "end": "02:50",
+      "why": "UK rap with a young crowd after 01:00."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra",
+      "name": "Simian Mobile Disco",
+      "start": "04:30",
+      "end": "06:00",
+      "why": "Dance veterans, the Saturday Cupra closer."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "Mori",
+      "start": "16:35",
+      "end": "17:15",
+      "why": "Press lists them with the local acts, small stage opener."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "Rebe",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Press lists them with the local acts, Line 4, early evening."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "Erin LeCount",
+      "start": "19:45",
+      "end": "20:45",
+      "why": "British pop, sunset hour."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "Dove Ellis",
+      "start": "22:00",
+      "end": "23:00",
+      "why": "Irish songwriter, in prime Schwarzkopf opposite Hayley Williams."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "Theodora",
+      "start": "00:25",
+      "end": "01:25",
+      "why": "French rap-pop, Line 3, midnight Schwarzkopf: Rojuu and fakemink got this slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "B0yg1rl",
+      "start": "02:50",
+      "end": "03:35",
+      "why": "Experimental dance duo, late."
+    },
+    {
+      "day": "SAT",
+      "stage": "schwarzkopf",
+      "name": "DJ Stingray 313 Live",
+      "start": "04:35",
+      "end": "05:35",
+      "why": "Detroit electro for the last hour."
+    },
+    {
+      "day": "SAT",
+      "stage": "port",
+      "name": "Blanco Palamera",
+      "start": "17:15",
+      "end": "18:00",
+      "why": "Spanish small print, Port's opener."
+    },
+    {
+      "day": "SAT",
+      "stage": "port",
+      "name": "Twisted Teens",
+      "start": "18:50",
+      "end": "19:35",
+      "why": "New Orleans punk, short early set."
+    },
+    {
+      "day": "SAT",
+      "stage": "port",
+      "name": "Prostitute",
+      "start": "20:55",
+      "end": "21:55",
+      "why": "Abrasive post-punk at dusk, the sea stage's weird slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "port",
+      "name": "Tirzah",
+      "start": "23:10",
+      "end": "00:05",
+      "why": "Hazy late songs, the Port prime hour."
+    },
+    {
+      "day": "SAT",
+      "stage": "port",
+      "name": "Jesu",
+      "start": "01:30",
+      "end": "02:30",
+      "why": "Justin Broadrick's heavy shoegaze, Kylesa's late slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "port",
+      "name": "Bashkka b2b Mike Servito",
+      "start": "03:40",
+      "end": "04:30",
+      "why": "Club closer for Port."
+    },
+    {
+      "day": "SAT",
+      "stage": "auditori-rockdelux",
+      "name": "Marta Salogni Live",
+      "start": "16:30",
+      "end": "17:30",
+      "why": "Tape-loop live set, seated."
+    },
+    {
+      "day": "SAT",
+      "stage": "auditori-rockdelux",
+      "name": "Jump Source Live",
+      "start": "18:00",
+      "end": "19:00",
+      "why": "Electronic live set, seated."
+    },
+    {
+      "day": "SAT",
+      "stage": "auditori-rockdelux",
+      "name": "Dani Dicostas",
+      "start": "19:30",
+      "end": "20:30",
+      "why": "Played PS26's Aperol Island, moves indoors."
+    },
+    {
+      "day": "SAT",
+      "stage": "auditori-rockdelux",
+      "name": "Bonnie \"Prince\" Billy",
+      "start": "21:00",
+      "end": "22:00",
+      "why": "Quiet legend, the Auditori's headline slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "plenitude",
+      "name": "Gazella",
+      "start": "18:00",
+      "end": "18:45",
+      "why": "Valencian kraut and noise band, on the early band half."
+    },
+    {
+      "day": "SAT",
+      "stage": "plenitude",
+      "name": "Victoryland",
+      "start": "19:15",
+      "end": "20:00",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "plenitude",
+      "name": "Warning",
+      "start": "20:30",
+      "end": "21:15",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "plenitude",
+      "name": "Dulce",
+      "start": "21:45",
+      "end": "23:15",
+      "why": "DJ, Plenitude's club half starts."
+    },
+    {
+      "day": "SAT",
+      "stage": "levis-warehouse",
+      "name": "Loradeniz",
+      "start": "22:00",
+      "end": "23:10",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "levis-warehouse",
+      "name": "Plo Man",
+      "start": "23:20",
+      "end": "00:35",
+      "why": "DJ for the Warehouse."
+    },
+    {
+      "day": "SAT",
+      "stage": "levis-warehouse",
+      "name": "Andy Stott",
+      "start": "00:40",
+      "end": "02:00",
+      "why": "Modern Love heavyweight, peak of the dark room."
+    },
+    {
+      "day": "SAT",
+      "stage": "levis-warehouse",
+      "name": "Sonido Underground: Dngdngdng & Phran",
+      "start": "02:05",
+      "end": "03:30",
+      "why": "Latin club session, long peak."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra-pulse",
+      "name": "DJ /rupture",
+      "start": "21:00",
+      "end": "22:30",
+      "why": "Pulse's early set."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra-pulse",
+      "name": "Bae Bae",
+      "start": "22:30",
+      "end": "00:00",
+      "why": "Couldn't identify this act. Small print, so a generic slot."
+    },
+    {
+      "day": "SAT",
+      "stage": "cupra-pulse",
+      "name": "Livwutang b2b Konduku",
+      "start": "00:00",
+      "end": "02:00",
+      "why": "B2Bs run long on Pulse."
+    },
+    {
+      "day": "SUN",
+      "stage": "parc-del-forum",
+      "name": "Richie Hawtin x Four Tet x Dixon",
+      "start": "15:00",
+      "end": "23:00",
+      "why": "Press: an eight-hour marathon of alternating sets, so one block. Same 15:00-23:00 window as PS26's closing day."
+    }
+  ]
+}

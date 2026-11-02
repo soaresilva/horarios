@@ -45,11 +45,15 @@ export async function deleteSession(): Promise<void> {
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
+/** Non-throwing check for public routes that show admins more than the public (unpublished festivals). */
+export async function hasAdminSession(): Promise<boolean> {
+  const cookieStore = await cookies();
+  return verifyToken(cookieStore.get(SESSION_COOKIE_NAME)?.value);
+}
+
 /** Real authorization check for Server Actions/route handlers — proxy.ts alone is only an optimistic redirect, not a security boundary. */
 export async function requireSession(): Promise<void> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  if (!(await verifyToken(token))) {
+  if (!(await hasAdminSession())) {
     throw new Error("Unauthorized");
   }
 }
