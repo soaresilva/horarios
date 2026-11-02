@@ -82,6 +82,21 @@ describe("Plenitude", () => {
   });
 });
 
+describe("Saturday's small-print stages", () => {
+  const where = (name: string) => find(name).stage;
+
+  it("keeps club music off the Auditori, which is for seated sets", () => {
+    expect(where("Marta Salogni Live")).toBe("plenitude");
+    expect(where("Jump Source Live")).toBe("plenitude");
+  });
+
+  it("puts the two guitar bands on the small stages", () => {
+    expect(where("Victoryland")).toBe("port");
+    expect(where("Warning")).toBe("schwarzkopf");
+    expect(find("Victoryland").start < "20:00").toBe(true);
+  });
+});
+
 describe("artist links", () => {
   const link = (name: string) => snapshot.artists.find((a) => a.slug === find(name).artistSlug)!;
 

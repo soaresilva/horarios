@@ -1121,11 +1121,11 @@
     },
     {
       "day": "SAT",
-      "stage": "schwarzkopf",
+      "stage": "auditori-rockdelux",
       "name": "Dove Ellis",
-      "start": "22:00",
-      "end": "23:00",
-      "why": "Irish songwriter, in prime Schwarzkopf opposite Hayley Williams.",
+      "start": "18:00",
+      "end": "19:00",
+      "why": "Quiet Irish songwriter: suits the Auditori, and gives it its usual three sets with the two moved out.",
       "artistSlug": "dove-ellis"
     },
     {
@@ -1168,9 +1168,9 @@
       "day": "SAT",
       "stage": "port",
       "name": "Twisted Teens",
-      "start": "18:50",
-      "end": "19:35",
-      "why": "New Orleans punk, short early set.",
+      "start": "03:40",
+      "end": "04:30",
+      "why": "Punk, moved to the late slot Victoryland left. Late punk has played the small stages (Fcukers, Six Sex in PS26).",
       "artistSlug": "twisted-teens"
     },
     {
@@ -1211,20 +1211,20 @@
     },
     {
       "day": "SAT",
-      "stage": "auditori-rockdelux",
+      "stage": "plenitude",
       "name": "Marta Salogni Live",
-      "start": "16:30",
-      "end": "17:30",
-      "why": "Tape-loop live set, seated.",
+      "start": "18:00",
+      "end": "19:30",
+      "why": "Club and electronic set, so Plenitude (a DJ stage) rather than the Auditori. Opens the stage.",
       "artistSlug": "marta-salogni"
     },
     {
       "day": "SAT",
-      "stage": "auditori-rockdelux",
+      "stage": "plenitude",
       "name": "Jump Source Live",
-      "start": "18:00",
-      "end": "19:00",
-      "why": "Electronic live set, seated.",
+      "start": "19:30",
+      "end": "21:00",
+      "why": "Club music: Plenitude, second on the early run.",
       "artistSlug": "jump-source"
     },
     {
@@ -1256,20 +1256,20 @@
     },
     {
       "day": "SAT",
-      "stage": "plenitude",
+      "stage": "port",
       "name": "Victoryland",
-      "start": "18:00",
-      "end": "19:30",
-      "why": "Early set, opens Plenitude.",
+      "start": "18:50",
+      "end": "19:35",
+      "why": "Indie rock band: an early small-stage slot on the sea stage, like Friko on Thursday.",
       "artistSlug": "victoryland"
     },
     {
       "day": "SAT",
-      "stage": "plenitude",
+      "stage": "schwarzkopf",
       "name": "Warning",
-      "start": "19:30",
-      "end": "21:00",
-      "why": "Early set, second on Plenitude.",
+      "start": "22:00",
+      "end": "23:00",
+      "why": "Legendary doom metal band: a prime small-stage hour, the heavy slot Skullcrusher and Touché Amoré had in PS26.",
       "artistSlug": "warning"
     },
     {
