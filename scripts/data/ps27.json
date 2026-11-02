@@ -932,11 +932,11 @@
     },
     {
       "day": "SAT",
-      "stage": "revolut",
+      "stage": "cupra",
       "name": "Dinosaur Jr.",
-      "start": "18:30",
-      "end": "19:30",
-      "why": "Heritage guitars early, the Baxter Dury slot.",
+      "start": "23:25",
+      "end": "00:25",
+      "why": "Heritage guitars on the Cupra prime slot, opposite Doechii's first half.",
       "artistSlug": "dinosaur-jr"
     },
     {
@@ -1058,20 +1058,20 @@
     },
     {
       "day": "SAT",
-      "stage": "cupra",
+      "stage": "revolut",
       "name": "Muna",
-      "start": "20:55",
-      "end": "21:55",
-      "why": "Pop trio, dusk.",
+      "start": "18:30",
+      "end": "19:30",
+      "why": "Pop trio on the first Revolut hour, Dinosaur Jr.'s old slot: Slowdive's PS26 Revolut slot also went to a crowd-pleaser.",
       "artistSlug": "muna"
     },
     {
       "day": "SAT",
       "stage": "cupra",
       "name": "DIIV",
-      "start": "23:05",
-      "end": "00:05",
-      "why": "Shoegaze set on the Cupra's prime slot, opposite Doechii's first half.",
+      "start": "20:55",
+      "end": "21:55",
+      "why": "Shoegaze at dusk on Cupra, Muna's old slot.",
       "artistSlug": "diiv"
     },
     {

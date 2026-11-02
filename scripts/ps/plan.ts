@@ -128,6 +128,13 @@ export const NOT_ON_PLENITUDE: readonly string[] = [
   "El Buen Hijo", "Perfecto Miserable", "Irenegarry", "Gazella",
 ];
 
+/** Stages that never play at the same time: zero overlap, not even a minute. */
+export const TAKING_TURNS: readonly { label: string; stages: readonly string[] }[] = [
+  { label: "main stages", stages: MAIN_STAGES },
+  { label: "Occident and Cupra", stages: MID_STAGES },
+  { label: "Port and Schwarzkopf", stages: SMALL_STAGES },
+];
+
 /** "Closing*set" on the poster: nothing on the two main stages may end after it. */
 export const CLOSING_SET = "Skrillex b2b Ninajirachi";
 
@@ -357,14 +364,18 @@ export function validatePsSnapshot(snapshot: PsSnapshot): string[] {
     endTime: p.endTime,
   }));
   errors.push(...findOverlaps(planned));
-  // The two main stages take turns: true of every PS24 and PS26 day.
-  errors.push(
-    ...findOverlaps(
-      planned
-        .filter((p) => MAIN_STAGES.some((stage) => p.stageKey.endsWith(` ${stage}`)))
-        .map((p) => ({ ...p, stageKey: `${p.stageKey.slice(0, 10)} main stages` })),
-    ),
-  );
+  // Each pair takes turns, so no clash ever needs a choice between two
+  // stages of one size: true of every PS24 and PS26 main-stage day, and
+  // Diogo's rule for the mid-size and small pairs too.
+  for (const { label, stages } of TAKING_TURNS) {
+    errors.push(
+      ...findOverlaps(
+        planned
+          .filter((p) => stages.some((stage) => p.stageKey.endsWith(` ${stage}`)))
+          .map((p) => ({ ...p, stageKey: `${p.stageKey.slice(0, 10)} ${label}` })),
+      ),
+    );
+  }
 
   // Only once --fetch-artists has run: every act but Sunday's three-way block
   // resolves to a page whose title is the same act. Catches a wrong slug (a

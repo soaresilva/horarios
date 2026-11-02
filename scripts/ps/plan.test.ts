@@ -97,6 +97,16 @@ describe("Saturday's small-print stages", () => {
   });
 });
 
+describe("Saturday's Muna, DIIV and Dinosaur Jr.", () => {
+  const slot = (name: string) => `${find(name).stage} ${find(name).start}-${find(name).end}`;
+
+  it("rotates through the three slots as asked", () => {
+    expect(slot("Muna")).toBe("revolut 18:30-19:30");
+    expect(slot("DIIV")).toBe("cupra 20:55-21:55");
+    expect(slot("Dinosaur Jr.")).toBe("cupra 23:25-00:25");
+  });
+});
+
 describe("artist links", () => {
   const link = (name: string) => snapshot.artists.find((a) => a.slug === find(name).artistSlug)!;
 
@@ -242,6 +252,21 @@ describe("a bad snapshot fails", () => {
 
   it("overlaps across the two main stages", () => {
     expect(editing("Robyn", { start: "20:30", end: "21:30" })).toContainEqual(expect.stringContaining("main stages"));
+  });
+
+  it("overlaps across Occident and Cupra", () => {
+    const { start, end } = find("Caroline Polachek");
+    expect(editing("Muna", { stage: "cupra", start, end })).toContainEqual(expect.stringContaining("Occident and Cupra"));
+  });
+
+  it("overlaps across Port and Schwarzkopf", () => {
+    const { start, end } = find("Tirzah");
+    expect(editing("Theodora", { start, end })).toContainEqual(expect.stringContaining("Port and Schwarzkopf"));
+  });
+
+  it("overlaps by a single minute across a pair", () => {
+    // Estrella's Hayley Williams ends 23:35, when Doechii starts on Revolut.
+    expect(editing("Doechii", { start: "23:30" })).toContainEqual(expect.stringContaining("main stages"));
   });
 
   it("goes off the 5-minute grid", () => {
