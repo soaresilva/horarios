@@ -3,7 +3,7 @@
     "https://leguesswho.com/timetable",
     "https://leguesswho.com/u/timetable"
   ],
-  "fetchedAt": "2026-10-22T08:54:12.098Z",
+  "fetchedAt": "2026-11-03T16:17:54.141Z",
   "days": {
     "LGW": [
       "2026-11-05",
@@ -68,6 +68,14 @@
     {
       "id": 165,
       "name": "Curated by Perry Gits"
+    },
+    {
+      "id": 168,
+      "name": "Ambient Melodies Reimagined Realities"
+    },
+    {
+      "id": 169,
+      "name": "totally wired"
     }
   ],
   "shows": [
@@ -2015,8 +2023,8 @@
       "showId": 2127,
       "name": "Dubplate Pearl",
       "start": 17,
-      "end": 18,
-      "time": "17:00 - 18:00",
+      "end": 18.5,
+      "time": "17:00 - 18:30",
       "project": "24 HOUR DUB",
       "projectId": 147,
       "slug": "dubplate-pearl"
@@ -2189,21 +2197,6 @@
     {
       "programme": "LGW",
       "day": "2026-11-07",
-      "venue": "KABUL à GoGo",
-      "room": null,
-      "sourceStageId": 185,
-      "showId": 2131,
-      "name": "Mad Professor & Sista Aisha",
-      "start": 18,
-      "end": 19.5,
-      "time": "18:00 - 19:30",
-      "project": "24 HOUR DUB",
-      "projectId": 147,
-      "slug": "mad-professor-sista-aisha"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-07",
       "venue": "TivoliVredenburg",
       "room": "Cloud Nine",
       "sourceStageId": 3,
@@ -2245,6 +2238,21 @@
       "project": "Tropical Fuck Storm",
       "projectId": 148,
       "slug": "chuck-roth"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-07",
+      "venue": "KABUL à GoGo",
+      "room": null,
+      "sourceStageId": 185,
+      "showId": 2131,
+      "name": "Mad Professor & Sista Aisha",
+      "start": 18.5,
+      "end": 19.5,
+      "time": "18:30 - 19:30",
+      "project": "24 HOUR DUB",
+      "projectId": 147,
+      "slug": "mad-professor-sista-aisha"
     },
     {
       "programme": "LGW",
@@ -2553,13 +2561,13 @@
       "room": "Hertz",
       "sourceStageId": 2,
       "showId": 2265,
-      "name": "Mai Mai Mai & Osama Abu Ali",
+      "name": "Mai Mai Mai & Tareq Abboushi",
       "start": 20.5,
       "end": 21.5,
       "time": "20:30 - 21:30",
       "project": null,
       "projectId": null,
-      "slug": "mai-mai-mai-osama-abu-ali"
+      "slug": "mai-mai-mai-tareq-abboushi"
     },
     {
       "programme": "LGW",
@@ -2805,21 +2813,6 @@
       "programme": "LGW",
       "day": "2026-11-07",
       "venue": "TivoliVredenburg",
-      "room": "Pandora",
-      "sourceStageId": 4,
-      "showId": 2197,
-      "name": "Tshegue",
-      "start": 23,
-      "end": 23.833333333333332,
-      "time": "23:00 - 23:50",
-      "project": "aja monet",
-      "projectId": 151,
-      "slug": "tshegue"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-07",
-      "venue": "TivoliVredenburg",
       "room": "Grote Zaal",
       "sourceStageId": 5,
       "showId": 2222,
@@ -2865,6 +2858,21 @@
       "programme": "LGW",
       "day": "2026-11-07",
       "venue": "TivoliVredenburg",
+      "room": "Pandora",
+      "sourceStageId": 4,
+      "showId": 2479,
+      "name": "RÓIS",
+      "start": 23,
+      "end": 23.833333333333332,
+      "time": "23:00 - 23:50",
+      "project": null,
+      "projectId": null,
+      "slug": "rois"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-07",
+      "venue": "TivoliVredenburg",
       "room": "Cloud Nine",
       "sourceStageId": 3,
       "showId": 2221,
@@ -2882,14 +2890,14 @@
       "venue": "TivoliVredenburg",
       "room": "COSMOS Foyer / Pandora Studio",
       "sourceStageId": 8,
-      "showId": 2461,
-      "name": "COSMOS x Refuge Worldwide",
+      "showId": 2475,
+      "name": "Ibrahim Owais (Radio Alhara)",
       "start": 23.5,
       "end": 24.5,
       "time": "23:30 - 00:30",
       "project": "COSMOS",
       "projectId": 103,
-      "slug": "cosmos-x-refuge-worldwide"
+      "slug": "ibrahim-owais-radio-alhara"
     },
     {
       "programme": "LGW",
@@ -3314,21 +3322,6 @@
     {
       "programme": "LGW",
       "day": "2026-11-08",
-      "venue": "BASIS",
-      "room": null,
-      "sourceStageId": 38,
-      "showId": 2439,
-      "name": "...",
-      "start": 14.5,
-      "end": 21,
-      "time": "14:30 - 21:00",
-      "project": "Perry Gits",
-      "projectId": 165,
-      "slug": "dotdotdot"
-    },
-    {
-      "programme": "LGW",
-      "day": "2026-11-08",
       "venue": "TivoliVredenburg",
       "room": "Ronda",
       "sourceStageId": 1,
@@ -3400,6 +3393,21 @@
       "project": "COSMOS",
       "projectId": 103,
       "slug": "cosmos-x-refuge-worldwide"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-08",
+      "venue": "BASIS",
+      "room": null,
+      "sourceStageId": 38,
+      "showId": 2439,
+      "name": "...",
+      "start": 15.5,
+      "end": 21,
+      "time": "15:30 - 21:00",
+      "project": "Perry Gits",
+      "projectId": 165,
+      "slug": "dotdotdot"
     },
     {
       "programme": "LGW",
@@ -3557,14 +3565,14 @@
       "venue": "TivoliVredenburg",
       "room": "Grote Zaal",
       "sourceStageId": 5,
-      "showId": 2146,
-      "name": "Mazaher",
-      "start": 18.25,
+      "showId": 2474,
+      "name": "Mohammad Reza Mortazavi",
+      "start": 18.5,
       "end": 19.5,
-      "time": "18:15 - 19:30",
+      "time": "18:30 - 19:30",
       "project": null,
       "projectId": null,
-      "slug": "mazaher"
+      "slug": "mohammad-reza-mortazavi"
     },
     {
       "programme": "LGW",
@@ -3737,14 +3745,44 @@
       "venue": "TivoliVredenburg",
       "room": "Pandora",
       "sourceStageId": 4,
-      "showId": 2408,
-      "name": "Afterparty",
+      "showId": 2473,
+      "name": "Cami Layé Okún",
       "start": 23,
-      "end": 26.5,
-      "time": "23:00 - 02:30",
+      "end": 25,
+      "time": "23:00 - 01:00",
       "project": null,
       "projectId": null,
-      "slug": null
+      "slug": "cami-laye-okun"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-08",
+      "venue": "TivoliVredenburg",
+      "room": "COSMOS Foyer / Pandora Studio",
+      "sourceStageId": 8,
+      "showId": 2471,
+      "name": "COSMOS x Refuge Worldwide",
+      "start": 24,
+      "end": 25.5,
+      "time": "00:00 - 01:30",
+      "project": "COSMOS",
+      "projectId": 103,
+      "slug": "cosmos-x-refuge-worldwide"
+    },
+    {
+      "programme": "LGW",
+      "day": "2026-11-08",
+      "venue": "TivoliVredenburg",
+      "room": "Pandora",
+      "sourceStageId": 4,
+      "showId": 2472,
+      "name": "Tash LC",
+      "start": 25,
+      "end": 26.5,
+      "time": "01:00 - 02:30",
+      "project": null,
+      "projectId": null,
+      "slug": "tash-lc"
     },
     {
       "programme": "U?",
@@ -4079,8 +4117,8 @@
     {
       "programme": "U?",
       "day": "2026-11-07",
-      "venue": "Stuurhut",
-      "room": null,
+      "venue": "De Nijverheid",
+      "room": "Stuurhut",
       "sourceStageId": 232,
       "showId": 2441,
       "name": "Analogue Photobooth | Het Kleinste Kamertje",
@@ -4158,7 +4196,7 @@
       "room": null,
       "sourceStageId": 86,
       "showId": 2400,
-      "name": "Tijmen Lohmeijer & Luke Cohlen",
+      "name": "Luke Cohlen",
       "start": 17.25,
       "end": 18.75,
       "time": "17:15 - 18:45",
@@ -4195,6 +4233,21 @@
       "project": null,
       "projectId": null,
       "slug": "massage-puppetry-theater-that-heals-you"
+    },
+    {
+      "programme": "U?",
+      "day": "2026-11-07",
+      "venue": "Hof van Cartesius",
+      "room": "Maakplaats UP",
+      "sourceStageId": 223,
+      "showId": 2476,
+      "name": "Myra-Ida van der Veen",
+      "start": 17.5,
+      "end": 18.25,
+      "time": "17:30 - 18:15",
+      "project": "Ambient Melodies Reimagined Realities",
+      "projectId": 168,
+      "slug": "myra-ida-van-der-veen"
     },
     {
       "programme": "U?",
@@ -4240,6 +4293,21 @@
       "project": null,
       "projectId": null,
       "slug": "cndy-br34k"
+    },
+    {
+      "programme": "U?",
+      "day": "2026-11-07",
+      "venue": "Hof van Cartesius",
+      "room": "Maakplaats UP",
+      "sourceStageId": 223,
+      "showId": 2477,
+      "name": "Legowelt presents: Ambient Trip Commander",
+      "start": 18.5,
+      "end": 20,
+      "time": "18:30 - 20:00",
+      "project": "Ambient Melodies Reimagined Realities",
+      "projectId": 168,
+      "slug": "legowelt-presents-ambient-trip-commander"
     },
     {
       "programme": "U?",
@@ -4324,9 +4392,9 @@
       "sourceStageId": 38,
       "showId": 2377,
       "name": "...",
-      "start": 14.5,
+      "start": 15.5,
       "end": 21,
-      "time": "14:30 - 21:00",
+      "time": "15:30 - 21:00",
       "project": "Perry Gits",
       "projectId": 165,
       "slug": "dotdotdot"
@@ -4504,12 +4572,6 @@
       "address": "Nijverheidsweg 18, 3534 AM",
       "lat": 52.10417237060009,
       "lng": 5.079084240218016
-    },
-    "Stuurhut": {
-      "slug": "de-nijverheid",
-      "address": "Nijverheidskade 15, 3534 AZ",
-      "lat": 52.1003,
-      "lng": 5.0836
     },
     "Theater Kikker": {
       "slug": "theater-kikker",

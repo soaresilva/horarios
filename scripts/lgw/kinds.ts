@@ -59,8 +59,6 @@ export const LONG_CONCERTS = new Set([
   "death by dagger",
   // Perry Gits' day of ambient and experimental live sets at BASIS.
   "...",
-  // Sunday's closing club night in Pandora, 23:00-02:30. No lineup page.
-  "Afterparty",
 ]);
 
 export const LONG_ITEM_HOURS = 3;

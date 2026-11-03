@@ -89,7 +89,7 @@ export const ROOMS: RoomDef[] = [
   { venue: "De Nijverheid", room: "Loods", slug: "nijverheid-loods", name: "De Nijverheid Loods", zone: "nijverheidskade" },
   { venue: "De Nijverheid", room: "Kadeboot", slug: "nijverheid-kadeboot", name: "De Nijverheid Kadeboot", zone: "nijverheidskade" },
   { venue: "De Nijverheid", room: "De Sardine", slug: "nijverheid-de-sardine", name: "De Nijverheid De Sardine", zone: "nijverheidskade" },
-  { venue: "Stuurhut", room: null, slug: "stuurhut", name: "Stuurhut", zone: "nijverheidskade" },
+  { venue: "De Nijverheid", room: "Stuurhut", slug: "stuurhut", name: "Stuurhut", zone: "nijverheidskade" },
   { venue: "Boot 122", room: null, slug: "boot-122", name: "Boot 122", zone: "nijverheidskade" },
   { venue: "SETUP", room: null, slug: "setup", name: "SETUP", zone: "nijverheidskade" },
   { venue: "NAR", room: null, slug: "nar", name: "NAR", zone: "nijverheidskade" },

@@ -20,9 +20,6 @@ export interface LgwSnapshot {
 export const VENUE_PAGE_SLUG_OVERRIDES: Record<string, string> = {
   "dB's": "dbs",
   "Stadsschouwburg": "stadsschouwburg-utrecht",
-  // A cabin on De Nijverheid's quay; the Analogue Photobooth page links it
-  // to De Nijverheid's venue page.
-  "Stuurhut": "de-nijverheid",
 };
 
 export function venuePageSlug(venue: string): string {

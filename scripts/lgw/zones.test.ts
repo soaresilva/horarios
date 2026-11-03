@@ -69,6 +69,8 @@ describe("ROOMS", () => {
   it("looks up a room by venue and room, and refuses an unknown one", () => {
     expect(roomFor("TivoliVredenburg", "Ronda").slug).toBe("ronda");
     expect(roomFor("ACU", null).slug).toBe("acu");
+    // The source files Stuurhut under De Nijverheid; it used to be its own venue.
+    expect(roomFor("De Nijverheid", "Stuurhut").slug).toBe("stuurhut");
     expect(() => roomFor("TivoliVredenburg", "Kelder")).toThrow(/Unknown room/);
   });
 });
